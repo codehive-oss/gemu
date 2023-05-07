@@ -19,8 +19,17 @@ unsigned char *d = reg + 4;
 unsigned char *e = reg + 5;
 unsigned char *h = reg + 6;
 unsigned char *l = reg + 7;
-unsigned short *sp = (unsigned short*)reg + 8;
-unsigned short *pc = (unsigned short*)reg + 10;
+unsigned short *sp = (unsigned short *)reg + 8;
+unsigned short *pc = (unsigned short *)reg + 10;
+
+void print_bytes(void *p, size_t len) {
+  size_t i;
+  for (i = 0; i < len; ++i)
+    printf("%02X\n", ((unsigned char *)p)[i]);
+}
+
+void print_short(short x) { print_bytes(&x, sizeof(x)); }
+void print_double(double x) { print_bytes(&x, sizeof(x)); }
 
 void read_file(const char *path, unsigned char *dst) {
   FILE *file = fopen(path, "rb");
@@ -39,17 +48,20 @@ void read_file(const char *path, unsigned char *dst) {
 
 int main(void) {
   read_file("main.gb", mem);
-  *pc=0x100;
+  *pc = 0x0100;
   unsigned char instruction = mem[*pc];
-    printf("Instruction: %hhx\n", instruction);
-  if(instruction==0xc3) {
-      (*pc)++;
-    unsigned char *target = &mem[*pc];
-      *pc = (unsigned short*) *target;
-    printf("Jump to: %hhx %hhx\n", target[0], target[1]);
+  printf("Instruction: %hhx\n", instruction);
+
+  if (instruction == 0xc3) {
+    (*pc)++;
+    unsigned short target = *(unsigned short *)&mem[*pc];
+    *pc = target;
+		printf("Jump Instruction Found\n");
+		print_short(target);
   }
 
-  printf("Instruction pointer: %hhx", *pc);
+  printf("Instruction pointer\n");
+	print_short(*pc);
 
   return 0;
 }
