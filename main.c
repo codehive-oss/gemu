@@ -46,22 +46,30 @@ void read_file(const char *path, unsigned char *dst) {
   fclose(file);
 }
 
+void jp() {
+  (*pc)++;
+  unsigned short target = *(unsigned short *)&mem[*pc];
+  *pc = target;
+  // printf("Jump Instruction Found\n");
+  // print_short(target);
+}
+
+void ld() {}
+
 int main(void) {
   read_file("main.gb", mem);
   *pc = 0x0100;
   unsigned char instruction = mem[*pc];
   printf("Instruction: %hhx\n", instruction);
 
-  if (instruction == 0xc3) {
-    (*pc)++;
-    unsigned short target = *(unsigned short *)&mem[*pc];
-    *pc = target;
-		printf("Jump Instruction Found\n");
-		print_short(target);
+  switch (instruction) {
+  case 0xc3:
+    jp();
+    break;
   }
 
   printf("Instruction pointer\n");
-	print_short(*pc);
+  print_short(*pc);
 
   return 0;
 }
