@@ -3,13 +3,14 @@
 
 #include "./types.h"
 
-typedef struct Instruction {
+typedef struct Instruction
+{
   u8 encoding;
   u8 mcycle;
   void (*execute)(EmulationState *);
 } Instruction;
 
-#define GB_INSTRUCTIONS_LENGTH 8
+#define GB_INSTRUCTIONS_LENGTH 10
 
 extern Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH];
 
