@@ -43,17 +43,21 @@ const char *ROM_TYPES[] = {
     "MBC7+SENSOR+RUMBLE+RAM+BATTERY",
 };
 
-void print_bytes(void *p, size_t len) {
-  for (size_t i = len; i > 0; i--) {
+void print_bytes(void *p, size_t len)
+{
+  for (size_t i = len; i > 0; i--)
+  {
     printf("%02X", ((u8 *)p)[i - 1]);
   }
   printf("\n");
 }
 
-void read_file(const char *path, u8 *dst) {
+void read_file(const char *path, u8 *dst)
+{
   FILE *file = fopen(path, "rb");
 
-  if (file == NULL) {
+  if (file == NULL)
+  {
     printf("Could not open file: %s\n", path);
   }
 
@@ -65,7 +69,8 @@ void read_file(const char *path, u8 *dst) {
   fclose(file);
 }
 
-EmulationState *emu_init() {
+EmulationState *emu_init()
+{
   EmulationState *emu = (EmulationState *)malloc(sizeof(EmulationState));
   emu->running = true;
 
@@ -106,7 +111,8 @@ EmulationState *emu_init() {
   return emu;
 }
 
-void emu_free(EmulationState *emu) {
+void emu_free(EmulationState *emu)
+{
   free(emu->mem);
   free(emu->reg);
   free(emu);
