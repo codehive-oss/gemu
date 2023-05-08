@@ -5,7 +5,6 @@
 
 typedef struct Instruction {
   u8 encoding;
-  u8 length;
   u8 mcycle;
   void (*execute)(EmulationState *);
 } Instruction;

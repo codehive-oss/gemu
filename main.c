@@ -11,6 +11,7 @@ void handle_instruction(EmulationState *emu, u8 instructionEncoding) {
     Instruction instruction = GB_INSTRUCTIONS[i];
     if (instruction.encoding == instructionEncoding) {
       instruction.execute(emu);
+      emu->mcycle += instruction.mcycle;
       break;
     }
   }
@@ -20,7 +21,7 @@ int main(void) {
   EmulationState *emu = emu_init();
 
   read_file("main.gb", emu->rom);
-	
+
   printf("START HEADERS\n");
   printf("Title: %s\n", emu->header->title);
   printf("Rom Type: %s\n", ROM_TYPES[(u8)emu->header->type]);
