@@ -2,19 +2,14 @@
 #include "types.h"
 #include "util.h"
 
-static void nop(EmulationState *emu) {
-  // Step to next instruction
-  *emu->pc += 1;
-}
+static void nop(EmulationState *emu) {}
 
 static void jp(EmulationState *emu) {
-  *emu->pc += 1;
   u16 target = *(u16 *)&emu->rom[*emu->pc];
   *emu->pc = target;
 }
 
 void jp_c_a16(EmulationState *emu) {
-  *emu->pc += 1;
   if (*emu->f & 0b00010000) { // C is set
     u16 target = *(u16 *)&emu->rom[*emu->pc];
     *emu->pc = target;
@@ -23,51 +18,37 @@ void jp_c_a16(EmulationState *emu) {
   }
 }
 
-static void ld_b_b(EmulationState *emu) {
-  *emu->b = *emu->b;
-  *emu->pc += 1;
-}
+static void ld_b_b(EmulationState *emu) { *emu->b = *emu->b; }
 
-static void ld_d_b(EmulationState *emu) {
-  *emu->d = *emu->b;
-  *emu->pc += 1;
-}
+static void ld_d_b(EmulationState *emu) { *emu->d = *emu->b; }
 
-void ld_h_b(EmulationState *emu) {
-  *emu->h = *emu->b;
-  *emu->pc += 1;
-}
+void ld_h_b(EmulationState *emu) { *emu->h = *emu->b; }
 
 void ld_a_d8(EmulationState *emu) {
-  *emu->pc += 1;
   u8 target = emu->rom[*emu->pc];
   *emu->a = target;
   *emu->pc += 1;
 }
 
 void ld_a16_a(EmulationState *emu) {
-  *emu->pc += 1;
   u16 target_addr = *(u16 *)&emu->rom[*emu->pc];
   emu->mem[target_addr] = *emu->a;
   *emu->pc += 2;
 }
 
 void ld_a_a16(EmulationState *emu) {
-  *emu->pc += 1;
   u16 target_addr = *(u16 *)&emu->rom[*emu->pc];
   *emu->a = emu->mem[target_addr];
   *emu->pc += 2;
 }
 
 void ld_de_d16(EmulationState *emu) {
-  *emu->pc += 1;
   u16 target = *(u16 *)&emu->rom[*emu->pc];
   *emu->de = target;
   *emu->pc += 2;
 }
 
 void cp_d8(EmulationState *emu) {
-  *emu->pc += 1;
   u8 value = emu->rom[*emu->pc];
   if (*emu->a == value) {
     *emu->f |= 0b11000000; // Z=1, N=1

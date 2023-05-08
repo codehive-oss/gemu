@@ -10,6 +10,7 @@ void hadle_next_inst(EmulationState *emu) {
   printf("Inst: %02X\tAt: %02X%02X\n", inst, ((u8 *)emu->pc)[1],
          ((u8 *)emu->pc)[0]);
 
+  *emu->pc += 1;
   for (size_t i = 0; i < GB_INSTRUCTIONS_LENGTH; i++) {
     Instruction instruction = GB_INSTRUCTIONS[i];
     if (instruction.encoding == inst) {
