@@ -3,7 +3,6 @@
 #include "types.h"
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 void handle_next_inst(EmulationState *emu) {
   u8 inst = emu->rom[*emu->pc];
@@ -27,6 +26,7 @@ void handle_next_inst(EmulationState *emu) {
 }
 
 int main(void) {
+  bool wait_for_step = false;
   EmulationState *emu = emu_init();
 
   read_file("main.gb", emu->rom);
@@ -48,28 +48,16 @@ int main(void) {
   printf("-------------START PROGRAM--------------\n");
   *emu->pc = 0x0100;
   while (emu->running) {
+    if (wait_for_step) {
+      getch();
+			emu_print(emu);
+    }
     handle_next_inst(emu);
   }
   printf("--------------END PROGRAM---------------\n\n");
 
   printf("-------------EmulationState-------------\n");
-  printf("AF: ");
-  PRINT_BYTES(*emu->af);
-
-  printf("BC: ");
-  PRINT_BYTES(*emu->bc);
-
-  printf("DE: ");
-  PRINT_BYTES(*emu->de);
-
-  printf("HL: ");
-  PRINT_BYTES(*emu->hl);
-
-  printf("SP: ");
-  PRINT_BYTES(*emu->sp);
-
-  printf("PC: ");
-  PRINT_BYTES(*emu->pc);
+  emu_print(emu);
 
   emu_free(emu);
 

@@ -1,8 +1,11 @@
 #include "./types.h"
+#include "./util.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <termios.h>
+#include <unistd.h>
 
 // https://gbdev.io/pandocs/The_Cartridge_Header.html#0147--cartridge-type
 const char *ROM_TYPES[] = {
@@ -65,6 +68,20 @@ void read_file(const char *path, u8 *dst) {
   fclose(file);
 }
 
+int getch(void) {
+  int ch;
+  struct termios oldt, newt;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  ch = getchar();
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+  return ch;
+}
+
 EmulationState *emu_init() {
   EmulationState *emu = (EmulationState *)malloc(sizeof(EmulationState));
   emu->running = true;
@@ -104,6 +121,26 @@ EmulationState *emu_init() {
   emu->pc = (u16 *)emu->reg + 10;
 
   return emu;
+}
+
+void emu_print(EmulationState *emu) {
+  printf("AF: ");
+  PRINT_BYTES(*emu->af);
+
+  printf("BC: ");
+  PRINT_BYTES(*emu->bc);
+
+  printf("DE: ");
+  PRINT_BYTES(*emu->de);
+
+  printf("HL: ");
+  PRINT_BYTES(*emu->hl);
+
+  printf("SP: ");
+  PRINT_BYTES(*emu->sp);
+
+  printf("PC: ");
+  PRINT_BYTES(*emu->pc);
 }
 
 void emu_free(EmulationState *emu) {

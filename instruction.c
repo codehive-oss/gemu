@@ -1,19 +1,25 @@
 #include "./instruction.h"
 #include "types.h"
 #include "util.h"
+#include <stdio.h>
 
 // Loads 8-bit data to any 8-bit register
-void ld_reg8_d8(EmulationState *emu, u8 *reg) {
+void ld_regd8_d8(EmulationState *emu, u8 *reg) {
   u8 target = emu->rom[*emu->pc];
   *reg = target;
   *emu->pc += 1;
 }
 
 // Loads 16-bit data to any 16-bit register
-void ld_reg16_d16(EmulationState *emu, u16 *reg) {
+void ld_regd16_d16(EmulationState *emu, u16 *reg) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
   *reg = target;
   *emu->pc += 2;
+}
+
+// Loads 8-bit data from any the memory address pointed by any 16-bit register
+void ld_regd8_rega16(EmulationState *emu, u8 *target, u16 *from) {
+  *target = emu->mem[*from];
 }
 
 void nop(EmulationState *emu) {}
@@ -48,11 +54,13 @@ void ld_a_a16(EmulationState *emu) {
   *emu->pc += 2;
 }
 
-void ld_a_d8(EmulationState *emu) { ld_reg8_d8(emu, emu->a); }
+void ld_a_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->a); }
 
-void ld_bc_d16(EmulationState *emu) { ld_reg16_d16(emu, emu->bc); }
-void ld_de_d16(EmulationState *emu) { ld_reg16_d16(emu, emu->de); }
-void ld_hl_d16(EmulationState *emu) { ld_reg16_d16(emu, emu->hl); }
+void ld_bc_d16(EmulationState *emu) { ld_regd16_d16(emu, emu->bc); }
+void ld_de_d16(EmulationState *emu) { ld_regd16_d16(emu, emu->de); }
+void ld_hl_d16(EmulationState *emu) { ld_regd16_d16(emu, emu->hl); }
+
+void ld_a_de(EmulationState *emu) { ld_regd8_rega16(emu, emu->a, emu->de); }
 
 void cp_d8(EmulationState *emu) {
   u8 value = emu->rom[*emu->pc];
@@ -74,6 +82,7 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x00, .mcycle = 1, .execute = &nop},
     {.encoding = 0x01, .mcycle = 3, .execute = &ld_bc_d16},
     {.encoding = 0x11, .mcycle = 3, .execute = &ld_de_d16},
+    {.encoding = 0x1A, .mcycle = 1, .execute = &ld_a_de},
     {.encoding = 0x21, .mcycle = 3, .execute = &ld_hl_d16},
     {.encoding = 0xC3, .mcycle = 4, .execute = &jp},
     {.encoding = 0x40, .mcycle = 1, .execute = &ld_b_b},

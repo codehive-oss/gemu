@@ -10,8 +10,10 @@ extern const char *ROM_TYPES[35];
 
 void print_bytes(void *p, size_t len);
 void read_file(const char *path, u8 *dst);
+int getch(void);
 
 EmulationState *emu_init();
+void emu_print(EmulationState *emu);
 void emu_free(EmulationState *emu);
 
 #define PRINT_BYTES(x) print_bytes(&x, sizeof(x))
