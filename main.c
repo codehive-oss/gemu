@@ -4,11 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-void handle_next_inst(EmulationState *emu) {
-  u8 inst = emu->rom[*emu->pc];
-  printf("Inst: %02X\tAt: %02X%02X\n", inst, ((u8 *)emu->pc)[1],
-         ((u8 *)emu->pc)[0]);
-
+void handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
   for (size_t i = 0; i < GB_INSTRUCTIONS_LENGTH; i++) {
     Instruction instruction = GB_INSTRUCTIONS[i];
@@ -48,11 +44,16 @@ int main(void) {
   printf("-------------START PROGRAM--------------\n");
   *emu->pc = 0x0100;
   while (emu->running) {
+    u8 inst = emu->rom[*emu->pc];
+    printf("Inst: %02X\tAt: ", inst);
+    PRINT_BYTES(*emu->pc);
+
     if (wait_for_step) {
       getch();
-			emu_print(emu);
+      emu_print(emu);
     }
-    handle_next_inst(emu);
+
+    handle_instruction(emu, inst);
   }
   printf("--------------END PROGRAM---------------\n\n");
 
