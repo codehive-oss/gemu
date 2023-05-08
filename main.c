@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void hadle_next_inst(EmulationState *emu) {
+void handle_next_inst(EmulationState *emu) {
   u8 inst = emu->rom[*emu->pc];
   printf("Inst: %02X\tAt: %02X%02X\n", inst, ((u8 *)emu->pc)[1],
          ((u8 *)emu->pc)[0]);
@@ -48,7 +48,7 @@ int main(void) {
   printf("-------------START PROGRAM--------------\n");
   *emu->pc = 0x0100;
   while (emu->running) {
-    hadle_next_inst(emu);
+    handle_next_inst(emu);
   }
   printf("--------------END PROGRAM---------------\n\n");
 
