@@ -1,6 +1,7 @@
-#include "./util.h"
+#include "./types.h"
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 // https://gbdev.io/pandocs/The_Cartridge_Header.html#0147--cartridge-type
 const char *ROM_TYPES[] = {
@@ -61,4 +62,41 @@ void read_file(const char *path, u8 *dst) {
 
   fread(dst, 1, length, file);
   fclose(file);
+}
+
+EmulationState *emu_init() {
+  EmulationState *emu = (EmulationState *)malloc(sizeof(EmulationState));
+  emu->mem = (u8 *)malloc(65536);
+  emu->reg = (u8 *)malloc(12);
+  emu->mcycle = 0;
+
+  emu->rom = emu->mem;
+  emu->header = (RomHeader *)(emu->rom + 0x100);
+
+  emu->vram = emu->mem + 0x8000;
+  emu->sram = emu->mem + 0xA000;
+  emu->wram = emu->mem + 0xC000;
+  emu->oam = emu->mem + 0xFE00;
+  emu->io = emu->mem + 0xFF00;
+  emu->hram = emu->mem + 0xFF80;
+  emu->ie = emu->mem + 0xFFFF;
+
+  emu->a = emu->reg;
+  emu->f = emu->reg + 1;
+  emu->b = emu->reg + 2;
+  emu->c = emu->reg + 3;
+  emu->d = emu->reg + 4;
+  emu->e = emu->reg + 5;
+  emu->h = emu->reg + 6;
+  emu->l = emu->reg + 7;
+  emu->sp = (u16 *)emu->reg + 8;
+  emu->pc = (u16 *)emu->reg + 10;
+
+  return emu;
+}
+
+void emu_free(EmulationState *emu) {
+  free(emu->mem);
+  free(emu->reg);
+  free(emu);
 }
