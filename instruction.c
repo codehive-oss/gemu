@@ -2,9 +2,23 @@
 #include "types.h"
 #include "util.h"
 
-static void nop(EmulationState *emu) {}
+// Loads 8-bit data to any 8-bit register
+void ld_reg8_d8(EmulationState *emu, u8 *reg) {
+  u8 target = emu->rom[*emu->pc];
+  *reg = target;
+  *emu->pc += 1;
+}
 
-static void jp(EmulationState *emu) {
+// Loads 16-bit data to any 16-bit register
+void ld_reg16_d16(EmulationState *emu, u16 *reg) {
+  u16 target = *(u16 *)&emu->rom[*emu->pc];
+  *reg = target;
+  *emu->pc += 2;
+}
+
+void nop(EmulationState *emu) {}
+
+void jp(EmulationState *emu) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
   *emu->pc = target;
 }
@@ -18,17 +32,9 @@ void jp_c_a16(EmulationState *emu) {
   }
 }
 
-static void ld_b_b(EmulationState *emu) { *emu->b = *emu->b; }
-
-static void ld_d_b(EmulationState *emu) { *emu->d = *emu->b; }
-
+void ld_b_b(EmulationState *emu) { *emu->b = *emu->b; }
+void ld_d_b(EmulationState *emu) { *emu->d = *emu->b; }
 void ld_h_b(EmulationState *emu) { *emu->h = *emu->b; }
-
-void ld_a_d8(EmulationState *emu) {
-  u8 target = emu->rom[*emu->pc];
-  *emu->a = target;
-  *emu->pc += 1;
-}
 
 void ld_a16_a(EmulationState *emu) {
   u16 target_addr = *(u16 *)&emu->rom[*emu->pc];
@@ -42,11 +48,11 @@ void ld_a_a16(EmulationState *emu) {
   *emu->pc += 2;
 }
 
-void ld_de_d16(EmulationState *emu) {
-  u16 target = *(u16 *)&emu->rom[*emu->pc];
-  *emu->de = target;
-  *emu->pc += 2;
-}
+void ld_a_d8(EmulationState *emu) { ld_reg8_d8(emu, emu->a); }
+
+void ld_bc_d16(EmulationState *emu) { ld_reg16_d16(emu, emu->bc); }
+void ld_de_d16(EmulationState *emu) { ld_reg16_d16(emu, emu->de); }
+void ld_hl_d16(EmulationState *emu) { ld_reg16_d16(emu, emu->hl); }
 
 void cp_d8(EmulationState *emu) {
   u8 value = emu->rom[*emu->pc];
@@ -66,7 +72,9 @@ void cp_d8(EmulationState *emu) {
 // TODO: Put the Instructions in encoding order
 Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x00, .mcycle = 1, .execute = &nop},
+    {.encoding = 0x01, .mcycle = 3, .execute = &ld_bc_d16},
     {.encoding = 0x11, .mcycle = 3, .execute = &ld_de_d16},
+    {.encoding = 0x21, .mcycle = 3, .execute = &ld_hl_d16},
     {.encoding = 0xC3, .mcycle = 4, .execute = &jp},
     {.encoding = 0x40, .mcycle = 1, .execute = &ld_b_b},
     {.encoding = 0x50, .mcycle = 1, .execute = &ld_d_b},
