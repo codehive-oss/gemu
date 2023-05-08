@@ -1,6 +1,7 @@
-
 #ifndef TYPES_H
 #define TYPES_H
+
+#include <stdbool.h>
 
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -24,6 +25,8 @@ typedef struct RomHeader // https://gbdev.io/pandocs/The_Cartridge_Header.html
 } RomHeader;
 
 typedef struct EmulationState {
+	bool running;
+
   // Data
   u8* mem;
   u8* reg;

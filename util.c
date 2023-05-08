@@ -1,4 +1,5 @@
 #include "./types.h"
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,6 +67,8 @@ void read_file(const char *path, u8 *dst) {
 
 EmulationState *emu_init() {
   EmulationState *emu = (EmulationState *)malloc(sizeof(EmulationState));
+  emu->running = true;
+
   emu->mem = (u8 *)malloc(65536);
   emu->reg = (u8 *)malloc(12);
   emu->mcycle = 0;
