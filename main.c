@@ -5,19 +5,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void handle_instruction(EmulationState *emu, u8 instructionEncoding) {
-  printf("Running Instruction: %hhX\n", instructionEncoding);
+void hadle_next_inst(EmulationState *emu) {
+  u8 inst = emu->rom[*emu->pc];
+  printf("Inst: %02X\tAt: %02X%02X\n", inst, ((u8 *)emu->pc)[1],
+         ((u8 *)emu->pc)[0]);
 
   for (size_t i = 0; i < GB_INSTRUCTIONS_LENGTH; i++) {
     Instruction instruction = GB_INSTRUCTIONS[i];
-    if (instruction.encoding == instructionEncoding) {
+    if (instruction.encoding == inst) {
       instruction.execute(emu);
       emu->mcycle += instruction.mcycle;
       return;
     }
   }
 
-  printf("Instruction not found: %hhX\n", instructionEncoding);
+  printf("Instruction not found: %2X\n", inst);
+  printf("Terminating...\n");
   emu->running = false;
 }
 
@@ -42,8 +45,7 @@ int main(void) {
   printf("-------------START PROGRAM--------------\n");
   *emu->pc = 0x0100;
   while (emu->running) {
-    u8 nextInst = emu->mem[*emu->pc];
-    handle_instruction(emu, nextInst);
+    hadle_next_inst(emu);
   }
   printf("--------------END PROGRAM---------------\n\n");
 

@@ -8,8 +8,8 @@ static void nop(EmulationState *emu) {
 }
 
 static void jp(EmulationState *emu) {
-  (*emu->pc)++;
-  u16 target = *(u16 *)&emu->mem[*emu->pc];
+  *emu->pc += 1;
+  u16 target = *(u16 *)&emu->rom[*emu->pc];
   *emu->pc = target;
 }
 
@@ -28,6 +28,20 @@ void ld_h_b(EmulationState *emu) {
   *emu->pc += 1;
 }
 
+void ld_a_d8(EmulationState *emu) {
+  *emu->pc += 1;
+  u8 target = emu->rom[*emu->pc];
+  *emu->a = target;
+  *emu->pc += 1;
+}
+
+void ld_a16_a(EmulationState *emu) {
+  *emu->pc += 1;
+  u16 target_addr = *(u16 *)&emu->rom[*emu->pc];
+  emu->mem[target_addr] = *emu->a;
+  *emu->pc += 2;
+}
+
 Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     // nop
     {
@@ -37,7 +51,7 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     },
     // jp
     {
-        .encoding = 0xc3,
+        .encoding = 0xC3,
         .mcycle = 4,
         .execute = &jp,
     },
@@ -59,4 +73,13 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
         .mcycle = 1,
         .execute = &ld_h_b,
     },
-};
+    {
+        .encoding = 0x3E,
+        .mcycle = 2,
+        .execute = &ld_a_d8,
+    },
+    {
+        .encoding = 0xEA,
+        .mcycle = 4,
+        .execute = &ld_a16_a,
+    }};
