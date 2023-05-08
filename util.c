@@ -1,5 +1,9 @@
+#include "./util.h"
+#include <stddef.h>
+#include <stdio.h>
+
 // https://gbdev.io/pandocs/The_Cartridge_Header.html#0147--cartridge-type
-char *ROM_TYPES[] = {
+const char *ROM_TYPES[] = {
     "ROM ONLY",
     "MBC1",
     "MBC1+RAM",
@@ -36,3 +40,25 @@ char *ROM_TYPES[] = {
     "",
     "MBC7+SENSOR+RUMBLE+RAM+BATTERY",
 };
+
+void print_bytes(void *p, size_t len) {
+  size_t i;
+  for (i = 0; i < len; ++i)
+    printf("%02X ", ((u8 *)p)[i]);
+  printf("\n");
+}
+
+void read_file(const char *path, u8 *dst) {
+  FILE *file = fopen(path, "rb");
+
+  if (file == NULL) {
+    printf("Could not open file: %s\n", path);
+  }
+
+  fseek(file, 0, SEEK_END);
+  unsigned long length = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  fread(dst, 1, length, file);
+  fclose(file);
+}

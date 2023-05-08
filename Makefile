@@ -1,4 +1,4 @@
 CFLAGS=-Wall -Werror
 
 main:
-	$(CC) $(CFLAGS) main.c
+	$(CC) $(CFLAGS) main.c util.c
