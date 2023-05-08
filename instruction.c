@@ -59,6 +59,13 @@ void ld_a_a16(EmulationState *emu) {
   *emu->pc += 2;
 }
 
+void ld_de_d16(EmulationState *emu) {
+  *emu->pc += 1;
+  u16 target = *(u16 *)&emu->rom[*emu->pc];
+  *emu->de = target;
+  *emu->pc += 2;
+}
+
 void cp_d8(EmulationState *emu) {
   *emu->pc += 1;
   u8 value = emu->rom[*emu->pc];
@@ -75,52 +82,17 @@ void cp_d8(EmulationState *emu) {
   *emu->pc += 1;
 }
 
+// TODO: Put the Instructions in encoding order
 Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
-    // nop
-    {
-        .encoding = 0x00,
-        .mcycle = 1,
-        .execute = &nop,
-    },
-    // jp
-    {
-        .encoding = 0xC3,
-        .mcycle = 4,
-        .execute = &jp,
-    },
-    // ld b, b
-    {
-        .encoding = 0x40,
-        .mcycle = 1,
-        .execute = &ld_b_b,
-    },
-    // ld d, b
-    {
-        .encoding = 0x50,
-        .mcycle = 1,
-        .execute = &ld_d_b,
-    },
-    // ld h, b
-    {
-        .encoding = 0x60,
-        .mcycle = 1,
-        .execute = &ld_h_b,
-    },
-    {
-        .encoding = 0x3E,
-        .mcycle = 2,
-        .execute = &ld_a_d8,
-    },
-    {
-        .encoding = 0xEA,
-        .mcycle = 4,
-        .execute = &ld_a16_a,
-    },
-    {
-        .encoding = 0xFA,
-        .mcycle = 4,
-        .execute = &ld_a_a16,
-    },
-    // cp d
-    {.encoding = 0xFE, .mcycle = 8, .execute = &cp_d8},
-    {.encoding = 0xDA, .mcycle = 16, .execute = &jp_c_a16}};
+    {.encoding = 0x00, .mcycle = 1, .execute = &nop},
+    {.encoding = 0x11, .mcycle = 3, .execute = &ld_de_d16},
+    {.encoding = 0xC3, .mcycle = 4, .execute = &jp},
+    {.encoding = 0x40, .mcycle = 1, .execute = &ld_b_b},
+    {.encoding = 0x50, .mcycle = 1, .execute = &ld_d_b},
+    {.encoding = 0x60, .mcycle = 1, .execute = &ld_h_b},
+    {.encoding = 0x3E, .mcycle = 2, .execute = &ld_a_d8},
+    {.encoding = 0xEA, .mcycle = 4, .execute = &ld_a16_a},
+    {.encoding = 0xFA, .mcycle = 4, .execute = &ld_a_a16},
+    {.encoding = 0xFE, .mcycle = 2, .execute = &cp_d8},
+    {.encoding = 0xDA, .mcycle = 4, .execute = &jp_c_a16},
+};
