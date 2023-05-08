@@ -5,17 +5,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void hadle_next_inst(EmulationState *emu)
-{
+void hadle_next_inst(EmulationState *emu) {
   u8 inst = emu->rom[*emu->pc];
   printf("Inst: %02X\tAt: %02X%02X\n", inst, ((u8 *)emu->pc)[1],
          ((u8 *)emu->pc)[0]);
 
-  for (size_t i = 0; i < GB_INSTRUCTIONS_LENGTH; i++)
-  {
+  for (size_t i = 0; i < GB_INSTRUCTIONS_LENGTH; i++) {
     Instruction instruction = GB_INSTRUCTIONS[i];
-    if (instruction.encoding == inst)
-    {
+    if (instruction.encoding == inst) {
       instruction.execute(emu);
       emu->mcycle += instruction.mcycle;
       emu->mem[rLY] = emu->mcycle % 154;
@@ -28,8 +25,7 @@ void hadle_next_inst(EmulationState *emu)
   emu->running = false;
 }
 
-int main(void)
-{
+int main(void) {
   EmulationState *emu = emu_init();
 
   read_file("main.gb", emu->rom);
@@ -38,6 +34,7 @@ int main(void)
   printf("Title: %s\n", emu->header->title);
   printf("Rom Type: %s\n", ROM_TYPES[(u8)emu->header->type]);
   printf("Rom Size: %dKB\n", 32 * (1 << emu->header->rom_size));
+
   // https://gbdev.io/pandocs/The_Cartridge_Header.html#014d--header-checksum
   u8 checksum = 0;
   for (u16 address = 0x0134; address <= 0x014C; address++)
@@ -49,8 +46,7 @@ int main(void)
 
   printf("-------------START PROGRAM--------------\n");
   *emu->pc = 0x0100;
-  while (emu->running)
-  {
+  while (emu->running) {
     hadle_next_inst(emu);
   }
   printf("--------------END PROGRAM---------------\n\n");

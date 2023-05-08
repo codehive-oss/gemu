@@ -6,8 +6,8 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 
-typedef struct RomHeader // https://gbdev.io/pandocs/The_Cartridge_Header.html
-{
+// https://gbdev.io/pandocs/The_Cartridge_Header.html
+typedef struct RomHeader {
   u8 entrypoint[4];
   u8 logo[0x30];
   u8 title[16];
@@ -24,8 +24,7 @@ typedef struct RomHeader // https://gbdev.io/pandocs/The_Cartridge_Header.html
 
 } RomHeader;
 
-typedef struct EmulationState
-{
+typedef struct EmulationState {
   bool running;
 
   // Data

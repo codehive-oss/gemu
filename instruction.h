@@ -3,8 +3,7 @@
 
 #include "./types.h"
 
-typedef struct Instruction
-{
+typedef struct Instruction {
   u8 encoding;
   u8 mcycle;
   void (*execute)(EmulationState *);
