@@ -44,9 +44,9 @@ const char *ROM_TYPES[] = {
 };
 
 void print_bytes(void *p, size_t len) {
-  size_t i;
-  for (i = 0; i < len; ++i)
-    printf("%02X ", ((u8 *)p)[i]);
+  for (size_t i = len; i > 0; i--) {
+    printf("%02X", ((u8 *)p)[i - 1]);
+  }
   printf("\n");
 }
 
@@ -86,12 +86,20 @@ EmulationState *emu_init() {
 
   emu->a = emu->reg;
   emu->f = emu->reg + 1;
+  emu->af = (u16 *)emu->a;
+
   emu->b = emu->reg + 2;
   emu->c = emu->reg + 3;
+  emu->bc = (u16 *)emu->b;
+
   emu->d = emu->reg + 4;
   emu->e = emu->reg + 5;
+  emu->de = (u16 *)emu->d;
+
   emu->h = emu->reg + 6;
   emu->l = emu->reg + 7;
+  emu->hl = (u16 *)emu->h;
+
   emu->sp = (u16 *)emu->reg + 8;
   emu->pc = (u16 *)emu->reg + 10;
 

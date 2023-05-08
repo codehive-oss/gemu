@@ -49,7 +49,24 @@ int main(void) {
   }
   printf("--------------END PROGRAM---------------\n\n");
 
-  printf("Instruction pointer\n");
+
+	printf("-------------EmulationState-------------\n");
+  printf("AF: ");
+  PRINT_BYTES(*emu->af);
+
+  printf("BC: ");
+  PRINT_BYTES(*emu->bc);
+
+  printf("DE: ");
+  PRINT_BYTES(*emu->de);
+
+  printf("HL: ");
+  PRINT_BYTES(*emu->hl);
+
+  printf("SP: ");
+  PRINT_BYTES(*emu->sp);
+
+  printf("PC: ");
   PRINT_BYTES(*emu->pc);
 
   emu_free(emu);

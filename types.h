@@ -25,16 +25,16 @@ typedef struct RomHeader // https://gbdev.io/pandocs/The_Cartridge_Header.html
 } RomHeader;
 
 typedef struct EmulationState {
-	bool running;
+  bool running;
 
   // Data
-  u8* mem;
-  u8* reg;
+  u8 *mem;
+  u8 *reg;
   u16 mcycle;
 
   // Pointer
   u8 *rom;
-	RomHeader *header;
+  RomHeader *header;
 
   u8 *vram;
   u8 *sram;
@@ -46,12 +46,20 @@ typedef struct EmulationState {
 
   u8 *a;
   u8 *f;
+  u16 *af;
+
   u8 *b;
   u8 *c;
+  u16 *bc;
+
   u8 *d;
   u8 *e;
+  u16 *de;
+
   u8 *h;
   u8 *l;
+  u16 *hl;
+
   u16 *sp;
   u16 *pc;
 } EmulationState;

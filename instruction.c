@@ -42,6 +42,13 @@ void ld_a16_a(EmulationState *emu) {
   *emu->pc += 2;
 }
 
+void ld_a_a16(EmulationState *emu) {
+  *emu->pc += 1;
+  u16 target_addr = *(u16 *)&emu->rom[*emu->pc];
+  *emu->a = emu->mem[target_addr];
+  *emu->pc += 2;
+}
+
 Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     // nop
     {
@@ -82,4 +89,9 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
         .encoding = 0xEA,
         .mcycle = 4,
         .execute = &ld_a16_a,
+    },
+    {
+        .encoding = 0xFA,
+        .mcycle = 4,
+        .execute = &ld_a_a16,
     }};
