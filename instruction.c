@@ -151,14 +151,11 @@ void dec_sp(EmulationState *emu) { *emu->sp -= 1; }
 void cp_d8(EmulationState *emu) {
   u8 value = emu->rom[*emu->pc];
   if (*emu->a == value) {
-    *emu->f |= 0b11000000; // Z=1, N=1
-    *emu->f &= 0b11001111; // H=0, C=0
+    set_flags(emu, 1, 1, 0, 0);
   } else if (*emu->a > value) {
-    *emu->f |= 0b01000000; // N=1
-    *emu->f &= 0b01001111; // Z=0, H=0, C=0
+    set_flags(emu, 0, 1, 0, 0);
   } else {
-    *emu->f &= 0b01111111; // Z=0
-    *emu->f |= 0b01110000; // N=1, H=1, C=1
+    set_flags(emu, 0, 1, 1, 1);
   }
   *emu->pc += 1;
 }

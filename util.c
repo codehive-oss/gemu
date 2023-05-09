@@ -1,5 +1,5 @@
-#include "./types.h"
 #include "./util.h"
+#include "./types.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -147,4 +147,19 @@ void emu_free(EmulationState *emu) {
   free(emu->mem);
   free(emu->reg);
   free(emu);
+}
+
+void set_flags(EmulationState *emu, char z, char n, char h, char c) {
+  if (z != -1) {
+    BIT_SET(*emu->f, 7, z);
+  }
+  if (n != -1) {
+    BIT_SET(*emu->f, 6, n);
+  }
+  if (h != -1) {
+    BIT_SET(*emu->f, 5, h);
+  }
+  if (c != -1) {
+    BIT_SET(*emu->f, 4, c);
+  }
 }
