@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#define WAIT_FOR_STEP true
+
 void handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
   for (size_t i = 0; i < GB_INSTRUCTIONS_LENGTH; i++) {
@@ -22,7 +24,6 @@ void handle_instruction(EmulationState *emu, u8 inst) {
 }
 
 int main(void) {
-  bool wait_for_step = false;
   EmulationState *emu = emu_init();
 
   read_file("main.gb", emu->rom);
@@ -48,9 +49,9 @@ int main(void) {
     printf("Inst: %02X\tAt: ", inst);
     PRINT_BYTES(*emu->pc);
 
-    if (wait_for_step) {
-      getch();
+    if (WAIT_FOR_STEP) {
       emu_print(emu);
+      getch();
     }
 
     handle_instruction(emu, inst);
