@@ -43,6 +43,15 @@ void jp_c_a16(EmulationState *emu) {
   }
 }
 
+void jp_nz_a16(EmulationState *emu) {
+  if (!(*emu->f & 0b10000000)) { // Z is not set
+    u16 target = *(u16 *)&emu->rom[*emu->pc];
+    *emu->pc = target;
+  } else {
+    *emu->pc += 2;
+  }
+}
+
 void ld_b_b(EmulationState *emu) { *emu->b = *emu->b; }
 void ld_d_b(EmulationState *emu) { *emu->d = *emu->b; }
 void ld_h_b(EmulationState *emu) { *emu->h = *emu->b; }
@@ -160,6 +169,11 @@ void cp_d8(EmulationState *emu) {
   *emu->pc += 1;
 }
 
+void or_c(EmulationState *emu) {
+  *emu->a |= *emu->c;
+  set_flags(emu, *emu->a == 0, 0, 0, 0);
+}
+
 // TODO: Put the Instructions in encoding order
 Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x00, .mcycle = 1, .execute = &nop},
@@ -260,4 +274,6 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0xFA, .mcycle = 4, .execute = &ld_a_a16},
 
     {.encoding = 0xDA, .mcycle = 4, .execute = &jp_c_a16},
-};
+    {.encoding = 0xC2, .mcycle = 4, .execute = &jp_nz_a16},
+
+    {.encoding = 0xB1, .mcycle = 4, .execute = &or_c}};
