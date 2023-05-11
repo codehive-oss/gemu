@@ -32,7 +32,7 @@ bool win_update(Window *win) {
   return true;
 }
 
-void win_render_tile(Window *win, Tile tile, u8 x, u8 y) {
+void win_render_tile(Window *win, u8 *tile, u8 x, u8 y) {
   for (u8 i = 0; i < 64; i++) {
     u8 idx = get_palette_idx(tile, i);
 
@@ -49,14 +49,14 @@ void win_render_tile(Window *win, Tile tile, u8 x, u8 y) {
   }
 }
 
-void win_render_bg(Window *win, Tile *tiles, u8 *tileMap) {
+void win_render_bg(Window *win, u8 *tiles, u8 *tileMap) {
   for (u8 x = 0; x < 32; x++) {
     for (u8 y = 0; y < 32; y++) {
     }
   }
 }
 
-void win_render_tiles(Window *win, Tile *data) {
+void win_render_tiles(Window *win, u8 *data) {
   SDL_SetRenderDrawColor(win->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
   SDL_RenderClear(win->renderer);
 
@@ -67,7 +67,7 @@ void win_render_tiles(Window *win, Tile *data) {
 
       int dataOffset = (x + (y * 16)) * 16;
 
-      win_render_tile(win, data[dataOffset], xOffset, yOffset);
+      win_render_tile(win, data + dataOffset, xOffset, yOffset);
     }
   }
 

@@ -20,7 +20,7 @@ typedef struct Window {
 
 Window *win_init();
 bool win_update(Window *win);
-void win_render_tiles(Window *win, Tile *data);
+void win_render_tiles(Window *win, u8 *data);
 void win_destroy(Window *win);
 
 #endif // UI_H

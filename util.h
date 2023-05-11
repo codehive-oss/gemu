@@ -13,7 +13,7 @@ void read_file(const char *path, u8 *dst);
 void dump_file(const char *path, u8 *data, size_t length);
 int getch(void);
 
-u8 get_palette_idx(Tile tile_data, u8 i);
+u8 get_palette_idx(u8 *tile_data, u8 i);
 
 EmulationState *emu_init();
 void emu_print(EmulationState *emu);
