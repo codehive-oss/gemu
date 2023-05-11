@@ -1,10 +1,11 @@
 #include "./instruction.h"
 #include "./util.h"
 #include "types.h"
+#include "ui.h"
 #include <stdbool.h>
 #include <stdio.h>
 
-#define WAIT_FOR_STEP true
+#define WAIT_FOR_STEP false
 
 void handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
@@ -43,6 +44,8 @@ int main(void) {
   printf("--------------END HEADERS---------------\n\n");
 
   printf("-------------START PROGRAM--------------\n");
+  Window *win = win_init();
+
   *emu->pc = 0x0100;
   while (emu->running) {
     u8 inst = emu->rom[*emu->pc];
@@ -54,8 +57,18 @@ int main(void) {
       getch();
     }
 
+    win_update(win);
     handle_instruction(emu, inst);
+
+    if (*emu->pc == 0x0190) {
+      break;
+    }
   }
+  win_render_tiles(win, emu->vram);
+
+  getch();
+  win_destroy(win);
+
   printf("--------------END PROGRAM---------------\n\n");
 
   printf("-------------EmulationState-------------\n");

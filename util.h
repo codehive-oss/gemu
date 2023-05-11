@@ -12,6 +12,8 @@ void print_bytes(void *p, size_t len);
 void read_file(const char *path, u8 *dst);
 int getch(void);
 
+u8 get_palette_idx(u8 *tile_data, u8 i);
+
 EmulationState *emu_init();
 void emu_print(EmulationState *emu);
 void emu_free(EmulationState *emu);

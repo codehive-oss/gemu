@@ -12,5 +12,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Test with Make
+        run: make test && ./a.out
       - name: Build with Make
         run: make

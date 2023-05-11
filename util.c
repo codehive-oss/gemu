@@ -1,5 +1,6 @@
 #include "./util.h"
 #include "./types.h"
+#include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -82,6 +83,17 @@ int getch(void) {
   return ch;
 }
 
+u8 get_palette_idx(u8 *tile_data, u8 i) {
+  assert(i < 64);
+
+  u8 memIdx = i / 4;
+  u8 memOffset = i % 4;
+
+  u8 pixel = (tile_data[memIdx] >> (3 - memOffset) * 2) & 0b00000011;
+
+  return pixel;
+}
+
 EmulationState *emu_init() {
   EmulationState *emu = (EmulationState *)malloc(sizeof(EmulationState));
   emu->running = true;
@@ -92,6 +104,7 @@ EmulationState *emu_init() {
 
   emu->rom = emu->mem;
   emu->header = (RomHeader *)(emu->rom + 0x100);
+  emu->tiles = (Tile *)emu->mem + 0x8000;
 
   emu->vram = emu->mem + 0x8000;
   emu->sram = emu->mem + 0xA000;

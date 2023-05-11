@@ -6,6 +6,8 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 
+typedef char *Tile;
+
 // https://gbdev.io/pandocs/The_Cartridge_Header.html
 typedef struct RomHeader {
   u8 entrypoint[4];
@@ -35,6 +37,7 @@ typedef struct EmulationState {
   // Pointer
   u8 *rom;
   RomHeader *header;
+	Tile *tiles;
 
   u8 *vram;
   u8 *sram;
