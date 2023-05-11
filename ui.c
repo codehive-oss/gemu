@@ -54,7 +54,7 @@ void win_render_bg(Window *win, u8 *tiles, u8 *tileMap) {
   SDL_RenderClear(win->renderer);
   for (u8 y = 0; y < 32; y++) {
     for (u8 x = 0; x < 32; x++) {
-      u8 offset = (y * 32) + x;
+      int offset = (y * 32) + x;
       u8 tileIndex = tileMap[offset];
       win_render_tile(win, tiles + 0x1000 + (tileIndex * 16), x * 8, y * 8);
     }
