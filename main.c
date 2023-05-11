@@ -64,7 +64,7 @@ int main(void) {
       break;
     }
   }
-  win_render_tiles(win, emu->vram);
+  win_render_tiles(win, emu->tiles);
 
   getch();
   win_destroy(win);

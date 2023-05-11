@@ -32,7 +32,31 @@ bool win_update(Window *win) {
   return true;
 }
 
-void win_render_tiles(Window *win, u8 *data) {
+void win_render_tile(Window *win, Tile tile, u8 x, u8 y) {
+  for (u8 i = 0; i < 64; i++) {
+    u8 idx = get_palette_idx(tile, i);
+
+    SDL_SetRenderDrawColor(win->renderer, 0xFF - idx * 85, 0xFF - idx * 85,
+                           0xFF - idx * 85, 0xFF);
+
+    SDL_Rect rect;
+    rect.x = (x + i % 8) * SCALE_FACTOR;
+    rect.y = (y + i / 8) * SCALE_FACTOR;
+    rect.w = SCALE_FACTOR;
+    rect.h = SCALE_FACTOR;
+
+    SDL_RenderFillRect(win->renderer, &rect);
+  }
+}
+
+void win_render_bg(Window *win, Tile *tiles, u8 *tileMap) {
+  for (u8 x = 0; x < 32; x++) {
+    for (u8 y = 0; y < 32; y++) {
+    }
+  }
+}
+
+void win_render_tiles(Window *win, Tile *data) {
   SDL_SetRenderDrawColor(win->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
   SDL_RenderClear(win->renderer);
 
@@ -43,20 +67,7 @@ void win_render_tiles(Window *win, u8 *data) {
 
       int dataOffset = (x + (y * 16)) * 16;
 
-      for (u8 i = 0; i < 64; i++) {
-        u8 idx = get_palette_idx(data + dataOffset, i);
-
-        SDL_SetRenderDrawColor(win->renderer, 0xFF - idx * 85, 0xFF - idx * 85,
-                               0xFF - idx * 85, 0xFF);
-
-        SDL_Rect rect;
-        rect.x = (xOffset + i % 8) * SCALE_FACTOR;
-        rect.y = (yOffset + i / 8) * SCALE_FACTOR;
-        rect.w = SCALE_FACTOR;
-        rect.h = SCALE_FACTOR;
-
-        SDL_RenderFillRect(win->renderer, &rect);
-      }
+      win_render_tile(win, data[dataOffset], xOffset, yOffset);
     }
   }
 

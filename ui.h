@@ -10,6 +10,9 @@
 #define WIDTH 16 * 8 * SCALE_FACTOR
 #define HEIGHT 8 * 8 * 3 * SCALE_FACTOR
 
+// #define WIDTH 32 * 8
+// #define HEIGHT 32 * 8
+
 typedef struct Window {
   SDL_Window *window;
   SDL_Renderer *renderer;
@@ -17,7 +20,7 @@ typedef struct Window {
 
 Window *win_init();
 bool win_update(Window *win);
-void win_render_tiles(Window *win, u8 *data);
+void win_render_tiles(Window *win, Tile *data);
 void win_destroy(Window *win);
 
 #endif // UI_H

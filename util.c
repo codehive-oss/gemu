@@ -95,7 +95,7 @@ int getch(void) {
   return ch;
 }
 
-u8 get_palette_idx(u8 *tile_data, u8 i) {
+u8 get_palette_idx(Tile tile_data, u8 i) {
   assert(i < 64);
 
   u8 memIdx = 2 * (i / 8);
