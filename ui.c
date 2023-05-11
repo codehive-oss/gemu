@@ -3,6 +3,7 @@
 #include "util.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_video.h>
 #include <stdbool.h>
 
@@ -48,7 +49,13 @@ void win_render_tiles(Window *win, u8 *data) {
         SDL_SetRenderDrawColor(win->renderer, 0xFF - idx * 85, 0xFF - idx * 85,
                                0xFF - idx * 85, 0xFF);
 
-        SDL_RenderDrawPoint(win->renderer, xOffset + i % 8, yOffset + i / 8);
+        SDL_Rect rect;
+        rect.x = (xOffset + i % 8) * SCALE_FACTOR;
+        rect.y = (yOffset + i / 8) * SCALE_FACTOR;
+        rect.w = SCALE_FACTOR;
+        rect.h = SCALE_FACTOR;
+
+        SDL_RenderFillRect(win->renderer, &rect);
       }
     }
   }

@@ -5,13 +5,15 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 
+#define SCALE_FACTOR 4
+
+#define WIDTH 16 * 8 * SCALE_FACTOR
+#define HEIGHT 8 * 8 * 3 * SCALE_FACTOR
+
 typedef struct Window {
   SDL_Window *window;
   SDL_Renderer *renderer;
 } Window;
-
-#define WIDTH 16 * 8
-#define HEIGHT 8 * 8 * 3
 
 Window *win_init();
 bool win_update(Window *win);
