@@ -98,12 +98,17 @@ int getch(void) {
 u8 get_palette_idx(u8 *tile_data, u8 i) {
   assert(i < 64);
 
-  u8 memIdx = i / 4;
-  u8 memOffset = i % 4;
+  u8 memIdx = 2 * (i / 8);
+  u8 memOffset = 7 - i % 8;
 
-  u8 pixel = (tile_data[memIdx] >> (3 - memOffset) * 2) & 0b00000011;
+  // 01010101
+  // 01010101
+  u8 p1 = (tile_data[memIdx] & (1 << memOffset)) >> memOffset;
+  u8 p2 = (tile_data[memIdx + 1] & (1 << memOffset)) >> memOffset << 1;
 
-  return pixel;
+  u8 idx = p1 | p2;
+
+  return idx;
 }
 
 EmulationState *emu_init() {
