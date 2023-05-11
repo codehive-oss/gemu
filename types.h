@@ -39,6 +39,7 @@ typedef struct EmulationState {
   // Pointer
   u8 *rom;
   RomHeader *header;
+  u8 *tilemaps;
 
   u8 *vram;
   u8 *sram;

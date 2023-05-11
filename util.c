@@ -121,6 +121,7 @@ EmulationState *emu_init() {
 
   emu->rom = emu->mem;
   emu->header = (RomHeader *)(emu->rom + 0x100);
+  emu->tilemaps = emu->mem + 0x9800;
 
   emu->vram = emu->mem + 0x8000;
   emu->sram = emu->mem + 0xA000;
