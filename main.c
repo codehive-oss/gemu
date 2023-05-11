@@ -24,10 +24,15 @@ void handle_instruction(EmulationState *emu, u8 inst) {
   emu->running = false;
 }
 
-int main(void) {
+int main(int argc, char **argv) {
+  const char *path = "main.gb";
+  if (argc > 1) {
+    path = argv[1];
+  }
+
   EmulationState *emu = emu_init();
 
-  read_file("main.gb", emu->rom);
+  read_file(path, emu->rom);
 
   printf("-------------START HEADERS--------------\n");
   printf("Title: %s\n", emu->header->title);
