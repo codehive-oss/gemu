@@ -69,6 +69,18 @@ void read_file(const char *path, u8 *dst) {
   fclose(file);
 }
 
+void dump_file(const char *path, u8 *data, size_t length) {
+  FILE *f = fopen(path, "wb");
+  if (!f) {
+    printf("Failed to open file.\n");
+  }
+
+  printf("Dumping %zu bytes\n", sizeof(u8) * length);
+  fwrite(data, sizeof(u8), length, f);
+
+  fclose(f);
+}
+
 int getch(void) {
   int ch;
   struct termios oldt, newt;
