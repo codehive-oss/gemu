@@ -12,7 +12,19 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: sudo apt install libsdl2-dev -y
+
       - name: Test with Make
         run: make test && ./a.out
+
       - name: Build with Make
-        run: sudo apt install libsdl2-dev -y && make
+        run: make release
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: gemu
+          path: ./gemu
+          retention-days: 5
