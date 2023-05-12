@@ -15,4 +15,4 @@ jobs:
       - name: Test with Make
         run: make test && ./a.out
       - name: Build with Make
-        run: make
+        run: apt install libsdl2-dev -y && make
