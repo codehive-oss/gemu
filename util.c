@@ -65,7 +65,10 @@ void read_file(const char *path, u8 *dst) {
   unsigned long length = ftell(file);
   fseek(file, 0, SEEK_SET);
 
-  (void)fread(dst, 1, length, file);
+  if (fread(dst, 1, length, file) > 0) {
+		printf("Failed to read file: %s\n", path);
+	}
+
   fclose(file);
 }
 
