@@ -62,16 +62,11 @@ int main(int argc, char **argv) {
       getch();
     }
 
-    win_update(win);
+    emu->running = win_update(win);
+    win_render_bg(win, emu->vram, emu->tilemaps);
     handle_instruction(emu, inst);
-
-    if (*emu->pc == 0x0190) {
-      break;
-    }
   }
-  win_render_bg(win, emu->vram, emu->tilemaps);
 
-  getch();
   win_destroy(win);
 
   printf("--------------END PROGRAM---------------\n\n");
