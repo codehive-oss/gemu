@@ -65,7 +65,7 @@ void read_file(const char *path, u8 *dst) {
   unsigned long length = ftell(file);
   fseek(file, 0, SEEK_SET);
 
-  fread(dst, 1, length, file);
+  (void)fread(dst, 1, length, file);
   fclose(file);
 }
 
