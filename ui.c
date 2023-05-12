@@ -20,8 +20,11 @@ Window *win_init() {
   Window *win = (Window *)malloc(sizeof(Window));
 
   SDL_Init(SDL_INIT_VIDEO);
-  SDL_CreateWindowAndRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, 0, &win->window,
-                              &win->renderer);
+  win->window =
+      SDL_CreateWindow("GEMU", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                       WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+  win->renderer = SDL_CreateRenderer(win->window, -1, SDL_RENDERER_ACCELERATED);
+
   SDL_SetRenderDrawColor(win->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
   win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_RGBA8888,
