@@ -5,9 +5,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define WAIT_FOR_STEP false
+#define START_WITH_STEP false
 
-void handle_instruction(EmulationState *emu, u8 inst) {
+bool handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
   for (size_t i = 0; i < GB_INSTRUCTIONS_LENGTH; i++) {
     Instruction instruction = GB_INSTRUCTIONS[i];
@@ -15,13 +15,14 @@ void handle_instruction(EmulationState *emu, u8 inst) {
       instruction.execute(emu);
       emu->mcycle += instruction.mcycle;
       emu->mem[rLY] = emu->mcycle % 154;
-      return;
+      return true;
     }
   }
 
   printf("Instruction not found: %02X\n", inst);
   printf("Terminating...\n");
-  emu->running = false;
+
+  return false;
 }
 
 int main(int argc, char **argv) {
@@ -48,31 +49,44 @@ int main(int argc, char **argv) {
   printf("Computed Value:  %d\n", checksum);
   printf("--------------END HEADERS---------------\n\n");
 
+  bool running = true;
+  bool step = START_WITH_STEP;
   printf("-------------START PROGRAM--------------\n");
   Window *win = win_init();
 
   *emu->pc = 0x0100;
-  for (int frame = 0; emu->running; frame++) {
-    u8 inst = emu->rom[*emu->pc];
-    printf("Inst: %02X\tAt: ", inst);
-    PRINT_BYTES(*emu->pc);
-
-    if (WAIT_FOR_STEP) {
-      emu_print(emu);
-      getch();
+  for (int frame = 0; running; frame++) {
+    if (!step) {
+      u8 inst = emu->rom[*emu->pc];
+      printf("Inst: %02X\tAt: ", inst);
+      PRINT_BYTES(*emu->pc);
+      running = handle_instruction(emu, inst);
     }
 
-    emu->running = win_update(win);
+    // TODO: Use a custom input struct to set values
+    bool spacedown = false;
+    bool enterdown = false;
+    win_update_input(win, &running, &spacedown, &enterdown);
 
-		// Render every 128th frame
+    if (enterdown) {
+      step = !step;
+    }
+
+    if (step && spacedown) {
+      u8 inst = emu->rom[*emu->pc];
+      printf("Inst: %02X\tAt: ", inst);
+      PRINT_BYTES(*emu->pc);
+      running = handle_instruction(emu, inst);
+      emu_print(emu);
+    }
+
+    // Render every 128th frame
     if (frame % 128 == 0) {
       win_clear(win);
       win_draw_bg(win, emu->vram, emu->tilemaps);
       win_draw_tiles(win, emu->vram);
       win_render(win);
     }
-
-    handle_instruction(emu, inst);
   }
 
   win_destroy(win);

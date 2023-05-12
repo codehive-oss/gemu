@@ -27,7 +27,7 @@ typedef struct Window {
 } Window;
 
 Window *win_init();
-bool win_update(Window *win);
+void win_update_input(Window *win, bool *running, bool *spacedown, bool *enterdown);
 
 void win_clear(Window *win);
 void win_render(Window *win);

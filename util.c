@@ -113,7 +113,6 @@ u8 get_palette_idx(u8 *tile_data, u8 i) {
 
 EmulationState *emu_init() {
   EmulationState *emu = (EmulationState *)malloc(sizeof(EmulationState));
-  emu->running = true;
 
   emu->mem = (u8 *)malloc(65536);
   emu->reg = (u8 *)malloc(12);

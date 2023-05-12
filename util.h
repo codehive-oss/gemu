@@ -27,8 +27,6 @@ typedef struct RomHeader {
 } RomHeader;
 
 typedef struct EmulationState {
-  bool running;
-
   // Data
   u8 *mem;
   u8 *reg;

@@ -36,12 +36,30 @@ Window *win_init() {
   return win;
 }
 
-bool win_update(Window *win) {
-  SDL_Event event;
-  if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
-    return false;
-
-  return true;
+void win_update_input(Window *win, bool *running, bool *spacedown,
+                      bool *enterdown) {
+  SDL_Event e;
+  while (SDL_PollEvent(&e)) {
+    switch (e.type) {
+    case SDL_QUIT:
+      *running = false;
+      break;
+    case SDL_KEYDOWN:
+      switch (e.key.keysym.sym) {
+      case SDLK_SPACE:
+        *spacedown = true;
+        break;
+      case SDLK_RETURN:
+        *enterdown = true;
+        break;
+			case SDLK_q:
+			case SDLK_ESCAPE:
+        *running = false;
+        break;
+      }
+      break;
+    }
+  }
 }
 
 void win_clear(Window *win) { SDL_RenderClear(win->renderer); }
@@ -72,8 +90,8 @@ void win_draw_bg(Window *win, u8 *tiles, u8 *tileMap) {
     for (u8 x = 0; x < 32; x++) {
       int offset = (y * 32) + x;
       u8 tileIndex = tileMap[offset];
-      win_draw_tile(winpixel, tiles + 0x1000 + (tileIndex * 16), pitch / 4, x * 8,
-                      y * 8);
+      win_draw_tile(winpixel, tiles + 0x1000 + (tileIndex * 16), pitch / 4,
+                    x * 8, y * 8);
     }
   }
   SDL_UnlockTexture(win->screen);
