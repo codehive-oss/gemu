@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
   Window *win = win_init();
 
   *emu->pc = 0x0100;
-  while (emu->running) {
+  for (int frame = 0; emu->running; frame++) {
     u8 inst = emu->rom[*emu->pc];
     printf("Inst: %02X\tAt: ", inst);
     PRINT_BYTES(*emu->pc);
@@ -62,9 +62,12 @@ int main(int argc, char **argv) {
       getch();
     }
 
-    emu->running = win_update(win);
-    win_render_bg(win, emu->vram, emu->tilemaps);
-    // win_render_tiles(win, emu->vram);
+    if (frame % 128 == 0) {
+      emu->running = win_update(win);
+      win_render_bg(win, emu->vram, emu->tilemaps);
+      // win_render_tiles(win, emu->vram);
+    }
+
     handle_instruction(emu, inst);
   }
 
