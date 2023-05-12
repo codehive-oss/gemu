@@ -27,6 +27,18 @@ void ld_rega16_regd8(EmulationState *emu, u16 *target, u8 *from) {
   emu->mem[*target] = *from;
 }
 
+// OR with 8-bit register
+void or_regd8(EmulationState *emu, u8 *reg) {
+  *emu->a |= *reg;
+  set_flags(emu, *emu->a == 0, 0, 0, 0);
+}
+
+// XOR with 8-bit register
+void xor_regd8(EmulationState *emu, u8 *reg) {
+  *emu->a ^= *reg;
+  set_flags(emu, *emu->a == 0, 0, 0, 0);
+}
+
 void nop(EmulationState *emu) {}
 
 void jp(EmulationState *emu) {
@@ -127,6 +139,13 @@ void ld_a_a16(EmulationState *emu) {
   *emu->pc += 2;
 }
 
+void ld_b_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->b); }
+void ld_d_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->d); }
+void ld_h_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->h); }
+
+void ld_c_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->c); }
+void ld_e_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->e); }
+void ld_l_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->l); }
 void ld_a_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->a); }
 
 void ld_bc_d16(EmulationState *emu) { ld_regd16_d16(emu, emu->bc); }
@@ -169,10 +188,9 @@ void cp_d8(EmulationState *emu) {
   *emu->pc += 1;
 }
 
-void or_c(EmulationState *emu) {
-  *emu->a |= *emu->c;
-  set_flags(emu, *emu->a == 0, 0, 0, 0);
-}
+void or_c(EmulationState *emu) { or_regd8(emu, emu->c); }
+
+void xor_a(EmulationState *emu) { xor_regd8(emu, emu->a); }
 
 // TODO: Put the Instructions in encoding order
 Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
@@ -265,6 +283,13 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
 
     {.encoding = 0xC3, .mcycle = 4, .execute = &jp},
 
+    {.encoding = 0x06, .mcycle = 2, .execute = &ld_b_d8},
+    {.encoding = 0x16, .mcycle = 2, .execute = &ld_d_d8},
+    {.encoding = 0x26, .mcycle = 2, .execute = &ld_h_d8},
+
+    {.encoding = 0x0E, .mcycle = 2, .execute = &ld_c_d8},
+    {.encoding = 0x1E, .mcycle = 2, .execute = &ld_e_d8},
+    {.encoding = 0x2E, .mcycle = 2, .execute = &ld_l_d8},
     {.encoding = 0x3E, .mcycle = 2, .execute = &ld_a_d8},
 
     {.encoding = 0xEA, .mcycle = 4, .execute = &ld_a16_a},
@@ -276,4 +301,6 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0xDA, .mcycle = 4, .execute = &jp_c_a16},
     {.encoding = 0xC2, .mcycle = 4, .execute = &jp_nz_a16},
 
-    {.encoding = 0xB1, .mcycle = 4, .execute = &or_c}};
+    {.encoding = 0xB1, .mcycle = 4, .execute = &or_c},
+    {.encoding = 0xAF, .mcycle = 1, .execute = &xor_a},
+};

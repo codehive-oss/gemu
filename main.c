@@ -19,7 +19,7 @@ void handle_instruction(EmulationState *emu, u8 inst) {
     }
   }
 
-  printf("Instruction not found: %2X\n", inst);
+  printf("Instruction not found: %02X\n", inst);
   printf("Terminating...\n");
   emu->running = false;
 }
