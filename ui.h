@@ -10,12 +10,16 @@
 // #define WIDTH 16 * 8 * SCALE_FACTOR
 // #define HEIGHT 8 * 8 * 3 * SCALE_FACTOR
 
-#define WIDTH 32 * 8 * SCALE_FACTOR
-#define HEIGHT 32 * 8 * SCALE_FACTOR
+#define WIDTH 32 * 8
+#define HEIGHT 32 * 8
+
+#define WINDOW_WIDTH WIDTH * SCALE_FACTOR
+#define WINDOW_HEIGHT HEIGHT * SCALE_FACTOR
 
 typedef struct Window {
   SDL_Window *window;
   SDL_Renderer *renderer;
+	SDL_Texture *texture;
 } Window;
 
 Window *win_init();

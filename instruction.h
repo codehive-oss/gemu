@@ -2,6 +2,7 @@
 #define INSTRUCTION_H
 
 #include "./types.h"
+#include "util.h"
 
 typedef struct Instruction {
   u8 encoding;

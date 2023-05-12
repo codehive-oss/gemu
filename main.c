@@ -64,6 +64,7 @@ int main(int argc, char **argv) {
 
     emu->running = win_update(win);
     win_render_bg(win, emu->vram, emu->tilemaps);
+    // win_render_tiles(win, emu->vram);
     handle_instruction(emu, inst);
   }
 
