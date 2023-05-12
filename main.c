@@ -62,12 +62,14 @@ int main(int argc, char **argv) {
       getch();
     }
 
+    emu->running = win_update(win);
+
+		// Render every 128th frame
     if (frame % 128 == 0) {
-      emu->running = win_update(win);
-			win_clear(win);
-      win_render_bg(win, emu->vram, emu->tilemaps);
-      win_render_tiles(win, emu->vram);
-			win_render(win);
+      win_clear(win);
+      win_draw_bg(win, emu->vram, emu->tilemaps);
+      win_draw_tiles(win, emu->vram);
+      win_render(win);
     }
 
     handle_instruction(emu, inst);

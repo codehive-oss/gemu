@@ -48,7 +48,7 @@ void win_clear(Window *win) { SDL_RenderClear(win->renderer); }
 void win_render(Window *win) { SDL_RenderPresent(win->renderer); }
 
 // TODO: Preload all textures
-void win_render_tile(u32 *target, u8 *tile, int pitch, u8 x, u8 y) {
+void win_draw_tile(u32 *target, u8 *tile, int pitch, u8 x, u8 y) {
   for (u8 i = 0; i < 64; i++) {
     u8 idx = get_palette_idx(tile, i);
 
@@ -62,7 +62,7 @@ void win_render_tile(u32 *target, u8 *tile, int pitch, u8 x, u8 y) {
   }
 }
 
-void win_render_bg(Window *win, u8 *tiles, u8 *tileMap) {
+void win_draw_bg(Window *win, u8 *tiles, u8 *tileMap) {
   u32 *winpixel;
   int pitch;
 
@@ -72,7 +72,7 @@ void win_render_bg(Window *win, u8 *tiles, u8 *tileMap) {
     for (u8 x = 0; x < 32; x++) {
       int offset = (y * 32) + x;
       u8 tileIndex = tileMap[offset];
-      win_render_tile(winpixel, tiles + 0x1000 + (tileIndex * 16), pitch / 4, x * 8,
+      win_draw_tile(winpixel, tiles + 0x1000 + (tileIndex * 16), pitch / 4, x * 8,
                       y * 8);
     }
   }
@@ -88,7 +88,7 @@ void win_render_bg(Window *win, u8 *tiles, u8 *tileMap) {
   SDL_RenderCopy(win->renderer, win->screen, NULL, &scrRect);
 }
 
-void win_render_tiles(Window *win, u8 *data) {
+void win_draw_tiles(Window *win, u8 *data) {
   u32 *winpixel;
   int pitch;
 
@@ -97,7 +97,7 @@ void win_render_tiles(Window *win, u8 *data) {
   for (u8 y = 0; y < 24; y++) {
     for (u8 x = 0; x < 16; x++) {
       int dataOffset = (x + (y * 16)) * 16;
-      win_render_tile(winpixel, data + dataOffset, pitch / 4, x * 8, y * 8);
+      win_draw_tile(winpixel, data + dataOffset, pitch / 4, x * 8, y * 8);
     }
   }
 

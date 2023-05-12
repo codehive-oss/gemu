@@ -31,8 +31,8 @@ bool win_update(Window *win);
 
 void win_clear(Window *win);
 void win_render(Window *win);
-void win_render_bg(Window *win, u8 *tiles, u8 *tileMap);
-void win_render_tiles(Window *win, u8 *data);
+void win_draw_bg(Window *win, u8 *tiles, u8 *tileMap);
+void win_draw_tiles(Window *win, u8 *data);
 void win_destroy(Window *win);
 
 #endif // UI_H
