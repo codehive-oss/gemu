@@ -22,9 +22,17 @@ void ld_regd8_rega16(EmulationState *emu, u8 *target, u16 *from) {
   *target = emu->mem[*from];
 }
 
-// Loads 8-bit data to any the memory address pointed by any 16-bit register
+// Loads 8-bit register data to any the memory address pointed by any 16-bit
+// register
 void ld_rega16_regd8(EmulationState *emu, u16 *target, u8 *from) {
   emu->mem[*target] = *from;
+}
+
+// Loads 8-bit data to any the memory address pointed by any 16-bit register
+void ld_rega16_d8(EmulationState *emu, u16 *target) {
+  u8 from = emu->rom[*emu->pc];
+  emu->mem[*target] = from;
+  *emu->pc += 1;
 }
 
 // OR with 8-bit register
@@ -52,10 +60,24 @@ void inc_regd8(EmulationState *emu, u8 *reg) {
 }
 
 void nop(EmulationState *emu) {}
+void di(EmulationState *emu) {}
 
 void jp_a16(EmulationState *emu) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
   *emu->pc = target;
+}
+
+void jr_d8(EmulationState *emu) {
+  i8 target = emu->rom[*emu->pc];
+  *emu->pc += target;
+}
+
+void jr_nz_d8(EmulationState *emu) {
+  if (!(*emu->f & 0b10000000)) { // Z is not set
+    jr_d8(emu);
+  } else {
+    *emu->pc += 1;
+  }
 }
 
 void jp_c_a16(EmulationState *emu) {
@@ -73,6 +95,20 @@ void jp_nz_a16(EmulationState *emu) {
     *emu->pc += 2;
   }
 }
+
+void ldh_a8_a(EmulationState *emu) {
+  u8 target = emu->rom[*emu->pc];
+  emu->io[target] = *emu->a;
+  *emu->pc += 1;
+}
+
+void ldh_a_a8(EmulationState *emu) {
+  u8 target = emu->rom[*emu->pc];
+  *emu->a = emu->io[target];
+  *emu->pc += 1;
+}
+
+void ld_hl_d8(EmulationState *emu) { ld_rega16_d8(emu, emu->hl); }
 
 void inc_bc(EmulationState *emu) { *emu->bc += 1; }
 void inc_de(EmulationState *emu) { *emu->de += 1; }
@@ -224,6 +260,7 @@ void xor_a(EmulationState *emu) { xor_regd8(emu, emu->a); }
 // TODO: Fix mcycle, because it depends on the operation executed
 Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x00, .mcycle = 1, .execute = &nop},
+    {.encoding = 0xF3, .mcycle = 1, .execute = &di},
 
     {.encoding = 0x01, .mcycle = 3, .execute = &ld_bc_d16},
     {.encoding = 0x11, .mcycle = 3, .execute = &ld_de_d16},
@@ -333,6 +370,7 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x06, .mcycle = 2, .execute = &ld_b_d8},
     {.encoding = 0x16, .mcycle = 2, .execute = &ld_d_d8},
     {.encoding = 0x26, .mcycle = 2, .execute = &ld_h_d8},
+    {.encoding = 0x36, .mcycle = 2, .execute = &ld_hl_d8},
 
     {.encoding = 0x0E, .mcycle = 2, .execute = &ld_c_d8},
     {.encoding = 0x1E, .mcycle = 2, .execute = &ld_e_d8},
@@ -340,14 +378,19 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x3E, .mcycle = 2, .execute = &ld_a_d8},
 
     {.encoding = 0xEA, .mcycle = 4, .execute = &ld_a16_a},
+    {.encoding = 0xFA, .mcycle = 4, .execute = &ld_a_a16},
+
+    {.encoding = 0xE0, .mcycle = 3, .execute = &ldh_a8_a},
+    {.encoding = 0xF0, .mcycle = 3, .execute = &ldh_a_a8},
 
     {.encoding = 0xFE, .mcycle = 2, .execute = &cp_d8},
-
-    {.encoding = 0xFA, .mcycle = 4, .execute = &ld_a_a16},
 
     {.encoding = 0xDA, .mcycle = 4, .execute = &jp_c_a16},
     {.encoding = 0xC2, .mcycle = 4, .execute = &jp_nz_a16},
 
     {.encoding = 0xB1, .mcycle = 4, .execute = &or_c},
     {.encoding = 0xAF, .mcycle = 1, .execute = &xor_a},
+
+    {.encoding = 0x18, .mcycle = 3, .execute = &jr_d8},
+    {.encoding = 0x20, .mcycle = 3, .execute = &jr_nz_d8},
 };
