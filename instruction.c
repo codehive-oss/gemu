@@ -53,16 +53,16 @@ void xor_regd8(EmulationState *emu, u8 *reg) {
   set_flags(emu, *emu->a == 0, 0, 0, 0);
 }
 
-// Decrement 1 from 8-bit register
-void dec_regd8(EmulationState *emu, u8 *reg) {
-  *reg -= 1;
-  set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x0F, -1);
-}
-
 // Increment 1 from 8-bit register
 void inc_regd8(EmulationState *emu, u8 *reg) {
   *reg += 1;
   set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x00, -1);
+}
+
+// Decrement 1 from 8-bit register
+void dec_regd8(EmulationState *emu, u8 *reg) {
+  *reg -= 1;
+  set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x0F, -1);
 }
 
 void add_regd8(EmulationState *emu, u8 *from) {
@@ -97,7 +97,7 @@ void jr_d8(EmulationState *emu) {
 }
 
 void jr_nz_d8(EmulationState *emu) {
-  if (!(*emu->f & 0b10000000)) { // Z is not set
+  if (!(*emu->f & Z_MASK)) { // Z is not set
     jr_d8(emu);
   } else {
     *emu->pc += 1;
@@ -105,7 +105,7 @@ void jr_nz_d8(EmulationState *emu) {
 }
 
 void jp_c_a16(EmulationState *emu) {
-  if (*emu->f & 0b00010000) { // C is set
+  if (*emu->f & C_MASK) { // C is set
     jp_a16(emu);
   } else {
     *emu->pc += 2;
@@ -113,7 +113,7 @@ void jp_c_a16(EmulationState *emu) {
 }
 
 void jp_nz_a16(EmulationState *emu) {
-  if (!(*emu->f & 0b10000000)) { // Z is not set
+  if (!(*emu->f & Z_MASK)) { // Z is not set
     jp_a16(emu);
   } else {
     *emu->pc += 2;
