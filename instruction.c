@@ -53,15 +53,14 @@ void inc_regd8(EmulationState *emu, u8 *reg) {
 
 void nop(EmulationState *emu) {}
 
-void jp(EmulationState *emu) {
+void jp_a16(EmulationState *emu) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
   *emu->pc = target;
 }
 
 void jp_c_a16(EmulationState *emu) {
   if (*emu->f & 0b00010000) { // C is set
-    u16 target = *(u16 *)&emu->rom[*emu->pc];
-    *emu->pc = target;
+    jp_a16(emu);
   } else {
     *emu->pc += 2;
   }
@@ -69,8 +68,7 @@ void jp_c_a16(EmulationState *emu) {
 
 void jp_nz_a16(EmulationState *emu) {
   if (!(*emu->f & 0b10000000)) { // Z is not set
-    u16 target = *(u16 *)&emu->rom[*emu->pc];
-    *emu->pc = target;
+    jp_a16(emu);
   } else {
     *emu->pc += 2;
   }
@@ -199,11 +197,11 @@ void ld_bc_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->bc, emu->a); }
 void ld_de_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->de, emu->a); }
 void ld_hli_a(EmulationState *emu) {
   ld_rega16_regd8(emu, emu->hl, emu->a);
-  *emu->hl += 1;
+  inc_hl(emu);
 }
 void ld_hld_a(EmulationState *emu) {
   ld_rega16_regd8(emu, emu->hl, emu->a);
-  *emu->hl -= 1;
+  dec_hl(emu);
 }
 
 void cp_d8(EmulationState *emu) {
@@ -223,6 +221,7 @@ void or_c(EmulationState *emu) { or_regd8(emu, emu->c); }
 void xor_a(EmulationState *emu) { xor_regd8(emu, emu->a); }
 
 // TODO: Put the Instructions in encoding order
+// TODO: Fix mcycle, because it depends on the operation executed
 Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x00, .mcycle = 1, .execute = &nop},
 
@@ -329,7 +328,7 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
 
     {.encoding = 0x1A, .mcycle = 2, .execute = &ld_a_de},
 
-    {.encoding = 0xC3, .mcycle = 4, .execute = &jp},
+    {.encoding = 0xC3, .mcycle = 4, .execute = &jp_a16},
 
     {.encoding = 0x06, .mcycle = 2, .execute = &ld_b_d8},
     {.encoding = 0x16, .mcycle = 2, .execute = &ld_d_d8},
