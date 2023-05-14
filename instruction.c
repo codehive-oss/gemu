@@ -39,6 +39,18 @@ void xor_regd8(EmulationState *emu, u8 *reg) {
   set_flags(emu, *emu->a == 0, 0, 0, 0);
 }
 
+// Decrement 1 from 8-bit register
+void dec_regd8(EmulationState *emu, u8 *reg) {
+  *reg -= 1;
+  set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x0F, -1);
+}
+
+// Increment 1 from 8-bit register
+void inc_regd8(EmulationState *emu, u8 *reg) {
+  *reg += 1;
+  set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x00, -1);
+}
+
 void nop(EmulationState *emu) {}
 
 void jp(EmulationState *emu) {
@@ -63,6 +75,34 @@ void jp_nz_a16(EmulationState *emu) {
     *emu->pc += 2;
   }
 }
+
+void inc_bc(EmulationState *emu) { *emu->bc += 1; }
+void inc_de(EmulationState *emu) { *emu->de += 1; }
+void inc_hl(EmulationState *emu) { *emu->hl += 1; }
+void inc_sp(EmulationState *emu) { *emu->sp += 1; }
+
+void inc_b(EmulationState *emu) { inc_regd8(emu, emu->b); }
+void inc_d(EmulationState *emu) { inc_regd8(emu, emu->d); }
+void inc_h(EmulationState *emu) { inc_regd8(emu, emu->h); }
+
+void inc_c(EmulationState *emu) { inc_regd8(emu, emu->c); }
+void inc_e(EmulationState *emu) { inc_regd8(emu, emu->e); }
+void inc_l(EmulationState *emu) { inc_regd8(emu, emu->l); }
+void inc_a(EmulationState *emu) { inc_regd8(emu, emu->a); }
+
+void dec_bc(EmulationState *emu) { *emu->bc -= 1; }
+void dec_de(EmulationState *emu) { *emu->de -= 1; }
+void dec_hl(EmulationState *emu) { *emu->hl -= 1; }
+void dec_sp(EmulationState *emu) { *emu->sp -= 1; }
+
+void dec_b(EmulationState *emu) { dec_regd8(emu, emu->b); }
+void dec_d(EmulationState *emu) { dec_regd8(emu, emu->d); }
+void dec_h(EmulationState *emu) { dec_regd8(emu, emu->h); }
+
+void dec_c(EmulationState *emu) { dec_regd8(emu, emu->c); }
+void dec_e(EmulationState *emu) { dec_regd8(emu, emu->e); }
+void dec_l(EmulationState *emu) { dec_regd8(emu, emu->l); }
+void dec_a(EmulationState *emu) { dec_regd8(emu, emu->a); }
 
 void ld_b_b(EmulationState *emu) { *emu->b = *emu->b; }
 void ld_d_b(EmulationState *emu) { *emu->d = *emu->b; }
@@ -166,16 +206,6 @@ void ld_hld_a(EmulationState *emu) {
   *emu->hl -= 1;
 }
 
-void inc_bc(EmulationState *emu) { *emu->bc += 1; }
-void inc_de(EmulationState *emu) { *emu->de += 1; }
-void inc_hl(EmulationState *emu) { *emu->hl += 1; }
-void inc_sp(EmulationState *emu) { *emu->sp += 1; }
-
-void dec_bc(EmulationState *emu) { *emu->bc -= 1; }
-void dec_de(EmulationState *emu) { *emu->de -= 1; }
-void dec_hl(EmulationState *emu) { *emu->hl -= 1; }
-void dec_sp(EmulationState *emu) { *emu->sp -= 1; }
-
 void cp_d8(EmulationState *emu) {
   u8 value = emu->rom[*emu->pc];
   if (*emu->a == value) {
@@ -273,6 +303,24 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x13, .mcycle = 2, .execute = &inc_de},
     {.encoding = 0x23, .mcycle = 2, .execute = &inc_hl},
     {.encoding = 0x33, .mcycle = 2, .execute = &inc_sp},
+
+    {.encoding = 0x04, .mcycle = 1, .execute = &inc_b},
+    {.encoding = 0x14, .mcycle = 1, .execute = &inc_d},
+    {.encoding = 0x24, .mcycle = 1, .execute = &inc_h},
+
+    {.encoding = 0x0C, .mcycle = 1, .execute = &inc_c},
+    {.encoding = 0x1C, .mcycle = 1, .execute = &inc_e},
+    {.encoding = 0x2C, .mcycle = 1, .execute = &inc_l},
+    {.encoding = 0x3C, .mcycle = 1, .execute = &inc_a},
+
+    {.encoding = 0x05, .mcycle = 1, .execute = &dec_b},
+    {.encoding = 0x15, .mcycle = 1, .execute = &dec_d},
+    {.encoding = 0x25, .mcycle = 1, .execute = &dec_h},
+
+    {.encoding = 0x0D, .mcycle = 1, .execute = &dec_c},
+    {.encoding = 0x1D, .mcycle = 1, .execute = &dec_e},
+    {.encoding = 0x2D, .mcycle = 1, .execute = &dec_l},
+    {.encoding = 0x3D, .mcycle = 1, .execute = &dec_a},
 
     {.encoding = 0x0B, .mcycle = 2, .execute = &dec_bc},
     {.encoding = 0x1B, .mcycle = 2, .execute = &dec_de},
