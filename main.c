@@ -13,7 +13,8 @@ bool handle_instruction(EmulationState *emu, u8 inst) {
     Instruction instruction = GB_INSTRUCTIONS[i];
     if (instruction.encoding == inst) {
       instruction.execute(emu);
-      emu->mcycle += instruction.mcycle;
+      // TODO: Fix this with real mcycle
+      emu->mcycle += 1;
       emu->mem[rLY] = emu->mcycle % 154;
       return true;
     }
