@@ -59,6 +59,22 @@ void inc_regd8(EmulationState *emu, u8 *reg) {
   set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x00, -1);
 }
 
+void add_reg8_reg8(EmulationState *emu, u8 *target, u8 *from) {
+  bool h = (*target & 0x0F) + (*from & 0x0F) > 0x0F;
+  bool c = *target + *from > 0xFF;
+
+  *target += *from;
+  set_flags(emu, *target == 0, 0, h, c);
+}
+
+void sub_reg8_reg8(EmulationState *emu, u8 *target, u8 *from) {
+  bool h = (*target & 0x0F) - (*from & 0x0F) < 0;
+  bool c = *target - *from < 0;
+
+  *target -= *from;
+  set_flags(emu, *target == 0, 1, h, c);
+}
+
 void nop(EmulationState *emu) {}
 
 // https://gbdev.io/pandocs/Interrupts.html
@@ -242,6 +258,22 @@ void ld_hld_a(EmulationState *emu) {
   dec_hl(emu);
 }
 
+void add_b(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->b); }
+void add_c(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->c); }
+void add_d(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->d); }
+void add_e(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->e); }
+void add_h(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->h); }
+void add_l(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->l); }
+void add_a(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->a); }
+
+void sub_b(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->b); }
+void sub_c(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->c); }
+void sub_d(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->d); }
+void sub_e(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->e); }
+void sub_h(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->h); }
+void sub_l(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->l); }
+void sub_a(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->a); }
+
 void cp_d8(EmulationState *emu) {
   u8 value = emu->rom[*emu->pc];
   if (*emu->a == value) {
@@ -384,6 +416,22 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
 
     {.encoding = 0xE0, .mcycle = 3, .execute = &ldh_a8_a},
     {.encoding = 0xF0, .mcycle = 3, .execute = &ldh_a_a8},
+
+    {.encoding = 0x80, .mcycle = 1, .execute = &add_b},
+    {.encoding = 0x81, .mcycle = 1, .execute = &add_c},
+    {.encoding = 0x82, .mcycle = 1, .execute = &add_d},
+    {.encoding = 0x83, .mcycle = 1, .execute = &add_e},
+    {.encoding = 0x84, .mcycle = 1, .execute = &add_h},
+    {.encoding = 0x85, .mcycle = 1, .execute = &add_l},
+    {.encoding = 0x87, .mcycle = 1, .execute = &add_a},
+
+    {.encoding = 0x90, .mcycle = 1, .execute = &sub_b},
+    {.encoding = 0x91, .mcycle = 1, .execute = &sub_c},
+    {.encoding = 0x92, .mcycle = 1, .execute = &sub_d},
+    {.encoding = 0x93, .mcycle = 1, .execute = &sub_e},
+    {.encoding = 0x94, .mcycle = 1, .execute = &sub_h},
+    {.encoding = 0x95, .mcycle = 1, .execute = &sub_l},
+    {.encoding = 0x97, .mcycle = 1, .execute = &sub_a},
 
     {.encoding = 0xFE, .mcycle = 2, .execute = &cp_d8},
 
