@@ -35,6 +35,12 @@ void ld_rega16_d8(EmulationState *emu, u16 *target) {
   *emu->pc += 1;
 }
 
+// AND with 8-bit register
+void and_regd8(EmulationState *emu, u8 *reg) {
+  *emu->a &= *reg;
+  set_flags(emu, *emu->a == 0, 0, 1, 0);
+}
+
 // OR with 8-bit register
 void or_regd8(EmulationState *emu, u8 *reg) {
   *emu->a |= *reg;
@@ -59,20 +65,20 @@ void inc_regd8(EmulationState *emu, u8 *reg) {
   set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x00, -1);
 }
 
-void add_reg8_reg8(EmulationState *emu, u8 *target, u8 *from) {
-  bool h = (*target & 0x0F) + (*from & 0x0F) > 0x0F;
-  bool c = *target + *from > 0xFF;
+void add_regd8(EmulationState *emu, u8 *from) {
+  bool h = (*emu->a & 0x0F) + (*from & 0x0F) > 0x0F;
+  bool c = *emu->a + *from > 0xFF;
 
-  *target += *from;
-  set_flags(emu, *target == 0, 0, h, c);
+  *emu->a += *from;
+  set_flags(emu, *emu->a == 0, 0, h, c);
 }
 
-void sub_reg8_reg8(EmulationState *emu, u8 *target, u8 *from) {
-  bool h = (*target & 0x0F) - (*from & 0x0F) < 0;
-  bool c = *target - *from < 0;
+void sub_regd8(EmulationState *emu, u8 *from) {
+  bool h = (*emu->a & 0x0F) - (*from & 0x0F) < 0;
+  bool c = *emu->a - *from < 0;
 
-  *target -= *from;
-  set_flags(emu, *target == 0, 1, h, c);
+  *emu->a -= *from;
+  set_flags(emu, *emu->a == 0, 1, h, c);
 }
 
 void nop(EmulationState *emu) {}
@@ -258,21 +264,45 @@ void ld_hld_a(EmulationState *emu) {
   dec_hl(emu);
 }
 
-void add_b(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->b); }
-void add_c(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->c); }
-void add_d(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->d); }
-void add_e(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->e); }
-void add_h(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->h); }
-void add_l(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->l); }
-void add_a(EmulationState *emu) { add_reg8_reg8(emu, emu->a, emu->a); }
+void add_b(EmulationState *emu) { add_regd8(emu, emu->b); }
+void add_c(EmulationState *emu) { add_regd8(emu, emu->c); }
+void add_d(EmulationState *emu) { add_regd8(emu, emu->d); }
+void add_e(EmulationState *emu) { add_regd8(emu, emu->e); }
+void add_h(EmulationState *emu) { add_regd8(emu, emu->h); }
+void add_l(EmulationState *emu) { add_regd8(emu, emu->l); }
+void add_a(EmulationState *emu) { add_regd8(emu, emu->a); }
 
-void sub_b(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->b); }
-void sub_c(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->c); }
-void sub_d(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->d); }
-void sub_e(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->e); }
-void sub_h(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->h); }
-void sub_l(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->l); }
-void sub_a(EmulationState *emu) { sub_reg8_reg8(emu, emu->a, emu->a); }
+void sub_b(EmulationState *emu) { sub_regd8(emu, emu->b); }
+void sub_c(EmulationState *emu) { sub_regd8(emu, emu->c); }
+void sub_d(EmulationState *emu) { sub_regd8(emu, emu->d); }
+void sub_e(EmulationState *emu) { sub_regd8(emu, emu->e); }
+void sub_h(EmulationState *emu) { sub_regd8(emu, emu->h); }
+void sub_l(EmulationState *emu) { sub_regd8(emu, emu->l); }
+void sub_a(EmulationState *emu) { sub_regd8(emu, emu->a); }
+
+void and_b(EmulationState *emu) { and_regd8(emu, emu->b); }
+void and_c(EmulationState *emu) { and_regd8(emu, emu->c); }
+void and_d(EmulationState *emu) { and_regd8(emu, emu->d); }
+void and_e(EmulationState *emu) { and_regd8(emu, emu->e); }
+void and_h(EmulationState *emu) { and_regd8(emu, emu->h); }
+void and_l(EmulationState *emu) { and_regd8(emu, emu->l); }
+void and_a(EmulationState *emu) { and_regd8(emu, emu->a); }
+
+void or_b(EmulationState *emu) { or_regd8(emu, emu->b); }
+void or_c(EmulationState *emu) { or_regd8(emu, emu->c); }
+void or_d(EmulationState *emu) { or_regd8(emu, emu->d); }
+void or_e(EmulationState *emu) { or_regd8(emu, emu->e); }
+void or_h(EmulationState *emu) { or_regd8(emu, emu->h); }
+void or_l(EmulationState *emu) { or_regd8(emu, emu->l); }
+void or_a(EmulationState *emu) { or_regd8(emu, emu->a); }
+
+void xor_b(EmulationState *emu) { xor_regd8(emu, emu->b); }
+void xor_c(EmulationState *emu) { xor_regd8(emu, emu->c); }
+void xor_d(EmulationState *emu) { xor_regd8(emu, emu->d); }
+void xor_e(EmulationState *emu) { xor_regd8(emu, emu->e); }
+void xor_h(EmulationState *emu) { xor_regd8(emu, emu->h); }
+void xor_l(EmulationState *emu) { xor_regd8(emu, emu->l); }
+void xor_a(EmulationState *emu) { xor_regd8(emu, emu->a); }
 
 void cp_d8(EmulationState *emu) {
   u8 value = emu->rom[*emu->pc];
@@ -285,10 +315,6 @@ void cp_d8(EmulationState *emu) {
   }
   *emu->pc += 1;
 }
-
-void or_c(EmulationState *emu) { or_regd8(emu, emu->c); }
-
-void xor_a(EmulationState *emu) { xor_regd8(emu, emu->a); }
 
 // TODO: Put the Instructions in encoding order
 // TODO: Fix mcycle, because it depends on the operation executed
@@ -432,6 +458,30 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x94, .mcycle = 1, .execute = &sub_h},
     {.encoding = 0x95, .mcycle = 1, .execute = &sub_l},
     {.encoding = 0x97, .mcycle = 1, .execute = &sub_a},
+
+    {.encoding = 0xA0, .mcycle = 1, .execute = &and_b},
+    {.encoding = 0xA1, .mcycle = 1, .execute = &and_c},
+    {.encoding = 0xA2, .mcycle = 1, .execute = &and_d},
+    {.encoding = 0xA3, .mcycle = 1, .execute = &and_e},
+    {.encoding = 0xA4, .mcycle = 1, .execute = &and_h},
+    {.encoding = 0xA5, .mcycle = 1, .execute = &and_l},
+    {.encoding = 0xA7, .mcycle = 1, .execute = &and_a},
+
+    {.encoding = 0xA8, .mcycle = 1, .execute = &xor_b},
+    {.encoding = 0xA9, .mcycle = 1, .execute = &xor_c},
+    {.encoding = 0xAA, .mcycle = 1, .execute = &xor_d},
+    {.encoding = 0xAB, .mcycle = 1, .execute = &xor_e},
+    {.encoding = 0xAC, .mcycle = 1, .execute = &xor_h},
+    {.encoding = 0xAD, .mcycle = 1, .execute = &xor_l},
+    {.encoding = 0xAF, .mcycle = 1, .execute = &xor_a},
+
+    {.encoding = 0xB0, .mcycle = 1, .execute = &or_b},
+    {.encoding = 0xB1, .mcycle = 1, .execute = &or_c},
+    {.encoding = 0xB2, .mcycle = 1, .execute = &or_d},
+    {.encoding = 0xB3, .mcycle = 1, .execute = &or_e},
+    {.encoding = 0xB4, .mcycle = 1, .execute = &or_h},
+    {.encoding = 0xB5, .mcycle = 1, .execute = &or_l},
+    {.encoding = 0xB7, .mcycle = 1, .execute = &or_a},
 
     {.encoding = 0xFE, .mcycle = 2, .execute = &cp_d8},
 

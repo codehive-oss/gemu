@@ -10,11 +10,11 @@ typedef struct Instruction {
   void (*execute)(EmulationState *);
 } Instruction;
 
-#define GB_INSTRUCTIONS_LENGTH 116
+#define GB_INSTRUCTIONS_LENGTH 137
 
 extern Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH];
 
-void add_reg8_reg8(EmulationState *emu, u8 *target, u8 *from);
-void sub_reg8_reg8(EmulationState *emu, u8 *target, u8 *from);
+void add_regd8(EmulationState *emu, u8 *from);
+void sub_regd8(EmulationState *emu, u8 *from);
 
 #endif // INSTRUCTION_H
