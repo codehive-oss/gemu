@@ -132,7 +132,8 @@ void ldh_a_a8(EmulationState *emu) {
   *emu->pc += 1;
 }
 
-void ld_hl_d8(EmulationState *emu) { ld_rega16_d8(emu, emu->hl); }
+void ld_ca_a(EmulationState *emu) { emu->mem[*emu->io + *emu->c] = *emu->a; }
+void ld_a_ca(EmulationState *emu) { *emu->a = emu->mem[*emu->io + *emu->c]; }
 
 void inc_bc(EmulationState *emu) { *emu->bc += 1; }
 void inc_de(EmulationState *emu) { *emu->de += 1; }
@@ -240,6 +241,7 @@ void ld_a_a16(EmulationState *emu) {
 void ld_b_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->b); }
 void ld_d_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->d); }
 void ld_h_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->h); }
+void ld_hl_d8(EmulationState *emu) { ld_rega16_d8(emu, emu->hl); }
 
 void ld_c_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->c); }
 void ld_e_d8(EmulationState *emu) { ld_regd8_d8(emu, emu->e); }
@@ -251,7 +253,16 @@ void ld_de_d16(EmulationState *emu) { ld_regd16_d16(emu, emu->de); }
 void ld_hl_d16(EmulationState *emu) { ld_regd16_d16(emu, emu->hl); }
 void ld_sp_d16(EmulationState *emu) { ld_regd16_d16(emu, emu->sp); }
 
+void ld_a_bc(EmulationState *emu) { ld_regd8_rega16(emu, emu->a, emu->bc); }
 void ld_a_de(EmulationState *emu) { ld_regd8_rega16(emu, emu->a, emu->de); }
+void ld_a_hli(EmulationState *emu) {
+  ld_regd8_rega16(emu, emu->a, emu->de);
+  inc_hl(emu);
+}
+void ld_a_hld(EmulationState *emu) {
+  ld_regd8_rega16(emu, emu->a, emu->de);
+  dec_hl(emu);
+}
 
 void ld_bc_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->bc, emu->a); }
 void ld_de_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->de, emu->a); }
@@ -395,6 +406,9 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x22, .mcycle = 2, .execute = &ld_hli_a},
     {.encoding = 0x32, .mcycle = 2, .execute = &ld_hld_a},
 
+		{.encoding = 0xE2, .mcycle = 1, .execute = &ld_ca_a},
+		{.encoding = 0xF2, .mcycle = 1, .execute = &ld_a_ca},
+
     {.encoding = 0x03, .mcycle = 2, .execute = &inc_bc},
     {.encoding = 0x13, .mcycle = 2, .execute = &inc_de},
     {.encoding = 0x23, .mcycle = 2, .execute = &inc_hl},
@@ -423,7 +437,10 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x2B, .mcycle = 2, .execute = &dec_hl},
     {.encoding = 0x3B, .mcycle = 2, .execute = &dec_sp},
 
+    {.encoding = 0x0A, .mcycle = 2, .execute = &ld_a_bc},
     {.encoding = 0x1A, .mcycle = 2, .execute = &ld_a_de},
+    {.encoding = 0x2A, .mcycle = 2, .execute = &ld_a_hli},
+    {.encoding = 0x3A, .mcycle = 2, .execute = &ld_a_hld},
 
     {.encoding = 0xC3, .mcycle = 4, .execute = &jp_a16},
 
