@@ -60,7 +60,9 @@ void inc_regd8(EmulationState *emu, u8 *reg) {
 }
 
 void nop(EmulationState *emu) {}
-void di(EmulationState *emu) {}
+
+// https://gbdev.io/pandocs/Interrupts.html
+void di(EmulationState *emu) { *emu->ie = 0; }
 
 void jp_a16(EmulationState *emu) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
