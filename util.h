@@ -79,6 +79,11 @@ void emu_free(EmulationState *emu);
 
 void set_flags(EmulationState *emu, char z, char n, char h, char c);
 
+#define Z_MASK 0b10000000
+#define N_MASK 0b01000000
+#define H_MASK 0b00100000
+#define C_MASK 0b00010000
+
 #define BIT_SET(a, n, x)                                                       \
   {                                                                            \
     if (x)                                                                     \

@@ -14,4 +14,7 @@ typedef struct Instruction {
 
 extern Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH];
 
+void add_reg8_reg8(EmulationState *emu, u8 *target, u8 *from);
+void sub_reg8_reg8(EmulationState *emu, u8 *target, u8 *from);
+
 #endif // INSTRUCTION_H
