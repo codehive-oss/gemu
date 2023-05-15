@@ -121,6 +121,38 @@ void jp_a16(EmulationState *emu) {
   *emu->pc = target;
 }
 
+void jp_z_a16(EmulationState *emu) {
+  if (*emu->f & Z_MASK) { // Z is set
+    jp_a16(emu);
+  } else {
+    *emu->pc += 2;
+  }
+}
+
+void jp_nz_a16(EmulationState *emu) {
+  if (!(*emu->f & Z_MASK)) { // Z is not set
+    jp_a16(emu);
+  } else {
+    *emu->pc += 2;
+  }
+}
+
+void jp_c_a16(EmulationState *emu) {
+  if (*emu->f & C_MASK) { // C is set
+    jp_a16(emu);
+  } else {
+    *emu->pc += 2;
+  }
+}
+
+void jp_nc_a16(EmulationState *emu) {
+  if (!(*emu->f & C_MASK)) { // C is not set
+    jp_a16(emu);
+  } else {
+    *emu->pc += 2;
+  }
+}
+
 void jr_d8(EmulationState *emu) {
   i8 target = *(i8 *)&emu->rom[*emu->pc];
   *emu->pc += 1;
@@ -156,22 +188,6 @@ void jr_nc_d8(EmulationState *emu) {
     jr_d8(emu);
   } else {
     *emu->pc += 1;
-  }
-}
-
-void jp_c_a16(EmulationState *emu) {
-  if (*emu->f & C_MASK) { // C is set
-    jp_a16(emu);
-  } else {
-    *emu->pc += 2;
-  }
-}
-
-void jp_nz_a16(EmulationState *emu) {
-  if (!(*emu->f & Z_MASK)) { // Z is not set
-    jp_a16(emu);
-  } else {
-    *emu->pc += 2;
   }
 }
 
@@ -578,9 +594,10 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0xFE, .execute = &cp_d8},
 
     {.encoding = 0xC3, .execute = &jp_a16},
-
-    {.encoding = 0xDA, .execute = &jp_c_a16},
     {.encoding = 0xC2, .execute = &jp_nz_a16},
+    {.encoding = 0xD2, .execute = &jp_nc_a16},
+    {.encoding = 0xCA, .execute = &jp_z_a16},
+    {.encoding = 0xDA, .execute = &jp_c_a16},
 
     {.encoding = 0xCD, .execute = &call_a16},
 
@@ -588,7 +605,6 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
 
     {.encoding = 0xB1, .execute = &or_c},
     {.encoding = 0xAF, .execute = &xor_a},
-
 
     {.encoding = 0x20, .execute = &jr_nz_d8},
     {.encoding = 0x30, .execute = &jr_nc_d8},

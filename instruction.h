@@ -9,7 +9,7 @@ typedef struct Instruction {
   void (*execute)(EmulationState *);
 } Instruction;
 
-#define GB_INSTRUCTIONS_LENGTH 152
+#define GB_INSTRUCTIONS_LENGTH 154
 
 extern Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH];
 
@@ -34,11 +34,15 @@ void di(EmulationState *emu);
 void ei(EmulationState *emu);
 
 void jp_a16(EmulationState *emu);
+void jp_z_a16(EmulationState *emu);
+void jp_nz_a16(EmulationState *emu);
+void jp_c_a16(EmulationState *emu);
+void jp_nc_a16(EmulationState *emu);
 
 void jr_d8(EmulationState *emu);
 void jr_z_d8(EmulationState *emu);
 void jr_nz_d8(EmulationState *emu);
-void jp_c_a16(EmulationState *emu);
+void jr_c_d8(EmulationState *emu);
 void jr_nc_d8(EmulationState *emu);
 
 void call_a16(EmulationState *emu);
