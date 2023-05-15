@@ -46,6 +46,11 @@ void jr_c_d8(EmulationState *emu);
 void jr_nc_d8(EmulationState *emu);
 
 void call_a16(EmulationState *emu);
+void call_z_a16(EmulationState *emu);
+void call_nz_a16(EmulationState *emu);
+void call_c_a16(EmulationState *emu);
+void call_nc_a16(EmulationState *emu);
+
 void ret(EmulationState *emu);
 
 void ldh_a8_a(EmulationState *emu);
@@ -181,7 +186,7 @@ void add_e(EmulationState *emu);
 void add_h(EmulationState *emu);
 void add_l(EmulationState *emu);
 void add_a(EmulationState *emu);
-;
+
 void sub_b(EmulationState *emu);
 void sub_c(EmulationState *emu);
 void sub_d(EmulationState *emu);
@@ -189,7 +194,7 @@ void sub_e(EmulationState *emu);
 void sub_h(EmulationState *emu);
 void sub_l(EmulationState *emu);
 void sub_a(EmulationState *emu);
-;
+
 void and_b(EmulationState *emu);
 void and_c(EmulationState *emu);
 void and_d(EmulationState *emu);

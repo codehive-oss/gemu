@@ -201,6 +201,38 @@ void call_a16(EmulationState *emu) {
   *emu->pc = target;
 }
 
+void call_z_a16(EmulationState *emu) {
+  if (*emu->f & Z_MASK) { // Z is set
+    call_a16(emu);
+  } else {
+    *emu->pc += 2;
+  }
+}
+
+void call_nz_a16(EmulationState *emu) {
+  if (!(*emu->f & Z_MASK)) { // C not is set
+    call_a16(emu);
+  } else {
+    *emu->pc += 2;
+  }
+}
+
+void call_c_a16(EmulationState *emu) {
+  if (*emu->f & C_MASK) { // Z is set
+    call_a16(emu);
+  } else {
+    *emu->pc += 2;
+  }
+}
+
+void call_nc_a16(EmulationState *emu) {
+  if (!(*emu->f & C_MASK)) { // C not is set
+    call_a16(emu);
+  } else {
+    *emu->pc += 2;
+  }
+}
+
 void ret(EmulationState *emu) {
   *emu->pc = *(u16 *)&emu->mem[*emu->sp];
   *emu->sp += 2;
@@ -600,6 +632,10 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0xDA, .execute = &jp_c_a16},
 
     {.encoding = 0xCD, .execute = &call_a16},
+    {.encoding = 0xC4, .execute = &call_nz_a16},
+    {.encoding = 0xD4, .execute = &call_nc_a16},
+    {.encoding = 0xCC, .execute = &call_z_a16},
+    {.encoding = 0xDC, .execute = &call_c_a16},
 
     {.encoding = 0xC9, .execute = &ret},
 
