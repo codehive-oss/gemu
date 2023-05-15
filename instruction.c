@@ -127,9 +127,18 @@ void jp_nz_a16(EmulationState *emu) {
 }
 
 void call_a16(EmulationState *emu) {
+  u16 target = *(u16 *)&emu->rom[*emu->pc];
+  *emu->pc += 2;
+
   *emu->sp -= 2;
   *(u16 *)&emu->mem[*emu->sp] = *emu->pc;
-  jp_a16(emu);
+
+  *emu->pc = target;
+}
+
+void ret(EmulationState *emu) {
+  *emu->pc = *(u16 *)&emu->mem[*emu->sp];
+  *emu->sp += 2;
 }
 
 void ldh_a8_a(EmulationState *emu) {
@@ -518,6 +527,8 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0xC2, .execute = &jp_nz_a16},
 
     {.encoding = 0xCD, .execute = &call_a16},
+
+    {.encoding = 0xC9, .execute = &ret},
 
     {.encoding = 0xB1, .execute = &or_c},
     {.encoding = 0xAF, .execute = &xor_a},

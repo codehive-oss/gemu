@@ -9,7 +9,7 @@ typedef struct Instruction {
   void (*execute)(EmulationState *);
 } Instruction;
 
-#define GB_INSTRUCTIONS_LENGTH 144
+#define GB_INSTRUCTIONS_LENGTH 145
 
 extern Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH];
 
