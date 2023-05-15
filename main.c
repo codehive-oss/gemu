@@ -15,7 +15,7 @@ bool handle_instruction(EmulationState *emu, u8 inst) {
       instruction.execute(emu);
       // TODO: Fix this with real mcycle
       emu->mcycle += 1;
-      emu->mem[rLY] = emu->mcycle % 154;
+      emu->mem[rLY] = ((emu->mem[rLY] + rand() % 5) % 154);
       return true;
     }
   }
