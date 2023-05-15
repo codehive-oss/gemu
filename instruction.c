@@ -41,16 +41,37 @@ void and_regd8(EmulationState *emu, u8 *reg) {
   set_flags(emu, *emu->a == 0, 0, 1, 0);
 }
 
+// AND with 8-bit data
+void and_d8(EmulationState *emu) {
+  u8 target = emu->rom[*emu->pc];
+  *emu->a &= target;
+  *emu->pc += 1;
+}
+
 // OR with 8-bit register
 void or_regd8(EmulationState *emu, u8 *reg) {
   *emu->a |= *reg;
   set_flags(emu, *emu->a == 0, 0, 0, 0);
 }
 
+// OR with 8-bit data
+void or_d8(EmulationState *emu) {
+  u8 target = emu->rom[*emu->pc];
+  *emu->a |= target;
+  *emu->pc += 1;
+}
+
 // XOR with 8-bit register
 void xor_regd8(EmulationState *emu, u8 *reg) {
   *emu->a ^= *reg;
   set_flags(emu, *emu->a == 0, 0, 0, 0);
+}
+
+// XOR with 8-bit data
+void xor_d8(EmulationState *emu) {
+  u8 target = emu->rom[*emu->pc];
+  *emu->a ^= target;
+  *emu->pc += 1;
 }
 
 // Increment 1 from 8-bit register
@@ -90,6 +111,10 @@ void nop(EmulationState *emu) {}
 
 // https://gbdev.io/pandocs/Interrupts.html
 void di(EmulationState *emu) { *emu->ie = 0; }
+
+// TODO: Delay instruction by one
+// https://gbdev.io/pandocs/Interrupts.html
+void ei(EmulationState *emu) { *emu->ie = 1; }
 
 void jp_a16(EmulationState *emu) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
@@ -352,6 +377,7 @@ void cp_d8(EmulationState *emu) {
 Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x00, .execute = &nop},
     {.encoding = 0xF3, .execute = &di},
+    {.encoding = 0xFB, .execute = &ei},
 
     {.encoding = 0x01, .execute = &ld_bc_d16},
     {.encoding = 0x11, .execute = &ld_de_d16},
@@ -517,6 +543,11 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0xB4, .execute = &or_h},
     {.encoding = 0xB5, .execute = &or_l},
     {.encoding = 0xB7, .execute = &or_a},
+
+    {.encoding = 0xE6, .execute = &and_d8},
+    {.encoding = 0xF6, .execute = &or_d8},
+
+    {.encoding = 0xEE, .execute = &xor_d8},
 
     {.encoding = 0x2F, .execute = &cpl},
 

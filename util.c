@@ -54,22 +54,19 @@ void print_bytes(void *p, size_t len) {
   printf("\n");
 }
 
-void read_file(const char *path, u8 *dst) {
+size_t read_rom(const char *path, u8 *dst) {
   FILE *file = fopen(path, "rb");
 
   if (file == NULL) {
     printf("Could not open file: %s\n", path);
+		return 0;
   }
 
-  fseek(file, 0, SEEK_END);
-  unsigned long length = ftell(file);
-  fseek(file, 0, SEEK_SET);
-
-  if (fread(dst, 1, length, file) > 0) {
-    printf("Failed to read file: %s\n", path);
-  }
+  size_t b = fread(dst, 1, 65536, file);
 
   fclose(file);
+
+	return b;
 }
 
 void dump_file(const char *path, u8 *data, size_t length) {

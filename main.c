@@ -31,10 +31,12 @@ int main(int argc, char **argv) {
   if (argc > 1) {
     path = argv[1];
   }
+  printf("Loading ROM from %s\n", path);
 
   EmulationState *emu = emu_init();
 
-  read_file(path, emu->rom);
+  size_t bytes_read = read_rom(path, emu->rom);
+  printf("Read %zu bytes\n", bytes_read);
 
   printf("-------------START HEADERS--------------\n");
   printf("Title: %s\n", emu->header->title);

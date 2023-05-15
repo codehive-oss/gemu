@@ -9,7 +9,7 @@ typedef struct Instruction {
   void (*execute)(EmulationState *);
 } Instruction;
 
-#define GB_INSTRUCTIONS_LENGTH 145
+#define GB_INSTRUCTIONS_LENGTH 149
 
 extern Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH];
 
@@ -19,8 +19,11 @@ void ld_regd8_rega16(EmulationState *emu, u8 *target, u16 *from);
 void ld_rega16_regd8(EmulationState *emu, u16 *target, u8 *from);
 void ld_rega16_d8(EmulationState *emu, u16 *target);
 void and_regd8(EmulationState *emu, u8 *reg);
+void and_d8(EmulationState *emu);
 void or_regd8(EmulationState *emu, u8 *reg);
+void or_d8(EmulationState *emu);
 void xor_regd8(EmulationState *emu, u8 *reg);
+void xor_d8(EmulationState *emu);
 void inc_regd8(EmulationState *emu, u8 *reg);
 void dec_regd8(EmulationState *emu, u8 *reg);
 void add_regd8(EmulationState *emu, u8 *from);
@@ -28,6 +31,7 @@ void sub_regd8(EmulationState *emu, u8 *from);
 
 void nop(EmulationState *emu);
 void di(EmulationState *emu);
+void ei(EmulationState *emu);
 
 void jp_a16(EmulationState *emu);
 void jr_d8(EmulationState *emu);
@@ -36,6 +40,7 @@ void jr_nz_d8(EmulationState *emu);
 void jp_c_a16(EmulationState *emu);
 
 void call_a16(EmulationState *emu);
+void ret(EmulationState *emu);
 
 void ldh_a8_a(EmulationState *emu);
 void ldh_a_a8(EmulationState *emu);
@@ -170,7 +175,7 @@ void add_e(EmulationState *emu);
 void add_h(EmulationState *emu);
 void add_l(EmulationState *emu);
 void add_a(EmulationState *emu);
-                               ;
+;
 void sub_b(EmulationState *emu);
 void sub_c(EmulationState *emu);
 void sub_d(EmulationState *emu);
@@ -178,7 +183,7 @@ void sub_e(EmulationState *emu);
 void sub_h(EmulationState *emu);
 void sub_l(EmulationState *emu);
 void sub_a(EmulationState *emu);
-                               ;
+;
 void and_b(EmulationState *emu);
 void and_c(EmulationState *emu);
 void and_d(EmulationState *emu);

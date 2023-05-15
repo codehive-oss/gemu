@@ -67,7 +67,7 @@ typedef struct EmulationState {
 } EmulationState;
 
 void print_bytes(void *p, size_t len);
-void read_file(const char *path, u8 *dst);
+size_t read_rom(const char *path, u8 *dst);
 void dump_file(const char *path, u8 *data, size_t length);
 int getch(void);
 
