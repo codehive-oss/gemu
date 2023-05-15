@@ -81,6 +81,11 @@ void sub_regd8(EmulationState *emu, u8 *from) {
   set_flags(emu, *emu->a == 0, 1, h, c);
 }
 
+void cpl(EmulationState *emu) {
+  *emu->a = *emu->a ^ 0xFF;
+  set_flags(emu, -1, 1, 1, -1);
+}
+
 void nop(EmulationState *emu) {}
 
 // https://gbdev.io/pandocs/Interrupts.html
@@ -92,7 +97,8 @@ void jp_a16(EmulationState *emu) {
 }
 
 void jr_d8(EmulationState *emu) {
-  i8 target = emu->rom[*emu->pc];
+  i8 target = *(i8 *)&emu->rom[*emu->pc];
+  *emu->pc += 1;
   *emu->pc += target;
 }
 
@@ -118,6 +124,12 @@ void jp_nz_a16(EmulationState *emu) {
   } else {
     *emu->pc += 2;
   }
+}
+
+void call_a16(EmulationState *emu) {
+  *emu->sp -= 2;
+  *(u16 *)&emu->mem[*emu->sp] = *emu->pc;
+  jp_a16(emu);
 }
 
 void ldh_a8_a(EmulationState *emu) {
@@ -441,8 +453,6 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0x2A, .execute = &ld_a_hli},
     {.encoding = 0x3A, .execute = &ld_a_hld},
 
-    {.encoding = 0xC3, .execute = &jp_a16},
-
     {.encoding = 0x06, .execute = &ld_b_d8},
     {.encoding = 0x16, .execute = &ld_d_d8},
     {.encoding = 0x26, .execute = &ld_h_d8},
@@ -499,10 +509,15 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0xB5, .execute = &or_l},
     {.encoding = 0xB7, .execute = &or_a},
 
+    {.encoding = 0x2F, .execute = &cpl},
+
     {.encoding = 0xFE, .execute = &cp_d8},
 
+    {.encoding = 0xC3, .execute = &jp_a16},
     {.encoding = 0xDA, .execute = &jp_c_a16},
     {.encoding = 0xC2, .execute = &jp_nz_a16},
+
+    {.encoding = 0xCD, .execute = &call_a16},
 
     {.encoding = 0xB1, .execute = &or_c},
     {.encoding = 0xAF, .execute = &xor_a},
