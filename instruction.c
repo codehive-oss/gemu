@@ -127,8 +127,32 @@ void jr_d8(EmulationState *emu) {
   *emu->pc += target;
 }
 
+void jr_z_d8(EmulationState *emu) {
+  if (*emu->f & Z_MASK) { // Z is set
+    jr_d8(emu);
+  } else {
+    *emu->pc += 1;
+  }
+}
+
 void jr_nz_d8(EmulationState *emu) {
   if (!(*emu->f & Z_MASK)) { // Z is not set
+    jr_d8(emu);
+  } else {
+    *emu->pc += 1;
+  }
+}
+
+void jr_c_d8(EmulationState *emu) {
+  if (*emu->f & C_MASK) { // C is set
+    jr_d8(emu);
+  } else {
+    *emu->pc += 1;
+  }
+}
+
+void jr_nc_d8(EmulationState *emu) {
+  if (!(*emu->f & C_MASK)) { // C not is set
     jr_d8(emu);
   } else {
     *emu->pc += 1;
@@ -554,6 +578,7 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0xFE, .execute = &cp_d8},
 
     {.encoding = 0xC3, .execute = &jp_a16},
+
     {.encoding = 0xDA, .execute = &jp_c_a16},
     {.encoding = 0xC2, .execute = &jp_nz_a16},
 
@@ -564,6 +589,11 @@ Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH] = {
     {.encoding = 0xB1, .execute = &or_c},
     {.encoding = 0xAF, .execute = &xor_a},
 
-    {.encoding = 0x18, .execute = &jr_d8},
+
     {.encoding = 0x20, .execute = &jr_nz_d8},
+    {.encoding = 0x30, .execute = &jr_nc_d8},
+
+    {.encoding = 0x18, .execute = &jr_d8},
+    {.encoding = 0x28, .execute = &jr_z_d8},
+    {.encoding = 0x38, .execute = &jr_c_d8},
 };
