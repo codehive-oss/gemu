@@ -142,6 +142,10 @@ void jp_a16(EmulationState *emu) {
   *emu->pc = target;
 }
 
+void jp_hl(EmulationState *emu) {
+  *emu->pc = *emu->hl;
+}
+
 void jp_z_a16(EmulationState *emu) {
   if (*emu->f & Z_MASK) { // Z is set
     jp_a16(emu);
@@ -707,6 +711,7 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0xFE] = {.execute = &cp_d8},
 
     [0xC3] = {.execute = &jp_a16},
+    [0xE9] = {.execute = &jp_hl},
     [0xC2] = {.execute = &jp_nz_a16},
     [0xD2] = {.execute = &jp_nc_a16},
     [0xCA] = {.execute = &jp_z_a16},

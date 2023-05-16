@@ -35,6 +35,7 @@ void di(EmulationState *emu);
 void ei(EmulationState *emu);
 
 void jp_a16(EmulationState *emu);
+void jp_hl(EmulationState *emu);
 void jp_z_a16(EmulationState *emu);
 void jp_nz_a16(EmulationState *emu);
 void jp_c_a16(EmulationState *emu);
