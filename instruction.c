@@ -2,6 +2,7 @@
 #include "types.h"
 #include "util.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 // Loads 8-bit data to any 8-bit register
 void ld_regd8_d8(EmulationState *emu, u8 *reg) {
@@ -445,10 +446,26 @@ void cp_d8(EmulationState *emu) {
   *emu->pc += 1;
 }
 
-Instruction GB_INSTRUCTIONS[255] = {
+void prefix(EmulationState *emu) {
+  u8 inst = emu->rom[*emu->pc];
+  *emu->pc += 1;
+
+  Instruction instruction = GB_INSTRUCTIONS_PREFIXED[inst];
+  if (*(u8 *)&instruction == 0) { // Uninitialized memory
+    printf("Prefixed Instruction not found: %02X\n", inst);
+    printf("Terminating...\n");
+
+    exit(1);
+  }
+
+  instruction.execute(emu);
+}
+
+Instruction GB_INSTRUCTIONS[256] = {
     [0x00] = {.execute = &nop},
     [0xF3] = {.execute = &di},
     [0xFB] = {.execute = &ei},
+    [0xCB] = {.execute = &prefix},
 
     [0x01] = {.execute = &ld_bc_d16},
     [0x11] = {.execute = &ld_de_d16},
@@ -644,4 +661,27 @@ Instruction GB_INSTRUCTIONS[255] = {
     [0x18] = {.execute = &jr_d8},
     [0x28] = {.execute = &jr_z_d8},
     [0x38] = {.execute = &jr_c_d8},
+};
+
+void swap_regd8(EmulationState *emu, u8 *reg) {
+  *reg = (*reg << 4) | (*reg >> 4);
+  set_flags(emu, *reg == 0, 0, 0, 0);
+}
+
+void swap_b(EmulationState *emu) { swap_regd8(emu, emu->b); }
+void swap_c(EmulationState *emu) { swap_regd8(emu, emu->c); }
+void swap_d(EmulationState *emu) { swap_regd8(emu, emu->d); }
+void swap_e(EmulationState *emu) { swap_regd8(emu, emu->e); }
+void swap_h(EmulationState *emu) { swap_regd8(emu, emu->h); }
+void swap_l(EmulationState *emu) { swap_regd8(emu, emu->l); }
+void swap_a(EmulationState *emu) { swap_regd8(emu, emu->a); }
+
+Instruction GB_INSTRUCTIONS_PREFIXED[256] = {
+    [0x30] = {.execute = &swap_b},
+    [0x31] = {.execute = &swap_c},
+    [0x32] = {.execute = &swap_d},
+    [0x33] = {.execute = &swap_e},
+    [0x34] = {.execute = &swap_h},
+    [0x35] = {.execute = &swap_l},
+    [0x37] = {.execute = &swap_a},
 };

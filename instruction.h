@@ -8,7 +8,8 @@ typedef struct Instruction {
   void (*execute)(EmulationState *);
 } Instruction;
 
-extern Instruction GB_INSTRUCTIONS[255];
+extern Instruction GB_INSTRUCTIONS[256];
+extern Instruction GB_INSTRUCTIONS_PREFIXED[256];
 
 void ld_regd8_d8(EmulationState *emu, u8 *reg);
 void ld_regd16_d16(EmulationState *emu, u16 *reg);
