@@ -757,6 +757,166 @@ void swap_regd8(EmulationState *emu, u8 *reg) {
   set_flags(emu, *reg == 0, 0, 0, 0);
 }
 
+void res_regd8(EmulationState *emu, u8 *reg, u8 bit) {
+  *reg &= ~(1 << bit);
+}
+
+void res_rega16(EmulationState *emu, u16 addr, u8 bit) {
+  emu->mem[addr] &= ~(1 << bit);
+}
+
+void set_regd8(EmulationState *emu, u8 *reg, u8 bit) {
+  *reg |= (1 << bit);
+}
+
+void set_rega16(EmulationState *emu, u16 addr, u8 bit) {
+  emu->mem[addr] |= (1 << bit);
+}
+
+void res_b0(EmulationState *emu) { res_regd8(emu, emu->b, 0); }
+void res_c0(EmulationState *emu) { res_regd8(emu, emu->c, 0); }
+void res_d0(EmulationState *emu) { res_regd8(emu, emu->d, 0); }
+void res_e0(EmulationState *emu) { res_regd8(emu, emu->e, 0); }
+void res_h0(EmulationState *emu) { res_regd8(emu, emu->h, 0); }
+void res_l0(EmulationState *emu) { res_regd8(emu, emu->l, 0); }
+void res_hl0(EmulationState *emu) { res_rega16(emu, *emu->hl, 0); }
+void res_a0(EmulationState *emu) { res_regd8(emu, emu->a, 0); }
+
+void res_b1(EmulationState *emu) { res_regd8(emu, emu->b, 1); }
+void res_c1(EmulationState *emu) { res_regd8(emu, emu->c, 1); }
+void res_d1(EmulationState *emu) { res_regd8(emu, emu->d, 1); }
+void res_e1(EmulationState *emu) { res_regd8(emu, emu->e, 1); }
+void res_h1(EmulationState *emu) { res_regd8(emu, emu->h, 1); }
+void res_l1(EmulationState *emu) { res_regd8(emu, emu->l, 1); }
+void res_hl1(EmulationState *emu) { res_rega16(emu, *emu->hl, 1); }
+void res_a1(EmulationState *emu) { res_regd8(emu, emu->a, 1); }
+
+void res_b2(EmulationState *emu) { res_regd8(emu, emu->b, 2); }
+void res_c2(EmulationState *emu) { res_regd8(emu, emu->c, 2); }
+void res_d2(EmulationState *emu) { res_regd8(emu, emu->d, 2); }
+void res_e2(EmulationState *emu) { res_regd8(emu, emu->e, 2); }
+void res_h2(EmulationState *emu) { res_regd8(emu, emu->h, 2); }
+void res_l2(EmulationState *emu) { res_regd8(emu, emu->l, 2); }
+void res_hl2(EmulationState *emu) { res_rega16(emu, *emu->hl, 2); }
+void res_a2(EmulationState *emu) { res_regd8(emu, emu->a, 2); }
+
+void res_b3(EmulationState *emu) { res_regd8(emu, emu->b, 3); }
+void res_c3(EmulationState *emu) { res_regd8(emu, emu->c, 3); }
+void res_d3(EmulationState *emu) { res_regd8(emu, emu->d, 3); }
+void res_e3(EmulationState *emu) { res_regd8(emu, emu->e, 3); }
+void res_h3(EmulationState *emu) { res_regd8(emu, emu->h, 3); }
+void res_l3(EmulationState *emu) { res_regd8(emu, emu->l, 3); }
+void res_hl3(EmulationState *emu) { res_rega16(emu, *emu->hl, 3); }
+void res_a3(EmulationState *emu) { res_regd8(emu, emu->a, 3); }
+
+void res_b4(EmulationState *emu) { res_regd8(emu, emu->b, 4); }
+void res_c4(EmulationState *emu) { res_regd8(emu, emu->c, 4); }
+void res_d4(EmulationState *emu) { res_regd8(emu, emu->d, 4); }
+void res_e4(EmulationState *emu) { res_regd8(emu, emu->e, 4); }
+void res_h4(EmulationState *emu) { res_regd8(emu, emu->h, 4); }
+void res_l4(EmulationState *emu) { res_regd8(emu, emu->l, 4); }
+void res_hl4(EmulationState *emu) { res_rega16(emu, *emu->hl, 4); }
+void res_a4(EmulationState *emu) { res_regd8(emu, emu->a, 4); }
+
+void res_b5(EmulationState *emu) { res_regd8(emu, emu->b, 5); }
+void res_c5(EmulationState *emu) { res_regd8(emu, emu->c, 5); }
+void res_d5(EmulationState *emu) { res_regd8(emu, emu->d, 5); }
+void res_e5(EmulationState *emu) { res_regd8(emu, emu->e, 5); }
+void res_h5(EmulationState *emu) { res_regd8(emu, emu->h, 5); }
+void res_l5(EmulationState *emu) { res_regd8(emu, emu->l, 5); }
+void res_hl5(EmulationState *emu) { res_rega16(emu, *emu->hl, 5); }
+void res_a5(EmulationState *emu) { res_regd8(emu, emu->a, 5); }
+
+void res_b6(EmulationState *emu) { res_regd8(emu, emu->b, 6); }
+void res_c6(EmulationState *emu) { res_regd8(emu, emu->c, 6); }
+void res_d6(EmulationState *emu) { res_regd8(emu, emu->d, 6); }
+void res_e6(EmulationState *emu) { res_regd8(emu, emu->e, 6); }
+void res_h6(EmulationState *emu) { res_regd8(emu, emu->h, 6); }
+void res_l6(EmulationState *emu) { res_regd8(emu, emu->l, 6); }
+void res_hl6(EmulationState *emu) { res_rega16(emu, *emu->hl, 6); }
+void res_a6(EmulationState *emu) { res_regd8(emu, emu->a, 6); }
+
+void res_b7(EmulationState *emu) { res_regd8(emu, emu->b, 7); }
+void res_c7(EmulationState *emu) { res_regd8(emu, emu->c, 7); }
+void res_d7(EmulationState *emu) { res_regd8(emu, emu->d, 7); }
+void res_e7(EmulationState *emu) { res_regd8(emu, emu->e, 7); }
+void res_h7(EmulationState *emu) { res_regd8(emu, emu->h, 7); }
+void res_l7(EmulationState *emu) { res_regd8(emu, emu->l, 7); }
+void res_hl7(EmulationState *emu) { res_rega16(emu, *emu->hl, 7); }
+void res_a7(EmulationState *emu) { res_regd8(emu, emu->a, 7); }
+
+void set_b0(EmulationState *emu) { set_regd8(emu, emu->b, 0); }
+void set_c0(EmulationState *emu) { set_regd8(emu, emu->c, 0); }
+void set_d0(EmulationState *emu) { set_regd8(emu, emu->d, 0); }
+void set_e0(EmulationState *emu) { set_regd8(emu, emu->e, 0); }
+void set_h0(EmulationState *emu) { set_regd8(emu, emu->h, 0); }
+void set_l0(EmulationState *emu) { set_regd8(emu, emu->l, 0); }
+void set_hl0(EmulationState *emu) { set_rega16(emu, *emu->hl, 0); }
+void set_a0(EmulationState *emu) { set_regd8(emu, emu->a, 0); }
+
+void set_b1(EmulationState *emu) { set_regd8(emu, emu->b, 1); }
+void set_c1(EmulationState *emu) { set_regd8(emu, emu->c, 1); }
+void set_d1(EmulationState *emu) { set_regd8(emu, emu->d, 1); }
+void set_e1(EmulationState *emu) { set_regd8(emu, emu->e, 1); }
+void set_h1(EmulationState *emu) { set_regd8(emu, emu->h, 1); }
+void set_l1(EmulationState *emu) { set_regd8(emu, emu->l, 1); }
+void set_hl1(EmulationState *emu) { set_rega16(emu, *emu->hl, 1); }
+void set_a1(EmulationState *emu) { set_regd8(emu, emu->a, 1); }
+
+void set_b2(EmulationState *emu) { set_regd8(emu, emu->b, 2); }
+void set_c2(EmulationState *emu) { set_regd8(emu, emu->c, 2); }
+void set_d2(EmulationState *emu) { set_regd8(emu, emu->d, 2); }
+void set_e2(EmulationState *emu) { set_regd8(emu, emu->e, 2); }
+void set_h2(EmulationState *emu) { set_regd8(emu, emu->h, 2); }
+void set_l2(EmulationState *emu) { set_regd8(emu, emu->l, 2); }
+void set_hl2(EmulationState *emu) { set_rega16(emu, *emu->hl, 2); }
+void set_a2(EmulationState *emu) { set_regd8(emu, emu->a, 2); }
+
+void set_b3(EmulationState *emu) { set_regd8(emu, emu->b, 3); }
+void set_c3(EmulationState *emu) { set_regd8(emu, emu->c, 3); }
+void set_d3(EmulationState *emu) { set_regd8(emu, emu->d, 3); }
+void set_e3(EmulationState *emu) { set_regd8(emu, emu->e, 3); }
+void set_h3(EmulationState *emu) { set_regd8(emu, emu->h, 3); }
+void set_l3(EmulationState *emu) { set_regd8(emu, emu->l, 3); }
+void set_hl3(EmulationState *emu) { set_rega16(emu, *emu->hl, 3); }
+void set_a3(EmulationState *emu) { set_regd8(emu, emu->a, 3); }
+
+void set_b4(EmulationState *emu) { set_regd8(emu, emu->b, 4); }
+void set_c4(EmulationState *emu) { set_regd8(emu, emu->c, 4); }
+void set_d4(EmulationState *emu) { set_regd8(emu, emu->d, 4); }
+void set_e4(EmulationState *emu) { set_regd8(emu, emu->e, 4); }
+void set_h4(EmulationState *emu) { set_regd8(emu, emu->h, 4); }
+void set_l4(EmulationState *emu) { set_regd8(emu, emu->l, 4); }
+void set_hl4(EmulationState *emu) { set_rega16(emu, *emu->hl, 4); }
+void set_a4(EmulationState *emu) { set_regd8(emu, emu->a, 4); }
+
+void set_b5(EmulationState *emu) { set_regd8(emu, emu->b, 5); }
+void set_c5(EmulationState *emu) { set_regd8(emu, emu->c, 5); }
+void set_d5(EmulationState *emu) { set_regd8(emu, emu->d, 5); }
+void set_e5(EmulationState *emu) { set_regd8(emu, emu->e, 5); }
+void set_h5(EmulationState *emu) { set_regd8(emu, emu->h, 5); }
+void set_l5(EmulationState *emu) { set_regd8(emu, emu->l, 5); }
+void set_hl5(EmulationState *emu) { set_rega16(emu, *emu->hl, 5); }
+void set_a5(EmulationState *emu) { set_regd8(emu, emu->a, 5); }
+
+void set_b6(EmulationState *emu) { set_regd8(emu, emu->b, 6); }
+void set_c6(EmulationState *emu) { set_regd8(emu, emu->c, 6); }
+void set_d6(EmulationState *emu) { set_regd8(emu, emu->d, 6); }
+void set_e6(EmulationState *emu) { set_regd8(emu, emu->e, 6); }
+void set_h6(EmulationState *emu) { set_regd8(emu, emu->h, 6); }
+void set_l6(EmulationState *emu) { set_regd8(emu, emu->l, 6); }
+void set_hl6(EmulationState *emu) { set_rega16(emu, *emu->hl, 6); }
+void set_a6(EmulationState *emu) { set_regd8(emu, emu->a, 6); }
+
+void set_b7(EmulationState *emu) { set_regd8(emu, emu->b, 7); }
+void set_c7(EmulationState *emu) { set_regd8(emu, emu->c, 7); }
+void set_d7(EmulationState *emu) { set_regd8(emu, emu->d, 7); }
+void set_e7(EmulationState *emu) { set_regd8(emu, emu->e, 7); }
+void set_h7(EmulationState *emu) { set_regd8(emu, emu->h, 7); }
+void set_l7(EmulationState *emu) { set_regd8(emu, emu->l, 7); }
+void set_hl7(EmulationState *emu) { set_rega16(emu, *emu->hl, 7); }
+void set_a7(EmulationState *emu) { set_regd8(emu, emu->a, 7); }
+
 void swap_b(EmulationState *emu) { swap_regd8(emu, emu->b); }
 void swap_c(EmulationState *emu) { swap_regd8(emu, emu->c); }
 void swap_d(EmulationState *emu) { swap_regd8(emu, emu->d); }
@@ -773,4 +933,148 @@ Instruction GB_INSTRUCTIONS_PREFIXED[256] = {
     [0x34] = {.execute = &swap_h},
     [0x35] = {.execute = &swap_l},
     [0x37] = {.execute = &swap_a},
+
+    [0x80] = {.execute = &res_b0},
+    [0x81] = {.execute = &res_c0},
+    [0x82] = {.execute = &res_d0},
+    [0x83] = {.execute = &res_e0},
+    [0x84] = {.execute = &res_h0},
+    [0x85] = {.execute = &res_l0},
+    [0x86] = {.execute = &res_hl0},
+    [0x87] = {.execute = &res_a0},
+
+    [0x88] = {.execute = &res_b1},
+    [0x89] = {.execute = &res_c1},
+    [0x8A] = {.execute = &res_d1},
+    [0x8B] = {.execute = &res_e1},
+    [0x8C] = {.execute = &res_h1},
+    [0x8D] = {.execute = &res_l1},
+    [0x8E] = {.execute = &res_hl1},
+    [0x8F] = {.execute = &res_a1},
+
+    [0x90] = {.execute = &res_b2},
+    [0x91] = {.execute = &res_c2},
+    [0x92] = {.execute = &res_d2},
+    [0x93] = {.execute = &res_e2},
+    [0x94] = {.execute = &res_h2},
+    [0x95] = {.execute = &res_l2},
+    [0x96] = {.execute = &res_hl2},
+    [0x97] = {.execute = &res_a2},
+
+    [0x98] = {.execute = &res_b3},
+    [0x99] = {.execute = &res_c3},
+    [0x9A] = {.execute = &res_d3},
+    [0x9B] = {.execute = &res_e3},
+    [0x9C] = {.execute = &res_h3},
+    [0x9D] = {.execute = &res_l3},
+    [0x9E] = {.execute = &res_hl3},
+    [0x9F] = {.execute = &res_a3},
+
+    [0xA0] = {.execute = &res_b4},
+    [0xA1] = {.execute = &res_c4},
+    [0xA2] = {.execute = &res_d4},
+    [0xA3] = {.execute = &res_e4},
+    [0xA4] = {.execute = &res_h4},
+    [0xA5] = {.execute = &res_l4},
+    [0xA6] = {.execute = &res_hl4},
+    [0xA7] = {.execute = &res_a4},
+
+    [0xA8] = {.execute = &res_b5},
+    [0xA9] = {.execute = &res_c5},
+    [0xAA] = {.execute = &res_d5},
+    [0xAB] = {.execute = &res_e5},
+    [0xAC] = {.execute = &res_h5},
+    [0xAD] = {.execute = &res_l5},
+    [0xAE] = {.execute = &res_hl5},
+    [0xAF] = {.execute = &res_a5},
+
+    [0xB0] = {.execute = &res_b6},
+    [0xB1] = {.execute = &res_c6},
+    [0xB2] = {.execute = &res_d6},
+    [0xB3] = {.execute = &res_e6},
+    [0xB4] = {.execute = &res_h6},
+    [0xB5] = {.execute = &res_l6},
+    [0xB6] = {.execute = &res_hl6},
+    [0xB7] = {.execute = &res_a6},
+
+    [0xB8] = {.execute = &res_b7},
+    [0xB9] = {.execute = &res_c7},
+    [0xBA] = {.execute = &res_d7},
+    [0xBB] = {.execute = &res_e7},
+    [0xBC] = {.execute = &res_h7},
+    [0xBD] = {.execute = &res_l7},
+    [0xBE] = {.execute = &res_hl7},
+    [0xBF] = {.execute = &res_a7},
+
+    [0xC0] = {.execute = &set_b0},
+    [0xC1] = {.execute = &set_c0},
+    [0xC2] = {.execute = &set_d0},
+    [0xC3] = {.execute = &set_e0},
+    [0xC4] = {.execute = &set_h0},
+    [0xC5] = {.execute = &set_l0},
+    [0xC6] = {.execute = &set_hl0},
+    [0xC7] = {.execute = &set_a0},
+
+    [0xC8] = {.execute = &set_b1},
+    [0xC9] = {.execute = &set_c1},
+    [0xCA] = {.execute = &set_d1},
+    [0xCB] = {.execute = &set_e1},
+    [0xCC] = {.execute = &set_h1},
+    [0xCD] = {.execute = &set_l1},
+    [0xCE] = {.execute = &set_hl1},
+    [0xCF] = {.execute = &set_a1},
+
+    [0xD0] = {.execute = &set_b2},
+    [0xD1] = {.execute = &set_c2},
+    [0xD2] = {.execute = &set_d2},
+    [0xD3] = {.execute = &set_e2},
+    [0xD4] = {.execute = &set_h2},
+    [0xD5] = {.execute = &set_l2},
+    [0xD6] = {.execute = &set_hl2},
+    [0xD7] = {.execute = &set_a2},
+
+    [0xD8] = {.execute = &set_b3},
+    [0xD9] = {.execute = &set_c3},
+    [0xDA] = {.execute = &set_d3},
+    [0xDB] = {.execute = &set_e3},
+    [0xDC] = {.execute = &set_h3},
+    [0xDD] = {.execute = &set_l3},
+    [0xDE] = {.execute = &set_hl3},
+    [0xDF] = {.execute = &set_a3},
+
+    [0xE0] = {.execute = &set_b4},
+    [0xE1] = {.execute = &set_c4},
+    [0xE2] = {.execute = &set_d4},
+    [0xE3] = {.execute = &set_e4},
+    [0xE4] = {.execute = &set_h4},
+    [0xE5] = {.execute = &set_l4},
+    [0xE6] = {.execute = &set_hl4},
+    [0xE7] = {.execute = &set_a4},
+
+    [0xE8] = {.execute = &set_b5},
+    [0xE9] = {.execute = &set_c5},
+    [0xEA] = {.execute = &set_d5},
+    [0xEB] = {.execute = &set_e5},
+    [0xEC] = {.execute = &set_h5},
+    [0xED] = {.execute = &set_l5},
+    [0xEE] = {.execute = &set_hl5},
+    [0xEF] = {.execute = &set_a5},
+
+    [0xF0] = {.execute = &set_b6},
+    [0xF1] = {.execute = &set_c6},
+    [0xF2] = {.execute = &set_d6},
+    [0xF3] = {.execute = &set_e6},
+    [0xF4] = {.execute = &set_h6},
+    [0xF5] = {.execute = &set_l6},
+    [0xF6] = {.execute = &set_hl6},
+    [0xF7] = {.execute = &set_a6},
+
+    [0xF8] = {.execute = &set_b7},
+    [0xF9] = {.execute = &set_c7},
+    [0xFA] = {.execute = &set_d7},
+    [0xFB] = {.execute = &set_e7},
+    [0xFC] = {.execute = &set_h7},
+    [0xFD] = {.execute = &set_l7},
+    [0xFE] = {.execute = &set_hl7},
+    [0xFF] = {.execute = &set_a7},
 };
