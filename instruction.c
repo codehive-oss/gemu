@@ -281,6 +281,30 @@ void push_af(EmulationState *emu) { push(emu, emu->af); }
 
 void ret(EmulationState *emu) { pop(emu, emu->pc); }
 
+void ret_z(EmulationState *emu) {
+  if (*emu->f & Z_MASK) { // Z is set
+    ret(emu);
+  }
+}
+
+void ret_nz(EmulationState *emu) {
+  if (!(*emu->f & Z_MASK)) { // C not is set
+    ret(emu);
+  }
+}
+
+void ret_c(EmulationState *emu) {
+  if (*emu->f & C_MASK) { // Z is set
+    ret(emu);
+  }
+}
+
+void ret_nc(EmulationState *emu) {
+  if (!(*emu->f & C_MASK)) { // C not is set
+    ret(emu);
+  }
+}
+
 void ldh_a8_a(EmulationState *emu) {
   u8 target = emu->rom[*emu->pc];
   emu->io[target] = *emu->a;
@@ -743,6 +767,10 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0xF5] = {.execute = &push_af},
 
     [0xC9] = {.execute = &ret},
+    [0xC0] = {.execute = &ret_nz},
+    [0xD0] = {.execute = &ret_nc},
+    [0xC8] = {.execute = &ret_z},
+    [0xD8] = {.execute = &ret_c},
 
     [0x20] = {.execute = &jr_nz_d8},
     [0x30] = {.execute = &jr_nc_d8},

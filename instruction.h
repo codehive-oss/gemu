@@ -73,6 +73,10 @@ void push_hl(EmulationState *emu);
 void push_af(EmulationState *emu);
 
 void ret(EmulationState *emu);
+void ret_z(EmulationState *emu);
+void ret_nz(EmulationState *emu);
+void ret_c(EmulationState *emu);
+void ret_nc(EmulationState *emu);
 
 void ldh_a8_a(EmulationState *emu);
 void ldh_a_a8(EmulationState *emu);
