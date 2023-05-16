@@ -11,12 +11,13 @@ bool handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
 
   Instruction instruction = GB_INSTRUCTIONS[inst];
-  if (*(u8 *)&instruction == 0) { // Uninitialized memory 
-    printf("Instruction not found: %02X\n", inst);
-    printf("Terminating...\n");
+	// TODO: Check if instruction exists
+  // if (*(u8 *)&instruction == 0) { // Uninitialized memory 
+  //   printf("Instruction not found: %02X\n", inst);
+  //   printf("Terminating...\n");
 
-    return false;
-  }
+  //   return false;
+  // }
 
   instruction.execute(emu);
   // TODO: Fix this with real mcycle

@@ -25,6 +25,7 @@ void xor_d8(EmulationState *emu);
 void inc_regd8(EmulationState *emu, u8 *reg);
 void dec_regd8(EmulationState *emu, u8 *reg);
 void add_regd8(EmulationState *emu, u8 *from);
+void add_regd16(EmulationState *emu, u16 *from);
 void sub_regd8(EmulationState *emu, u8 *from);
 void pop(EmulationState *emu, u16 *reg);
 void push(EmulationState *emu, u16 *reg);
@@ -205,6 +206,11 @@ void add_e(EmulationState *emu);
 void add_h(EmulationState *emu);
 void add_l(EmulationState *emu);
 void add_a(EmulationState *emu);
+
+void add_bc(EmulationState *emu);
+void add_de(EmulationState *emu);
+void add_hl(EmulationState *emu);
+void add_sp(EmulationState *emu);
 
 void sub_b(EmulationState *emu);
 void sub_c(EmulationState *emu);

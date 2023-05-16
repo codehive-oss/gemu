@@ -87,12 +87,22 @@ void dec_regd8(EmulationState *emu, u8 *reg) {
   set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x0F, -1);
 }
 
+// Add 8-bit data to A register
 void add_regd8(EmulationState *emu, u8 *from) {
   bool h = (*emu->a & 0x0F) + (*from & 0x0F) > 0x0F;
   bool c = *emu->a + *from > 0xFF;
 
   *emu->a += *from;
   set_flags(emu, *emu->a == 0, 0, h, c);
+}
+
+// Add 16-bit data to HL register
+void add_regd16(EmulationState *emu, u16 *from) {
+  bool h = (*emu->hl & 0x00FF) + (*from & 0x00FF) > 0x00FF;
+  bool c = *emu->hl + *from > 0xFFFF;
+
+  *emu->hl += *from;
+  set_flags(emu, -1, 0, h, c);
 }
 
 void sub_regd8(EmulationState *emu, u8 *from) {
@@ -430,6 +440,11 @@ void add_h(EmulationState *emu) { add_regd8(emu, emu->h); }
 void add_l(EmulationState *emu) { add_regd8(emu, emu->l); }
 void add_a(EmulationState *emu) { add_regd8(emu, emu->a); }
 
+void add_bc(EmulationState *emu) { add_regd16(emu, emu->bc); }
+void add_de(EmulationState *emu) { add_regd16(emu, emu->de); }
+void add_hl(EmulationState *emu) { add_regd16(emu, emu->hl); }
+void add_sp(EmulationState *emu) { add_regd16(emu, emu->sp); }
+
 void sub_b(EmulationState *emu) { sub_regd8(emu, emu->b); }
 void sub_c(EmulationState *emu) { sub_regd8(emu, emu->c); }
 void sub_d(EmulationState *emu) { sub_regd8(emu, emu->d); }
@@ -627,6 +642,11 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x84] = {.execute = &add_h},
     [0x85] = {.execute = &add_l},
     [0x87] = {.execute = &add_a},
+
+    [0x09] = {.execute = &add_bc},
+    [0x19] = {.execute = &add_de},
+    [0x29] = {.execute = &add_hl},
+    [0x39] = {.execute = &add_sp},
 
     [0x90] = {.execute = &sub_b},
     [0x91] = {.execute = &sub_c},
