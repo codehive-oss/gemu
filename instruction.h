@@ -261,6 +261,154 @@ void cp_d8(EmulationState *emu);
 void prefix(EmulationState *emu);
 
 void swap_regd8(EmulationState *emu, u8 *reg);
+void res_regd8(EmulationState *emu, u8 *reg, u8 bit);
+void res_rega16(EmulationState *emu, u16 addr, u8 bit);
+void set_regd8(EmulationState *emu, u8 *reg, u8 bit);
+void set_rega16(EmulationState *emu, u16 addr, u8 bit);
+
+void res_b0(EmulationState *emu);
+void res_c0(EmulationState *emu);
+void res_d0(EmulationState *emu);
+void res_e0(EmulationState *emu);
+void res_h0(EmulationState *emu);
+void res_l0(EmulationState *emu);
+void res_hl0(EmulationState *emu);
+void res_a0(EmulationState *emu);
+
+void res_b1(EmulationState *emu);
+void res_c1(EmulationState *emu);
+void res_d1(EmulationState *emu);
+void res_e1(EmulationState *emu);
+void res_h1(EmulationState *emu);
+void res_l1(EmulationState *emu);
+void res_hl1(EmulationState *emu);
+void res_a1(EmulationState *emu);
+
+void res_b2(EmulationState *emu);
+void res_c2(EmulationState *emu);
+void res_d2(EmulationState *emu);
+void res_e2(EmulationState *emu);
+void res_h2(EmulationState *emu);
+void res_l2(EmulationState *emu);
+void res_hl2(EmulationState *emu);
+void res_a2(EmulationState *emu);
+
+void res_b3(EmulationState *emu);
+void res_c3(EmulationState *emu);
+void res_d3(EmulationState *emu);
+void res_e3(EmulationState *emu);
+void res_h3(EmulationState *emu);
+void res_l3(EmulationState *emu);
+void res_hl3(EmulationState *emu);
+void res_a3(EmulationState *emu);
+
+void res_b4(EmulationState *emu);
+void res_c4(EmulationState *emu);
+void res_d4(EmulationState *emu);
+void res_e4(EmulationState *emu);
+void res_h4(EmulationState *emu);
+void res_l4(EmulationState *emu);
+void res_hl4(EmulationState *emu);
+void res_a4(EmulationState *emu);
+
+void res_b5(EmulationState *emu);
+void res_c5(EmulationState *emu);
+void res_d5(EmulationState *emu);
+void res_e5(EmulationState *emu);
+void res_h5(EmulationState *emu);
+void res_l5(EmulationState *emu);
+void res_hl5(EmulationState *emu);
+void res_a5(EmulationState *emu);
+
+void res_b6(EmulationState *emu);
+void res_c6(EmulationState *emu);
+void res_d6(EmulationState *emu);
+void res_e6(EmulationState *emu);
+void res_h6(EmulationState *emu);
+void res_l6(EmulationState *emu);
+void res_hl6(EmulationState *emu);
+void res_a6(EmulationState *emu);
+
+void res_b7(EmulationState *emu);
+void res_c7(EmulationState *emu);
+void res_d7(EmulationState *emu);
+void res_e7(EmulationState *emu);
+void res_h7(EmulationState *emu);
+void res_l7(EmulationState *emu);
+void res_hl7(EmulationState *emu);
+void res_a7(EmulationState *emu);
+
+void set_b0(EmulationState *emu);
+void set_c0(EmulationState *emu);
+void set_d0(EmulationState *emu);
+void set_e0(EmulationState *emu);
+void set_h0(EmulationState *emu);
+void set_l0(EmulationState *emu);
+void set_hl0(EmulationState *emu);
+void set_a0(EmulationState *emu);
+
+void set_b1(EmulationState *emu);
+void set_c1(EmulationState *emu);
+void set_d1(EmulationState *emu);
+void set_e1(EmulationState *emu);
+void set_h1(EmulationState *emu);
+void set_l1(EmulationState *emu);
+void set_hl1(EmulationState *emu);
+void set_a1(EmulationState *emu);
+
+void set_b2(EmulationState *emu);
+void set_c2(EmulationState *emu);
+void set_d2(EmulationState *emu);
+void set_e2(EmulationState *emu);
+void set_h2(EmulationState *emu);
+void set_l2(EmulationState *emu);
+void set_hl2(EmulationState *emu);
+void set_a2(EmulationState *emu);
+
+void set_b3(EmulationState *emu);
+void set_c3(EmulationState *emu);
+void set_d3(EmulationState *emu);
+void set_e3(EmulationState *emu);
+void set_h3(EmulationState *emu);
+void set_l3(EmulationState *emu);
+void set_hl3(EmulationState *emu);
+void set_a3(EmulationState *emu);
+
+void set_b4(EmulationState *emu);
+void set_c4(EmulationState *emu);
+void set_d4(EmulationState *emu);
+void set_e4(EmulationState *emu);
+void set_h4(EmulationState *emu);
+void set_l4(EmulationState *emu);
+void set_hl4(EmulationState *emu);
+void set_a4(EmulationState *emu);
+
+void set_b5(EmulationState *emu);
+void set_c5(EmulationState *emu);
+void set_d5(EmulationState *emu);
+void set_e5(EmulationState *emu);
+void set_h5(EmulationState *emu);
+void set_l5(EmulationState *emu);
+void set_hl5(EmulationState *emu);
+void set_a5(EmulationState *emu);
+
+void set_b6(EmulationState *emu);
+void set_c6(EmulationState *emu);
+void set_d6(EmulationState *emu);
+void set_e6(EmulationState *emu);
+void set_h6(EmulationState *emu);
+void set_l6(EmulationState *emu);
+void set_hl6(EmulationState *emu);
+void set_a6(EmulationState *emu);
+
+void set_b7(EmulationState *emu);
+void set_c7(EmulationState *emu);
+void set_d7(EmulationState *emu);
+void set_e7(EmulationState *emu);
+void set_h7(EmulationState *emu);
+void set_l7(EmulationState *emu);
+void set_hl7(EmulationState *emu);
+void set_a7(EmulationState *emu);
 
 void swap_b(EmulationState *emu);
 void swap_c(EmulationState *emu);
