@@ -343,21 +343,21 @@ EmulationState *emu_init() {
   emu->hram = emu->mem + 0xFF80;
   emu->ie = emu->mem + 0xFFFF;
 
-  emu->a = emu->reg;
-  emu->f = emu->reg + 1;
-  emu->af = (u16 *)emu->a;
+  emu->a = emu->reg + 1;
+  emu->f = emu->reg + 0;
+  emu->af = (u16 *)emu->f;
 
-  emu->b = emu->reg + 2;
-  emu->c = emu->reg + 3;
-  emu->bc = (u16 *)emu->b;
+  emu->b = emu->reg + 3;
+  emu->c = emu->reg + 2;
+  emu->bc = (u16 *)emu->c;
 
-  emu->d = emu->reg + 4;
-  emu->e = emu->reg + 5;
-  emu->de = (u16 *)emu->d;
+  emu->d = emu->reg + 5;
+  emu->e = emu->reg + 4;
+  emu->de = (u16 *)emu->e;
 
-  emu->h = emu->reg + 6;
-  emu->l = emu->reg + 7;
-  emu->hl = (u16 *)emu->h;
+  emu->h = emu->reg + 7;
+  emu->l = emu->reg + 6;
+  emu->hl = (u16 *)emu->l;
 
   emu->sp = (u16 *)emu->reg + 8;
   emu->pc = (u16 *)emu->reg + 10;
