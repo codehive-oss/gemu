@@ -5,13 +5,10 @@
 #include "util.h"
 
 typedef struct Instruction {
-  u8 encoding;
   void (*execute)(EmulationState *);
 } Instruction;
 
-#define GB_INSTRUCTIONS_LENGTH 158
-
-extern Instruction GB_INSTRUCTIONS[GB_INSTRUCTIONS_LENGTH];
+extern Instruction GB_INSTRUCTIONS[255];
 
 void ld_regd8_d8(EmulationState *emu, u8 *reg);
 void ld_regd16_d16(EmulationState *emu, u16 *reg);

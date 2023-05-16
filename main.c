@@ -9,21 +9,20 @@
 
 bool handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
-  for (size_t i = 0; i < GB_INSTRUCTIONS_LENGTH; i++) {
-    Instruction instruction = GB_INSTRUCTIONS[i];
-    if (instruction.encoding == inst) {
-      instruction.execute(emu);
-      // TODO: Fix this with real mcycle
-      emu->mcycle += 1;
-      emu->mem[rLY] = ((emu->mem[rLY] + rand() % 5) % 154);
-      return true;
-    }
+
+  Instruction instruction = GB_INSTRUCTIONS[inst];
+  if (*(u8 *)&instruction == 0) { // Uninitialized memory 
+    printf("Instruction not found: %02X\n", inst);
+    printf("Terminating...\n");
+
+    return false;
   }
 
-  printf("Instruction not found: %02X\n", inst);
-  printf("Terminating...\n");
-
-  return false;
+  instruction.execute(emu);
+  // TODO: Fix this with real mcycle
+  emu->mcycle += 1;
+  emu->mem[rLY] = ((emu->mem[rLY] + rand() % 5) % 154);
+  return true;
 }
 
 int main(int argc, char **argv) {
