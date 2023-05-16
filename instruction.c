@@ -421,6 +421,14 @@ void ld_a_hld(EmulationState *emu) {
   dec_hl(emu);
 }
 
+void ld_b_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->b, emu->hl); }
+void ld_d_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->d, emu->hl); }
+void ld_h_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->h, emu->hl); }
+void ld_c_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->c, emu->hl); }
+void ld_e_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->e, emu->hl); }
+void ld_l_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->l, emu->hl); }
+void ld_a_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->a, emu->hl); }
+
 void ld_bc_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->bc, emu->a); }
 void ld_de_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->de, emu->a); }
 void ld_hli_a(EmulationState *emu) {
@@ -539,6 +547,10 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x55] = {.execute = &ld_d_l},
     [0x65] = {.execute = &ld_h_l},
 
+    [0x46] = {.execute = &ld_b_hl},
+    [0x56] = {.execute = &ld_d_hl},
+    [0x66] = {.execute = &ld_h_hl},
+
     [0x47] = {.execute = &ld_b_a},
     [0x57] = {.execute = &ld_d_a},
     [0x67] = {.execute = &ld_h_a},
@@ -572,6 +584,11 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x5D] = {.execute = &ld_e_l},
     [0x6D] = {.execute = &ld_l_l},
     [0x7D] = {.execute = &ld_a_l},
+
+    [0x4E] = {.execute = &ld_c_hl},
+    [0x5E] = {.execute = &ld_e_hl},
+    [0x6E] = {.execute = &ld_l_hl},
+    [0x7E] = {.execute = &ld_a_hl},
 
     [0x4F] = {.execute = &ld_c_a},
     [0x5F] = {.execute = &ld_e_a},

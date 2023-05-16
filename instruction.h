@@ -194,6 +194,14 @@ void ld_a_de(EmulationState *emu);
 void ld_a_hli(EmulationState *emu);
 void ld_a_hld(EmulationState *emu);
 
+void ld_b_hl(EmulationState *emu);
+void ld_d_hl(EmulationState *emu);
+void ld_h_hl(EmulationState *emu);
+void ld_c_hl(EmulationState *emu);
+void ld_e_hl(EmulationState *emu);
+void ld_l_hl(EmulationState *emu);
+void ld_a_hl(EmulationState *emu);
+
 void ld_bc_a(EmulationState *emu);
 void ld_de_a(EmulationState *emu);
 void ld_hli_a(EmulationState *emu);
