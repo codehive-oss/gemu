@@ -103,6 +103,16 @@ void sub_regd8(EmulationState *emu, u8 *from) {
   set_flags(emu, *emu->a == 0, 1, h, c);
 }
 
+void pop(EmulationState *emu, u16 *reg) {
+  *reg = *(u16 *)&emu->mem[*emu->sp];
+  *emu->sp += 2;
+}
+
+void push(EmulationState *emu, u16 *reg) {
+  *emu->sp -= 2;
+  *(u16 *)&emu->mem[*emu->sp] = *reg;
+}
+
 void cpl(EmulationState *emu) {
   *emu->a = *emu->a ^ 0xFF;
   set_flags(emu, -1, 1, 1, -1);
@@ -193,9 +203,7 @@ void jr_nc_d8(EmulationState *emu) {
 }
 
 void call(EmulationState *emu, u16 target) {
-  *emu->sp -= 2;
-  *(u16 *)&emu->mem[*emu->sp] = *emu->pc;
-
+  push(emu, emu->pc);
   *emu->pc = target;
 }
 
@@ -247,10 +255,17 @@ void rst_28(EmulationState *emu) { call(emu, 0x0028); }
 void rst_30(EmulationState *emu) { call(emu, 0x0030); }
 void rst_38(EmulationState *emu) { call(emu, 0x0038); }
 
-void ret(EmulationState *emu) {
-  *emu->pc = *(u16 *)&emu->mem[*emu->sp];
-  *emu->sp += 2;
-}
+void pop_bc(EmulationState *emu) { pop(emu, emu->bc); }
+void pop_de(EmulationState *emu) { pop(emu, emu->de); }
+void pop_hl(EmulationState *emu) { pop(emu, emu->hl); }
+void pop_af(EmulationState *emu) { pop(emu, emu->af); }
+
+void push_bc(EmulationState *emu) { push(emu, emu->bc); }
+void push_de(EmulationState *emu) { push(emu, emu->de); }
+void push_hl(EmulationState *emu) { push(emu, emu->hl); }
+void push_af(EmulationState *emu) { push(emu, emu->af); }
+
+void ret(EmulationState *emu) { pop(emu, emu->pc); }
 
 void ldh_a8_a(EmulationState *emu) {
   u8 target = emu->rom[*emu->pc];
@@ -674,6 +689,16 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0xDF] = {.execute = &rst_18},
     [0xEF] = {.execute = &rst_28},
     [0xFF] = {.execute = &rst_38},
+
+    [0xC1] = {.execute = &pop_bc},
+    [0xD1] = {.execute = &pop_de},
+    [0xE1] = {.execute = &pop_hl},
+    [0xF1] = {.execute = &pop_af},
+
+    [0xC5] = {.execute = &push_bc},
+    [0xD5] = {.execute = &push_de},
+    [0xE5] = {.execute = &push_hl},
+    [0xF5] = {.execute = &push_af},
 
     [0xC9] = {.execute = &ret},
 

@@ -26,6 +26,8 @@ void inc_regd8(EmulationState *emu, u8 *reg);
 void dec_regd8(EmulationState *emu, u8 *reg);
 void add_regd8(EmulationState *emu, u8 *from);
 void sub_regd8(EmulationState *emu, u8 *from);
+void pop(EmulationState *emu, u16 *reg);
+void push(EmulationState *emu, u16 *reg);
 
 void nop(EmulationState *emu);
 void di(EmulationState *emu);
@@ -57,6 +59,16 @@ void rst_20(EmulationState *emu);
 void rst_28(EmulationState *emu);
 void rst_30(EmulationState *emu);
 void rst_38(EmulationState *emu);
+
+void pop_bc(EmulationState *emu);
+void pop_de(EmulationState *emu);
+void pop_hl(EmulationState *emu);
+void pop_af(EmulationState *emu);
+
+void push_bc(EmulationState *emu);
+void push_de(EmulationState *emu);
+void push_hl(EmulationState *emu);
+void push_af(EmulationState *emu);
 
 void ret(EmulationState *emu);
 
