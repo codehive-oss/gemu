@@ -49,6 +49,15 @@ void call_nz_a16(EmulationState *emu);
 void call_c_a16(EmulationState *emu);
 void call_nc_a16(EmulationState *emu);
 
+void rst_00(EmulationState *emu);
+void rst_08(EmulationState *emu);
+void rst_10(EmulationState *emu);
+void rst_18(EmulationState *emu);
+void rst_20(EmulationState *emu);
+void rst_28(EmulationState *emu);
+void rst_30(EmulationState *emu);
+void rst_38(EmulationState *emu);
+
 void ret(EmulationState *emu);
 
 void ldh_a8_a(EmulationState *emu);
@@ -218,5 +227,16 @@ void xor_l(EmulationState *emu);
 void xor_a(EmulationState *emu);
 
 void cp_d8(EmulationState *emu);
+void prefix(EmulationState *emu);
+
+void swap_regd8(EmulationState *emu, u8 *reg);
+
+void swap_b(EmulationState *emu);
+void swap_c(EmulationState *emu);
+void swap_d(EmulationState *emu);
+void swap_e(EmulationState *emu);
+void swap_h(EmulationState *emu);
+void swap_l(EmulationState *emu);
+void swap_a(EmulationState *emu);
 
 #endif // INSTRUCTION_H

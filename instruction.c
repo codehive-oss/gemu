@@ -192,14 +192,18 @@ void jr_nc_d8(EmulationState *emu) {
   }
 }
 
-void call_a16(EmulationState *emu) {
-  u16 target = *(u16 *)&emu->rom[*emu->pc];
-  *emu->pc += 2;
-
+void call(EmulationState *emu, u16 target) {
   *emu->sp -= 2;
   *(u16 *)&emu->mem[*emu->sp] = *emu->pc;
 
   *emu->pc = target;
+}
+
+void call_a16(EmulationState *emu) {
+  u16 target = *(u16 *)&emu->rom[*emu->pc];
+  *emu->pc += 2;
+
+  call(emu, target);
 }
 
 void call_z_a16(EmulationState *emu) {
@@ -233,6 +237,15 @@ void call_nc_a16(EmulationState *emu) {
     *emu->pc += 2;
   }
 }
+
+void rst_00(EmulationState *emu) { call(emu, 0x0000); }
+void rst_08(EmulationState *emu) { call(emu, 0x0008); }
+void rst_10(EmulationState *emu) { call(emu, 0x0010); }
+void rst_18(EmulationState *emu) { call(emu, 0x0018); }
+void rst_20(EmulationState *emu) { call(emu, 0x0020); }
+void rst_28(EmulationState *emu) { call(emu, 0x0028); }
+void rst_30(EmulationState *emu) { call(emu, 0x0030); }
+void rst_38(EmulationState *emu) { call(emu, 0x0038); }
 
 void ret(EmulationState *emu) {
   *emu->pc = *(u16 *)&emu->mem[*emu->sp];
@@ -652,6 +665,15 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0xD4] = {.execute = &call_nc_a16},
     [0xCC] = {.execute = &call_z_a16},
     [0xDC] = {.execute = &call_c_a16},
+
+    [0xC7] = {.execute = &rst_00},
+    [0xD7] = {.execute = &rst_10},
+    [0xE7] = {.execute = &rst_20},
+    [0xF7] = {.execute = &rst_30},
+    [0xCF] = {.execute = &rst_08},
+    [0xDF] = {.execute = &rst_18},
+    [0xEF] = {.execute = &rst_28},
+    [0xFF] = {.execute = &rst_38},
 
     [0xC9] = {.execute = &ret},
 
