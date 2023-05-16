@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define START_WITH_STEP false
+#define START_WITH_STEP true
 
 bool handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
@@ -42,6 +42,16 @@ int main(int argc, char **argv) {
   printf("Title: %s\n", emu->header->title);
   printf("Rom Type: %s\n", ROM_TYPES[(u8)emu->header->type]);
   printf("Rom Size: %dKB\n", 32 * (1 << emu->header->rom_size));
+  const char *license;
+  if (emu->header->lic_code == 0x33) {
+    license = NEW_LICENSEE_CODE[emu->header->new_lic_code];
+  } else {
+    license = OLD_LICENSEE_CODE[emu->header->lic_code];
+  }
+  printf("License: %s\n", license);
+  printf("Destination: %s\n", DESTINATION_CODE[emu->header->dest_code]);
+  printf("Version: %d\n", emu->header->version);
+  printf("SGB support: %s\n", emu->header->sgb_flag == 0x03 ? "true" : "false");
 
   // https://gbdev.io/pandocs/The_Cartridge_Header.html#014d--header-checksum
   u8 checksum = 0;
@@ -54,6 +64,7 @@ int main(int argc, char **argv) {
 
   bool running = true;
   bool step = START_WITH_STEP;
+
   printf("-------------START PROGRAM--------------\n");
   Window *win = win_init();
 

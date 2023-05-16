@@ -6,7 +6,10 @@
 
 #define rLY 0xFF44
 
-extern const char *ROM_TYPES[35];
+extern const char *ROM_TYPES[256];
+extern const char *NEW_LICENSEE_CODE[256];
+extern const char *DESTINATION_CODE[2];
+extern const char *OLD_LICENSEE_CODE[256];
 
 // https://gbdev.io/pandocs/The_Cartridge_Header.html
 typedef struct RomHeader {
