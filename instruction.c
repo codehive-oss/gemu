@@ -78,7 +78,7 @@ void xor_d8(EmulationState *emu) {
 // Increment 1 from 8-bit register
 void inc_regd8(EmulationState *emu, u8 *reg) {
   *reg += 1;
-  set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x00, -1);
+  set_flags(emu, *reg == 0, 0, (*reg & 0x0F) == 0x00, -1);
 }
 
 // Decrement 1 from 8-bit register
