@@ -82,16 +82,18 @@ int main(int argc, char **argv) {
     bool enterdown = false;
     win_update_input(win, &running, &spacedown, &enterdown);
 
+		// TODO: Load input
+		emu->mem[0xFF00] = 1;
+
     if (enterdown) {
       step = !step;
     }
 
     if (step && spacedown) {
       u8 inst = emu->rom[*emu->pc];
-      printf("Inst: %02X\tAt: ", inst);
-      PRINT_BYTES(*emu->pc);
-      running = handle_instruction(emu, inst);
       emu_print(emu);
+      printf("\n");
+      running = handle_instruction(emu, inst);
     }
 
     // Render every 128th frame

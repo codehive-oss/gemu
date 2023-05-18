@@ -47,6 +47,7 @@ void and_d8(EmulationState *emu) {
   u8 target = emu->rom[*emu->pc];
   *emu->a &= target;
   *emu->pc += 1;
+  set_flags(emu, *emu->a == 0, 0, 1, 0);
 }
 
 // OR with 8-bit register
@@ -124,7 +125,7 @@ void push(EmulationState *emu, u16 *reg) {
 }
 
 void cpl(EmulationState *emu) {
-  *emu->a = *emu->a ^ 0xFF;
+  *emu->a ^= 0xFF;
   set_flags(emu, -1, 1, 1, -1);
 }
 

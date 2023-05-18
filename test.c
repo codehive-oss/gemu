@@ -156,8 +156,43 @@ void test_inc_dec() {
   emu_free(emu);
 }
 
+void test_and_d8() {
+  EmulationState *emu = emu_init();
+
+  SUITE_START("Testing and_d8");
+
+  // Test case 1: Perform AND operation with non-zero value
+  *emu->a     = 0x0F;
+  emu->rom[0] = 0x3C; // AND with 0x3C
+  *emu->pc    = 0;
+  and_d8(emu);
+  CHECK(*emu->a == 0x0C);            // Result of 0x0F AND 0x3C
+  CHECK_MASK_FALSE(*emu->f, Z_MASK); // Zero flag should be clear
+  CHECK_MASK_FALSE(*emu->f, N_MASK); // Subtraction flag should be clear
+  CHECK_MASK_TRUE(*emu->f, H_MASK);  // Half-carry flag should be set
+  CHECK_MASK_FALSE(*emu->f, C_MASK); // Carry flag should be clear
+  CHECK(*emu->pc == 1);              // Program counter should be incremented by 1
+
+  // Test case 2: Perform AND operation with zero value
+  *emu->a     = 0x00;
+  emu->rom[0] = 0x00; // AND with 0x00
+  *emu->pc    = 0;
+  and_d8(emu);
+  CHECK(*emu->a == 0x00);            // Result of 0x00 AND 0x00
+  CHECK_MASK_TRUE(*emu->f, Z_MASK);  // Zero flag should be set
+  CHECK_MASK_FALSE(*emu->f, N_MASK); // Subtraction flag should be clear
+  CHECK_MASK_TRUE(*emu->f, H_MASK);  // Half-carry flag should be set
+  CHECK_MASK_FALSE(*emu->f, C_MASK); // Carry flag should be clear
+  CHECK(*emu->pc == 1);              // Program counter should be incremented by 1
+
+  SUITE_END();
+
+  emu_free(emu);
+}
+
 int main(void) {
   test_palette_idx();
   test_add_sub();
   test_inc_dec();
+	test_and_d8();
 }
