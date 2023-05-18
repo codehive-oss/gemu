@@ -331,10 +331,7 @@ EmulationState *emu_init() {
   emu->reg    = (u8 *)malloc(12);
   emu->mcycle = 0;
 
-  emu->rom      = emu->mem;
-  emu->header   = (RomHeader *)(emu->rom + 0x100);
-  emu->tilemaps = emu->mem + 0x9800;
-
+  emu->rom  = emu->mem;
   emu->vram = emu->mem + 0x8000;
   emu->sram = emu->mem + 0xA000;
   emu->wram = emu->mem + 0xC000;
@@ -361,6 +358,10 @@ EmulationState *emu_init() {
 
   emu->sp = (u16 *)emu->reg + 8;
   emu->pc = (u16 *)emu->reg + 10;
+
+  emu->header   = (RomHeader *)(emu->rom + 0x100);
+  emu->tilemaps = emu->mem + 0x9800;
+  emu->sprites  = (SpriteAttribute *)emu->oam;
 
   return emu;
 }

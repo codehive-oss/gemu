@@ -24,6 +24,14 @@
 #define OBJ_ENABLE          0b00000010
 #define BG_WINDOW_ENABLE    0b00000001
 
+// https://gbdev.io/pandocs/OAM.html#byte-3--attributesflags
+#define BG_OVER_OBJ         0b10000000
+#define Y_flip              0b01000000
+#define X_flip              0b00100000
+#define Palette_NON_CGB_NUM 0b00010000
+#define TILE_VRAM_BANK      0b00001000
+#define Palette_CGB_NUM     0b00000111
+
 extern const char *ROM_TYPES[256];
 extern const char *NEW_LICENSEE_CODE[256];
 extern const char *DESTINATION_CODE[2];
@@ -47,6 +55,14 @@ typedef struct RomHeader {
 
 } RomHeader;
 
+// https://gbdev.io/pandocs/OAM.html
+typedef struct SpriteAttribute {
+  u8 yPos;
+  u8 xPos;
+  u8 tileIdx;
+  u8 flags;
+} SpriteAttribute;
+
 typedef struct EmulationState {
   // Data
   u8 *mem;
@@ -54,10 +70,11 @@ typedef struct EmulationState {
   u16 mcycle;
 
   // Pointer
-  u8        *rom;
-  RomHeader *header;
-  u8        *tilemaps;
+  RomHeader       *header;
+  u8              *tilemaps;
+  SpriteAttribute *sprites;
 
+  u8 *rom;
   u8 *vram;
   u8 *sram;
   u8 *wram;
