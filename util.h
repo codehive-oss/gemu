@@ -4,12 +4,25 @@
 #include "./types.h"
 #include <stddef.h>
 
+// https://gbdev.io/pandocs/STAT.html
 #define rLY 0xFF44
 
 #define Z_MASK 0b10000000
 #define N_MASK 0b01000000
 #define H_MASK 0b00100000
 #define C_MASK 0b00010000
+
+// https://gbdev.io/pandocs/LCDC.html
+#define LCDC 0xFF40
+
+#define LCD_ENABLE          0b10000000
+#define WINDOW_TILEMAP_AREA 0b01000000
+#define WINDOW_ENABLE       0b00100000
+#define BG_WINDOW_DATA_AREA 0b00010000
+#define BG_TILEMAP_AREA     0b00001000
+#define OBJ_SIZE            0b00000100
+#define OBJ_ENABLE          0b00000010
+#define BG_WINDOW_ENABLE    0b00000001
 
 extern const char *ROM_TYPES[256];
 extern const char *NEW_LICENSEE_CODE[256];
