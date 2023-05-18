@@ -97,8 +97,13 @@ int main(int argc, char **argv) {
     // Render every 128th frame
     if (frame % 128 == 0) {
       win_clear(win);
-      win_draw_bg(win, emu->vram, emu->tilemaps, emu->mem[LCDC] & BG_WINDOW_DATA_AREA);
       win_draw_tiles(win, emu->vram);
+
+      win_draw_bg(win, emu->vram, emu->tilemaps, emu->mem[LCDC] & BG_WINDOW_DATA_AREA);
+
+      if (emu->mem[LCDC] & OBJ_ENABLE)
+        win_draw_objs(win, emu->sprites, emu->vram);
+
       win_render(win);
     }
   }

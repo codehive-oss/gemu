@@ -2,6 +2,7 @@
 #define UI_H
 
 #include "types.h"
+#include "util.h"
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 
@@ -28,6 +29,7 @@ void    win_update_input(Window *win, bool *running, bool *spacedown, bool *ente
 
 void win_clear(Window *win);
 void win_render(Window *win);
+void win_draw_objs(Window *win, SpriteAttribute *sprites, u8 *vram);
 void win_draw_bg(Window *win, u8 *vram, u8 *tileMap, bool data_area);
 void win_draw_tiles(Window *win, u8 *data);
 void win_destroy(Window *win);

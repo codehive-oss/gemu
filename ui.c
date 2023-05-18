@@ -72,6 +72,29 @@ void win_draw_tile(u32 *target, u8 *tile, int pitch, u8 x, u8 y) {
   }
 }
 
+void win_draw_objs(Window *win, SpriteAttribute *sprites, u8 *vram) {
+  u32 *winpixel;
+  int  pitch;
+
+  SDL_LockTexture(win->screen, NULL, (void *)&winpixel, &pitch);
+
+  for (u8 i = 0; i < 40; i++) {
+    SpriteAttribute sprite = sprites[i];
+    win_draw_tile(winpixel, vram + sprite.tileIdx * 16, pitch / 4, sprite.xPos, sprite.yPos);
+  }
+
+  SDL_UnlockTexture(win->screen);
+
+  SDL_Rect scrRect = {
+      .x = 0,
+      .y = 0,
+      .w = WIDTH * SCALE_FACTOR,
+      .h = HEIGHT * SCALE_FACTOR,
+  };
+
+  SDL_RenderCopy(win->renderer, win->screen, NULL, &scrRect);
+}
+
 void win_draw_bg(Window *win, u8 *vram, u8 *tileMap, bool data_area) {
   u32 *winpixel;
   int  pitch;
