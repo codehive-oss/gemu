@@ -10,24 +10,24 @@
 // #define WIDTH 16 * 8 * SCALE_FACTOR
 // #define HEIGHT 8 * 8 * 3 * SCALE_FACTOR
 
-#define WIDTH (32 * 8)
+#define WIDTH  (32 * 8)
 #define HEIGHT (32 * 8)
 
-#define TILEVIEW_WIDTH (16 * 8)
+#define TILEVIEW_WIDTH  (16 * 8)
 #define TILEVIEW_HEIGHT (24 * 8)
 
-#define WINDOW_WIDTH (WIDTH + TILEVIEW_WIDTH) * SCALE_FACTOR
-#define WINDOW_HEIGHT HEIGHT  * SCALE_FACTOR
+#define WINDOW_WIDTH  (WIDTH + TILEVIEW_WIDTH) * SCALE_FACTOR
+#define WINDOW_HEIGHT HEIGHT *SCALE_FACTOR
 
 typedef struct Window {
-  SDL_Window *window;
+  SDL_Window   *window;
   SDL_Renderer *renderer;
-  SDL_Texture *screen;
-  SDL_Texture *tileview;
+  SDL_Texture  *screen;
+  SDL_Texture  *tileview;
 } Window;
 
 Window *win_init();
-void win_update_input(Window *win, bool *running, bool *spacedown, bool *enterdown);
+void    win_update_input(Window *win, bool *running, bool *spacedown, bool *enterdown);
 
 void win_clear(Window *win);
 void win_render(Window *win);

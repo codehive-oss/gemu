@@ -52,8 +52,8 @@ void win_update_input(Window *win, bool *running, bool *spacedown,
       case SDLK_RETURN:
         *enterdown = true;
         break;
-			case SDLK_q:
-			case SDLK_ESCAPE:
+      case SDLK_q:
+      case SDLK_ESCAPE:
         *running = false;
         break;
       }
@@ -82,14 +82,14 @@ void win_draw_tile(u32 *target, u8 *tile, int pitch, u8 x, u8 y) {
 
 void win_draw_bg(Window *win, u8 *tiles, u8 *tileMap) {
   u32 *winpixel;
-  int pitch;
+  int  pitch;
 
   SDL_LockTexture(win->screen, NULL, (void *)&winpixel, &pitch);
 
   for (u8 y = 0; y < 32; y++) {
     for (u8 x = 0; x < 32; x++) {
-      int offset = (y * 32) + x;
-      u8 tileIndex = tileMap[offset];
+      int offset    = (y * 32) + x;
+      u8  tileIndex = tileMap[offset];
       win_draw_tile(winpixel, tiles + 0x1000 + (tileIndex * 16), pitch / 4,
                     x * 8, y * 8);
     }
@@ -108,7 +108,7 @@ void win_draw_bg(Window *win, u8 *tiles, u8 *tileMap) {
 
 void win_draw_tiles(Window *win, u8 *data) {
   u32 *winpixel;
-  int pitch;
+  int  pitch;
 
   SDL_LockTexture(win->tileview, NULL, (void *)&winpixel, &pitch);
 

@@ -13,11 +13,11 @@ void check(const char *description, bool condition) {
   printf("Passed!\n\n");
 }
 
-#define SUITE_START(description) printf("%s\n", description)
-#define CHECK(condition) assert(condition)
-#define CHECK_MASK_TRUE(value, mask) CHECK(value &mask)
+#define SUITE_START(description)      printf("%s\n", description)
+#define CHECK(condition)              assert(condition)
+#define CHECK_MASK_TRUE(value, mask)  CHECK(value &mask)
 #define CHECK_MASK_FALSE(value, mask) CHECK(!(value & mask))
-#define SUITE_END() printf("Passed\n\n")
+#define SUITE_END()                   printf("Passed\n\n")
 
 void test_palette_idx() {
   SUITE_START("Test palette index");
@@ -65,7 +65,7 @@ void test_add_sub() {
     CHECK_MASK_FALSE(*emu->f, C_MASK);
 
     *emu->a = 0xFF;
-    from = 0x01;
+    from    = 0x01;
     add_regd8(emu, &from);
     CHECK(*emu->a == 0x00);
     CHECK(*emu->f & Z_MASK);
@@ -87,7 +87,7 @@ void test_add_sub() {
     CHECK(!(*emu->f & C_MASK));
 
     *emu->a = 0x01;
-    from = 0x02;
+    from    = 0x02;
     sub_regd8(emu, &from);
     CHECK(*emu->a == 0xFF);
     CHECK(!(*emu->f & Z_MASK));

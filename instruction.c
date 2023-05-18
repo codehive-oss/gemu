@@ -7,14 +7,14 @@
 // Loads 8-bit data to any 8-bit register
 void ld_regd8_d8(EmulationState *emu, u8 *reg) {
   u8 target = emu->rom[*emu->pc];
-  *reg = target;
+  *reg      = target;
   *emu->pc += 1;
 }
 
 // Loads 16-bit data to any 16-bit register
 void ld_regd16_d16(EmulationState *emu, u16 *reg) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
-  *reg = target;
+  *reg       = target;
   *emu->pc += 2;
 }
 
@@ -31,7 +31,7 @@ void ld_rega16_regd8(EmulationState *emu, u16 *target, u8 *from) {
 
 // Loads 8-bit data to any the memory address pointed by any 16-bit register
 void ld_rega16_d8(EmulationState *emu, u16 *target) {
-  u8 from = emu->rom[*emu->pc];
+  u8 from           = emu->rom[*emu->pc];
   emu->mem[*target] = from;
   *emu->pc += 1;
 }
@@ -139,7 +139,7 @@ void ei(EmulationState *emu) { *emu->ie = 1; }
 
 void jp_a16(EmulationState *emu) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
-  *emu->pc = target;
+  *emu->pc   = target;
 }
 
 void jp_hl(EmulationState *emu) {
@@ -306,14 +306,14 @@ void ret_nc(EmulationState *emu) {
 }
 
 void ldh_a8_a(EmulationState *emu) {
-  u8 target = emu->rom[*emu->pc];
+  u8 target       = emu->rom[*emu->pc];
   emu->io[target] = *emu->a;
   *emu->pc += 1;
 }
 
 void ldh_a_a8(EmulationState *emu) {
   u8 target = emu->rom[*emu->pc];
-  *emu->a = emu->io[target];
+  *emu->a   = emu->io[target];
   *emu->pc += 1;
 }
 
@@ -412,14 +412,14 @@ void ld_l_a(EmulationState *emu) { *emu->l = *emu->a; }
 void ld_a_a(EmulationState *emu) { *emu->a = *emu->a; }
 
 void ld_a16_a(EmulationState *emu) {
-  u16 target_addr = *(u16 *)&emu->rom[*emu->pc];
+  u16 target_addr       = *(u16 *)&emu->rom[*emu->pc];
   emu->mem[target_addr] = *emu->a;
   *emu->pc += 2;
 }
 
 void ld_a_a16(EmulationState *emu) {
   u16 target_addr = *(u16 *)&emu->rom[*emu->pc];
-  *emu->a = emu->mem[target_addr];
+  *emu->a         = emu->mem[target_addr];
   *emu->pc += 2;
 }
 

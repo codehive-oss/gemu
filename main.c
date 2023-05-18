@@ -11,8 +11,8 @@ bool handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
 
   Instruction instruction = GB_INSTRUCTIONS[inst];
-	// TODO: Check if instruction exists
-  // if (*(u8 *)&instruction == 0) { // Uninitialized memory 
+  // TODO: Check if instruction exists
+  // if (*(u8 *)&instruction == 0) { // Uninitialized memory
   //   printf("Instruction not found: %02X\n", inst);
   //   printf("Terminating...\n");
 
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
   printf("--------------END HEADERS---------------\n\n");
 
   bool running = true;
-  bool step = START_WITH_STEP;
+  bool step    = START_WITH_STEP;
 
   printf("-------------START PROGRAM--------------\n");
   Window *win = win_init();

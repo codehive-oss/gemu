@@ -295,7 +295,7 @@ void dump_file(const char *path, u8 *data, size_t length) {
 }
 
 int getch(void) {
-  int ch;
+  int            ch;
   struct termios oldt, newt;
 
   tcgetattr(STDIN_FILENO, &oldt);
@@ -311,7 +311,7 @@ int getch(void) {
 u8 get_palette_idx(u8 *tile_data, u8 i) {
   assert(i < 64);
 
-  u8 memIdx = 2 * (i / 8);
+  u8 memIdx    = 2 * (i / 8);
   u8 memOffset = 7 - i % 8;
 
   // 01010101
@@ -327,36 +327,36 @@ u8 get_palette_idx(u8 *tile_data, u8 i) {
 EmulationState *emu_init() {
   EmulationState *emu = (EmulationState *)malloc(sizeof(EmulationState));
 
-  emu->mem = (u8 *)malloc(65536);
-  emu->reg = (u8 *)malloc(12);
+  emu->mem    = (u8 *)malloc(65536);
+  emu->reg    = (u8 *)malloc(12);
   emu->mcycle = 0;
 
-  emu->rom = emu->mem;
-  emu->header = (RomHeader *)(emu->rom + 0x100);
+  emu->rom      = emu->mem;
+  emu->header   = (RomHeader *)(emu->rom + 0x100);
   emu->tilemaps = emu->mem + 0x9800;
 
   emu->vram = emu->mem + 0x8000;
   emu->sram = emu->mem + 0xA000;
   emu->wram = emu->mem + 0xC000;
-  emu->oam = emu->mem + 0xFE00;
-  emu->io = emu->mem + 0xFF00;
+  emu->oam  = emu->mem + 0xFE00;
+  emu->io   = emu->mem + 0xFF00;
   emu->hram = emu->mem + 0xFF80;
-  emu->ie = emu->mem + 0xFFFF;
+  emu->ie   = emu->mem + 0xFFFF;
 
-  emu->a = emu->reg + 1;
-  emu->f = emu->reg + 0;
+  emu->a  = emu->reg + 1;
+  emu->f  = emu->reg + 0;
   emu->af = (u16 *)emu->f;
 
-  emu->b = emu->reg + 3;
-  emu->c = emu->reg + 2;
+  emu->b  = emu->reg + 3;
+  emu->c  = emu->reg + 2;
   emu->bc = (u16 *)emu->c;
 
-  emu->d = emu->reg + 5;
-  emu->e = emu->reg + 4;
+  emu->d  = emu->reg + 5;
+  emu->e  = emu->reg + 4;
   emu->de = (u16 *)emu->e;
 
-  emu->h = emu->reg + 7;
-  emu->l = emu->reg + 6;
+  emu->h  = emu->reg + 7;
+  emu->l  = emu->reg + 6;
   emu->hl = (u16 *)emu->l;
 
   emu->sp = (u16 *)emu->reg + 8;
