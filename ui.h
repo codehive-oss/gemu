@@ -7,9 +7,6 @@
 
 #define SCALE_FACTOR 2
 
-// #define WIDTH 16 * 8 * SCALE_FACTOR
-// #define HEIGHT 8 * 8 * 3 * SCALE_FACTOR
-
 #define WIDTH  (32 * 8)
 #define HEIGHT (32 * 8)
 
@@ -31,7 +28,7 @@ void    win_update_input(Window *win, bool *running, bool *spacedown, bool *ente
 
 void win_clear(Window *win);
 void win_render(Window *win);
-void win_draw_bg(Window *win, u8 *tiles, u8 *tileMap);
+void win_draw_bg(Window *win, u8 *vram, u8 *tileMap, bool data_area);
 void win_draw_tiles(Window *win, u8 *data);
 void win_destroy(Window *win);
 

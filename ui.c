@@ -8,14 +8,6 @@
 #include <SDL2/SDL_video.h>
 #include <stdbool.h>
 
-// ---------
-// |       |
-// ---------
-// |       |
-// ---------
-// |       |
-// ---------
-
 Window *win_init() {
   Window *win = (Window *)malloc(sizeof(Window));
 
@@ -80,9 +72,11 @@ void win_draw_tile(u32 *target, u8 *tile, int pitch, u8 x, u8 y) {
   }
 }
 
-void win_draw_bg(Window *win, u8 *tiles, u8 *tileMap) {
+void win_draw_bg(Window *win, u8 *vram, u8 *tileMap, bool data_area) {
   u32 *winpixel;
   int  pitch;
+  u8  *tiles0   = data_area ? vram : vram + 0x1000;
+  u8  *tiles128 = vram + 0x0800;
 
   SDL_LockTexture(win->screen, NULL, (void *)&winpixel, &pitch);
 
@@ -90,8 +84,9 @@ void win_draw_bg(Window *win, u8 *tiles, u8 *tileMap) {
     for (u8 x = 0; x < 32; x++) {
       int offset    = (y * 32) + x;
       u8  tileIndex = tileMap[offset];
-      win_draw_tile(winpixel, tiles + 0x1000 + (tileIndex * 16), pitch / 4,
-                    x * 8, y * 8);
+
+      u8 *tile = (tileIndex < 128 ? tiles0 : tiles128) + (tileIndex * 16);
+      win_draw_tile(winpixel, tile, pitch / 4, x * 8, y * 8);
     }
   }
   SDL_UnlockTexture(win->screen);
