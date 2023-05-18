@@ -82,10 +82,22 @@ void inc_regd8(EmulationState *emu, u8 *reg) {
   set_flags(emu, *reg == 0, 0, (*reg & 0x0F) == 0x00, -1);
 }
 
+// Increment 1 from 8-bit register
+void inc_rega16(EmulationState *emu, u16 from) {
+  emu->mem[from] += 1;
+  set_flags(emu, emu->mem[from] == 0, 0, (emu->mem[from] & 0x0F) == 0x00, -1);
+}
+
 // Decrement 1 from 8-bit register
 void dec_regd8(EmulationState *emu, u8 *reg) {
   *reg -= 1;
   set_flags(emu, *reg == 0, 1, (*reg & 0x0F) == 0x0F, -1);
+}
+
+// Decrement 1 from 16-bit address data
+void dec_rega16(EmulationState *emu, u16 from) {
+  emu->mem[from] -= 1;
+  set_flags(emu, emu->mem[from] == 0, 1, (emu->mem[from] & 0x0F) == 0x0F, -1);
 }
 
 // Add 8-bit data to A register
@@ -329,6 +341,7 @@ void inc_sp(EmulationState *emu) { *emu->sp += 1; }
 void inc_b(EmulationState *emu) { inc_regd8(emu, emu->b); }
 void inc_d(EmulationState *emu) { inc_regd8(emu, emu->d); }
 void inc_h(EmulationState *emu) { inc_regd8(emu, emu->h); }
+void inc_ahl(EmulationState *emu) { inc_rega16(emu, *emu->hl); }
 
 void inc_c(EmulationState *emu) { inc_regd8(emu, emu->c); }
 void inc_e(EmulationState *emu) { inc_regd8(emu, emu->e); }
@@ -343,6 +356,7 @@ void dec_sp(EmulationState *emu) { *emu->sp -= 1; }
 void dec_b(EmulationState *emu) { dec_regd8(emu, emu->b); }
 void dec_d(EmulationState *emu) { dec_regd8(emu, emu->d); }
 void dec_h(EmulationState *emu) { dec_regd8(emu, emu->h); }
+void dec_ahl(EmulationState *emu) { dec_rega16(emu, *emu->hl); }
 
 void dec_c(EmulationState *emu) { dec_regd8(emu, emu->c); }
 void dec_e(EmulationState *emu) { dec_regd8(emu, emu->e); }
@@ -640,6 +654,7 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x04] = {.execute = &inc_b},
     [0x14] = {.execute = &inc_d},
     [0x24] = {.execute = &inc_h},
+    [0x34] = {.execute = &inc_ahl},
 
     [0x0C] = {.execute = &inc_c},
     [0x1C] = {.execute = &inc_e},
@@ -649,6 +664,7 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x05] = {.execute = &dec_b},
     [0x15] = {.execute = &dec_d},
     [0x25] = {.execute = &dec_h},
+    [0x35] = {.execute = &dec_ahl},
 
     [0x0D] = {.execute = &dec_c},
     [0x1D] = {.execute = &dec_e},
