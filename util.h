@@ -5,7 +5,9 @@
 #include <stddef.h>
 
 // https://gbdev.io/pandocs/STAT.html
-#define rLY 0xFF44
+#define LY       0xFF44
+#define LYC      0xFF45
+#define LCD_STAT 0xFF41
 
 #define Z_MASK 0b10000000
 #define N_MASK 0b01000000
@@ -31,6 +33,14 @@
 #define Palette_NON_CGB_NUM 0b00010000
 #define TILE_VRAM_BANK      0b00001000
 #define Palette_CGB_NUM     0b00000111
+
+#define IF 0xFF0F
+
+#define IF_VBLANK   0b00000001
+#define IF_LCD_STAT 0b00000010
+#define IF_TIMER    0b00000100
+#define IF_SERIAL   0b00001000
+#define IF_JOYPAD   0b00010000
 
 extern const char *ROM_TYPES[256];
 extern const char *NEW_LICENSEE_CODE[256];

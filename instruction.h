@@ -49,6 +49,7 @@ void jr_nz_d8(EmulationState *emu);
 void jr_c_d8(EmulationState *emu);
 void jr_nc_d8(EmulationState *emu);
 
+void call(EmulationState *emu, u16 target);
 void call_a16(EmulationState *emu);
 void call_z_a16(EmulationState *emu);
 void call_nz_a16(EmulationState *emu);
