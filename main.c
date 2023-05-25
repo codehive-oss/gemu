@@ -133,6 +133,7 @@ int main(int argc, char **argv) {
     if (step && spacedown) {
       handle_interrupt(emu);
       u8 inst = emu->rom[*emu->pc];
+      printf("Inst: %02X\n", inst);
       emu_print(emu);
       printf("\n");
       running = handle_instruction(emu, inst);

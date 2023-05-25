@@ -332,8 +332,8 @@ void ldh_a_a8(EmulationState *emu) {
   *emu->pc += 1;
 }
 
-void ld_ca_a(EmulationState *emu) { emu->mem[*emu->io + *emu->c] = *emu->a; }
-void ld_a_ca(EmulationState *emu) { *emu->a = emu->mem[*emu->io + *emu->c]; }
+void ld_ca_a(EmulationState *emu) { emu->io[*emu->c] = *emu->a; }
+void ld_a_ca(EmulationState *emu) { *emu->a = emu->io[*emu->c]; }
 
 void inc_bc(EmulationState *emu) { *emu->bc += 1; }
 void inc_de(EmulationState *emu) { *emu->de += 1; }
@@ -458,11 +458,11 @@ void ld_sp_d16(EmulationState *emu) { ld_regd16_d16(emu, emu->sp); }
 void ld_a_bc(EmulationState *emu) { ld_regd8_rega16(emu, emu->a, emu->bc); }
 void ld_a_de(EmulationState *emu) { ld_regd8_rega16(emu, emu->a, emu->de); }
 void ld_a_hli(EmulationState *emu) {
-  ld_regd8_rega16(emu, emu->a, emu->de);
+  ld_regd8_rega16(emu, emu->a, emu->hl);
   inc_hl(emu);
 }
 void ld_a_hld(EmulationState *emu) {
-  ld_regd8_rega16(emu, emu->a, emu->de);
+  ld_regd8_rega16(emu, emu->a, emu->hl);
   dec_hl(emu);
 }
 
