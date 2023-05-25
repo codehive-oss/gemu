@@ -93,6 +93,8 @@ typedef struct EmulationState {
   u8 *hram;
   u8 *ie;
 
+  bool ime;
+
   // General Purpose Registers
   u8  *a;
   u8  *f;

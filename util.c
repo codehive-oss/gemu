@@ -339,6 +339,7 @@ EmulationState *emu_init() {
   emu->io   = emu->mem + 0xFF00;
   emu->hram = emu->mem + 0xFF80;
   emu->ie   = emu->mem + 0xFFFF;
+  emu->ime  = false;
 
   emu->a  = emu->reg + 1;
   emu->f  = emu->reg + 0;

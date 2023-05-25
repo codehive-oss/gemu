@@ -144,11 +144,13 @@ void cpl(EmulationState *emu) {
 void nop(EmulationState *emu) {}
 
 // https://gbdev.io/pandocs/Interrupts.html
-void di(EmulationState *emu) { *emu->ie = 0; }
+void di(EmulationState *emu) { emu->ime = false; }
 
 // TODO: Delay instruction by one
 // https://gbdev.io/pandocs/Interrupts.html
-void ei(EmulationState *emu) { *emu->ie = 1; }
+void ei(EmulationState *emu) {
+  emu->ime = true;
+}
 
 void jp_a16(EmulationState *emu) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];

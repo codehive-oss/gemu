@@ -8,40 +8,41 @@
 
 #define START_WITH_STEP true
 
+// https://gbdev.io/pandocs/Interrupts.html
+void handle_interrupt(EmulationState *emu) {
+  // printf("%02X\n", emu->mem[IF]);
+  u8 interrupt = *emu->ie & emu->mem[IF];
+  if (emu->ime && interrupt) {
+    if (interrupt & IF_VBLANK) {
+      nop(emu);
+      call(emu, 0x0040);
+      emu->ime = false;
+    } else if (interrupt & IF_LCD_STAT) {
+      nop(emu);
+      call(emu, 0x0048);
+      emu->ime = false;
+    } else if (interrupt & IF_TIMER) {
+      nop(emu);
+      call(emu, 0x0050);
+      emu->ime = false;
+    } else if (interrupt & IF_SERIAL) {
+      nop(emu);
+      call(emu, 0x0058);
+      emu->ime = false;
+    } else if (interrupt & IF_JOYPAD) {
+      nop(emu);
+      call(emu, 0x0060);
+      emu->ime = false;
+    }
+  }
+}
+
 bool handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
-
   Instruction instruction = GB_INSTRUCTIONS[inst];
 
   // if (emu->mem[LY] == 144) {
   //   emu->mem[IF] |= IF_VBLANK;
-  // }
-
-  // https://gbdev.io/pandocs/Interrupts.html
-  // printf("%02X\n", emu->mem[IF]);
-  // u8 interrupt = *emu->ie & emu->mem[IF];
-  // if (interrupt) {
-  //   if (interrupt & IF_VBLANK) {
-  //     nop(emu);
-  //     call(emu, 0x0040);
-  //     *emu->ie &= ~IF_VBLANK;
-  //   } else if (interrupt & IF_LCD_STAT) {
-  //     nop(emu);
-  //     call(emu, 0x0048);
-  //     *emu->ie &= ~IF_LCD_STAT;
-  //   } else if (interrupt & IF_TIMER) {
-  //     nop(emu);
-  //     call(emu, 0x0050);
-  //     *emu->ie &= ~IF_TIMER;
-  //   } else if (interrupt & IF_SERIAL) {
-  //     nop(emu);
-  //     call(emu, 0x0058);
-  //     *emu->ie &= ~IF_SERIAL;
-  //   } else if (interrupt & IF_JOYPAD) {
-  //     nop(emu);
-  //     call(emu, 0x0060);
-  //     *emu->ie &= ~IF_JOYPAD;
-  //   }
   // }
 
   // TODO: Check if instruction exists
@@ -110,6 +111,7 @@ int main(int argc, char **argv) {
 
   for (int frame = 0; running; frame++) {
     if (!step) {
+      handle_interrupt(emu);
       u8 inst = emu->rom[*emu->pc];
       printf("Inst: %02X\tAt: ", inst);
       PRINT_BYTES(*emu->pc);
@@ -129,6 +131,7 @@ int main(int argc, char **argv) {
     }
 
     if (step && spacedown) {
+      handle_interrupt(emu);
       u8 inst = emu->rom[*emu->pc];
       emu_print(emu);
       printf("\n");
