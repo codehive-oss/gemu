@@ -295,6 +295,10 @@ void push_hl(EmulationState *emu) { push(emu, emu->hl); }
 void push_af(EmulationState *emu) { push(emu, emu->af); }
 
 void ret(EmulationState *emu) { pop(emu, emu->pc); }
+void reti(EmulationState *emu) {
+  ei(emu);
+  pop(emu, emu->pc);
+}
 
 void ret_z(EmulationState *emu) {
   if (*emu->f & Z_MASK) { // Z is set
@@ -786,6 +790,7 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0xF5] = {.execute = &push_af},
 
     [0xC9] = {.execute = &ret},
+    [0xD9] = {.execute = &reti},
     [0xC0] = {.execute = &ret_nz},
     [0xD0] = {.execute = &ret_nc},
     [0xC8] = {.execute = &ret_z},

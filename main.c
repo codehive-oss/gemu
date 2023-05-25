@@ -16,10 +16,12 @@ void handle_interrupt(EmulationState *emu) {
     if (interrupt & IF_VBLANK) {
       nop(emu);
       call(emu, 0x0040);
+      *emu->ie &= ~IF_VBLANK;
       emu->ime = false;
     } else if (interrupt & IF_LCD_STAT) {
       nop(emu);
       call(emu, 0x0048);
+      *emu->ie &= ~IF_LCD_STAT;
       emu->ime = false;
     } else if (interrupt & IF_TIMER) {
       nop(emu);
@@ -28,10 +30,12 @@ void handle_interrupt(EmulationState *emu) {
     } else if (interrupt & IF_SERIAL) {
       nop(emu);
       call(emu, 0x0058);
+      *emu->ie &= ~IF_SERIAL;
       emu->ime = false;
     } else if (interrupt & IF_JOYPAD) {
       nop(emu);
       call(emu, 0x0060);
+      *emu->ie &= ~IF_JOYPAD;
       emu->ime = false;
     }
   }
