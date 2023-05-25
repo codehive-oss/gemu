@@ -194,5 +194,5 @@ int main(void) {
   test_palette_idx();
   test_add_sub();
   test_inc_dec();
-	test_and_d8();
+  test_and_d8();
 }
