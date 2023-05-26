@@ -811,14 +811,45 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x38] = {.execute = &jr_c_d8},
 };
 
+void sla_regd8(EmulationState *emu, u8 *reg) {
+  u8 c = *reg & 0b10000000;
+  *reg <<= 1;
+  set_flags(emu, *reg == 0, 0, 0, c);
+}
+
+void sla_rega16(EmulationState *emu, u16 addr) {
+  sla_regd8(emu, &emu->mem[addr]);
+}
+
+void sra_regd8(EmulationState *emu, u8 *reg) {
+  u8 c    = *reg & 0b00000001;
+  u8 left = *reg & 0b10000000;
+  *reg >>= 1;
+  *reg |= left;
+  set_flags(emu, *reg == 0, 0, 0, c);
+}
+
+void sra_rega16(EmulationState *emu, u16 addr) {
+  sra_regd8(emu, &emu->mem[addr]);
+}
+
+void srl_regd8(EmulationState *emu, u8 *reg) {
+  u8 c = *reg & 0b00000001;
+  *reg >>= 1;
+  set_flags(emu, *reg == 0, 0, 0, c);
+}
+
+void srl_rega16(EmulationState *emu, u16 addr) {
+  srl_regd8(emu, &emu->mem[addr]);
+}
+
 void swap_regd8(EmulationState *emu, u8 *reg) {
   *reg = (*reg << 4) | (*reg >> 4);
   set_flags(emu, *reg == 0, 0, 0, 0);
 }
 
 void swap_rega16(EmulationState *emu, u16 addr) {
-  emu->mem[addr] = (emu->mem[addr] << 4) | (emu->mem[addr] >> 4);
-  set_flags(emu, emu->mem[addr] == 0, 0, 0, 0);
+  swap_regd8(emu, &emu->mem[addr]);
 }
 
 void res_regd8(EmulationState *emu, u8 *reg, u8 bit) {
@@ -826,7 +857,7 @@ void res_regd8(EmulationState *emu, u8 *reg, u8 bit) {
 }
 
 void res_rega16(EmulationState *emu, u16 addr, u8 bit) {
-  emu->mem[addr] &= ~(1 << bit);
+  res_regd8(emu, &emu->mem[addr], bit);
 }
 
 void set_regd8(EmulationState *emu, u8 *reg, u8 bit) {
@@ -834,8 +865,26 @@ void set_regd8(EmulationState *emu, u8 *reg, u8 bit) {
 }
 
 void set_rega16(EmulationState *emu, u16 addr, u8 bit) {
-  emu->mem[addr] |= (1 << bit);
+  set_regd8(emu, &emu->mem[addr], bit);
 }
+
+void sla_b(EmulationState *emu) { sla_regd8(emu, emu->b); }
+void sla_c(EmulationState *emu) { sla_regd8(emu, emu->c); }
+void sla_d(EmulationState *emu) { sla_regd8(emu, emu->d); }
+void sla_e(EmulationState *emu) { sla_regd8(emu, emu->e); }
+void sla_h(EmulationState *emu) { sla_regd8(emu, emu->h); }
+void sla_l(EmulationState *emu) { sla_regd8(emu, emu->h); }
+void sla_hl(EmulationState *emu) { sla_rega16(emu, *emu->hl); }
+void sla_a(EmulationState *emu) { sla_regd8(emu, emu->a); }
+
+void sra_b(EmulationState *emu) { sra_regd8(emu, emu->b); }
+void sra_c(EmulationState *emu) { sra_regd8(emu, emu->c); }
+void sra_d(EmulationState *emu) { sra_regd8(emu, emu->d); }
+void sra_e(EmulationState *emu) { sra_regd8(emu, emu->e); }
+void sra_h(EmulationState *emu) { sra_regd8(emu, emu->h); }
+void sra_l(EmulationState *emu) { sra_regd8(emu, emu->h); }
+void sra_hl(EmulationState *emu) { sra_rega16(emu, *emu->hl); }
+void sra_a(EmulationState *emu) { sra_regd8(emu, emu->a); }
 
 void swap_b(EmulationState *emu) { swap_regd8(emu, emu->b); }
 void swap_c(EmulationState *emu) { swap_regd8(emu, emu->c); }
@@ -845,6 +894,15 @@ void swap_h(EmulationState *emu) { swap_regd8(emu, emu->h); }
 void swap_l(EmulationState *emu) { swap_regd8(emu, emu->l); }
 void swap_hl(EmulationState *emu) { swap_rega16(emu, *emu->hl); }
 void swap_a(EmulationState *emu) { swap_regd8(emu, emu->a); }
+
+void srl_b(EmulationState *emu) { srl_regd8(emu, emu->b); }
+void srl_c(EmulationState *emu) { srl_regd8(emu, emu->c); }
+void srl_d(EmulationState *emu) { srl_regd8(emu, emu->d); }
+void srl_e(EmulationState *emu) { srl_regd8(emu, emu->e); }
+void srl_h(EmulationState *emu) { srl_regd8(emu, emu->h); }
+void srl_l(EmulationState *emu) { srl_regd8(emu, emu->h); }
+void srl_hl(EmulationState *emu) { srl_rega16(emu, *emu->hl); }
+void srl_a(EmulationState *emu) { srl_regd8(emu, emu->a); }
 
 void res_b0(EmulationState *emu) { res_regd8(emu, emu->b, 0); }
 void res_c0(EmulationState *emu) { res_regd8(emu, emu->c, 0); }
@@ -991,6 +1049,24 @@ void set_hl7(EmulationState *emu) { set_rega16(emu, *emu->hl, 7); }
 void set_a7(EmulationState *emu) { set_regd8(emu, emu->a, 7); }
 
 Instruction GB_INSTRUCTIONS_PREFIXED[256] = {
+    [0x20] = {.execute = &sla_b},
+    [0x21] = {.execute = &sla_c},
+    [0x22] = {.execute = &sla_d},
+    [0x23] = {.execute = &sla_e},
+    [0x24] = {.execute = &sla_h},
+    [0x25] = {.execute = &sla_l},
+    [0x26] = {.execute = &sla_hl},
+    [0x27] = {.execute = &sla_a},
+
+    [0x28] = {.execute = &sra_b},
+    [0x29] = {.execute = &sra_c},
+    [0x2A] = {.execute = &sra_d},
+    [0x2B] = {.execute = &sra_e},
+    [0x2C] = {.execute = &sra_h},
+    [0x2D] = {.execute = &sra_l},
+    [0x2E] = {.execute = &sra_hl},
+    [0x2F] = {.execute = &sra_a},
+
     [0x30] = {.execute = &swap_b},
     [0x31] = {.execute = &swap_c},
     [0x32] = {.execute = &swap_d},
@@ -999,6 +1075,15 @@ Instruction GB_INSTRUCTIONS_PREFIXED[256] = {
     [0x35] = {.execute = &swap_l},
     [0x36] = {.execute = &swap_hl},
     [0x37] = {.execute = &swap_a},
+
+    [0x38] = {.execute = &srl_b},
+    [0x39] = {.execute = &srl_c},
+    [0x3A] = {.execute = &srl_d},
+    [0x3B] = {.execute = &srl_e},
+    [0x3C] = {.execute = &srl_h},
+    [0x3D] = {.execute = &srl_l},
+    [0x3E] = {.execute = &srl_hl},
+    [0x3F] = {.execute = &srl_a},
 
     [0x80] = {.execute = &res_b0},
     [0x81] = {.execute = &res_c0},
