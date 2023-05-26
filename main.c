@@ -20,13 +20,13 @@ bool handle_interrupt(EmulationState *emu) {
     if (interrupt & IF_VBLANK) {
       nop(emu);
       call(emu, 0x0040);
-      emu->mem[IE] &= ~IF_VBLANK;
+      emu->mem[IF] &= ~IF_VBLANK;
       emu->ime = false;
       return true;
     } else if (interrupt & IF_LCD_STAT) {
       nop(emu);
       call(emu, 0x0048);
-      emu->mem[IE] &= ~IF_LCD_STAT;
+      emu->mem[IF] &= ~IF_LCD_STAT;
       emu->ime = false;
       return true;
     } else if (interrupt & IF_TIMER) {
@@ -37,13 +37,13 @@ bool handle_interrupt(EmulationState *emu) {
     } else if (interrupt & IF_SERIAL) {
       nop(emu);
       call(emu, 0x0058);
-      emu->mem[IE] &= ~IF_SERIAL;
+      emu->mem[IF] &= ~IF_SERIAL;
       emu->ime = false;
       return true;
     } else if (interrupt & IF_JOYPAD) {
       nop(emu);
       call(emu, 0x0060);
-      emu->mem[IE] &= ~IF_JOYPAD;
+      emu->mem[IF] &= ~IF_JOYPAD;
       emu->ime = false;
       return true;
     }
@@ -71,7 +71,6 @@ int main(int argc, char **argv) {
   u16 breakpoint = 0x0100;
   if (argc > 2) {
     breakpoint = (u16)strtod(argv[2], NULL);
-    printf("%02X\n", breakpoint);
   }
 
   printf("Loading ROM from %s\n", path);
