@@ -99,7 +99,8 @@ void win_draw_bg(Window *win, u8 *vram, u8 *tileMap, bool data_area) {
   u32 *winpixel;
   int  pitch;
   u8  *tiles0   = data_area ? vram : vram + 0x1000;
-  u8  *tiles128 = vram + 0x0800;
+  // TODO: Implement https://gbdev.io/pandocs/Tile_Data.html#vram-tile-data
+  // u8  *tiles128 = vram + 0x0800;
 
   SDL_LockTexture(win->screen, NULL, (void *)&winpixel, &pitch);
 
@@ -108,7 +109,8 @@ void win_draw_bg(Window *win, u8 *vram, u8 *tileMap, bool data_area) {
       int offset    = (y * 32) + x;
       u8  tileIndex = tileMap[offset];
 
-      u8 *tile = (tileIndex < 128 ? tiles0 : tiles128) + (tileIndex * 16);
+      // u8 *tile = (tileIndex < 128 ? tiles0 : tiles128) + (tileIndex * 16);
+      u8 *tile = tiles0 + (tileIndex * 16);
       win_draw_tile(winpixel, tile, pitch / 4, x * 8, y * 8);
     }
   }
