@@ -273,8 +273,16 @@ void xor_a(EmulationState *emu);
 void cp_d8(EmulationState *emu);
 void prefix(EmulationState *emu);
 
+void sla_regd8(EmulationState *emu, u8 *reg);
+void sla_rega16(EmulationState *emu, u16 addr);
+void sra_regd8(EmulationState *emu, u8 *reg);
+void sra_rega16(EmulationState *emu, u16 addr);
 void swap_regd8(EmulationState *emu, u8 *reg);
 void swap_rega16(EmulationState *emu, u16 addr);
+void srl_regd8(EmulationState *emu, u8 *reg);
+void srl_rega16(EmulationState *emu, u16 addr);
+void bit_regd8(EmulationState *emu, u8 *reg, u8 bit);
+void bit_rega16(EmulationState *emu, u16 addr, u8 bit);
 void res_regd8(EmulationState *emu, u8 *reg, u8 bit);
 void res_rega16(EmulationState *emu, u16 addr, u8 bit);
 void set_regd8(EmulationState *emu, u8 *reg, u8 bit);
@@ -315,6 +323,78 @@ void srl_h(EmulationState *emu);
 void srl_l(EmulationState *emu);
 void srl_hl(EmulationState *emu);
 void srl_a(EmulationState *emu);
+
+void bit_b0(EmulationState *emu);
+void bit_c0(EmulationState *emu);
+void bit_d0(EmulationState *emu);
+void bit_e0(EmulationState *emu);
+void bit_h0(EmulationState *emu);
+void bit_l0(EmulationState *emu);
+void bit_hl0(EmulationState *emu);
+void bit_a0(EmulationState *emu);
+
+void bit_b1(EmulationState *emu);
+void bit_c1(EmulationState *emu);
+void bit_d1(EmulationState *emu);
+void bit_e1(EmulationState *emu);
+void bit_h1(EmulationState *emu);
+void bit_l1(EmulationState *emu);
+void bit_hl1(EmulationState *emu);
+void bit_a1(EmulationState *emu);
+
+void bit_b2(EmulationState *emu);
+void bit_c2(EmulationState *emu);
+void bit_d2(EmulationState *emu);
+void bit_e2(EmulationState *emu);
+void bit_h2(EmulationState *emu);
+void bit_l2(EmulationState *emu);
+void bit_hl2(EmulationState *emu);
+void bit_a2(EmulationState *emu);
+
+void bit_b3(EmulationState *emu);
+void bit_c3(EmulationState *emu);
+void bit_d3(EmulationState *emu);
+void bit_e3(EmulationState *emu);
+void bit_h3(EmulationState *emu);
+void bit_l3(EmulationState *emu);
+void bit_hl3(EmulationState *emu);
+void bit_a3(EmulationState *emu);
+
+void bit_b4(EmulationState *emu);
+void bit_c4(EmulationState *emu);
+void bit_d4(EmulationState *emu);
+void bit_e4(EmulationState *emu);
+void bit_h4(EmulationState *emu);
+void bit_l4(EmulationState *emu);
+void bit_hl4(EmulationState *emu);
+void bit_a4(EmulationState *emu);
+
+void bit_b5(EmulationState *emu);
+void bit_c5(EmulationState *emu);
+void bit_d5(EmulationState *emu);
+void bit_e5(EmulationState *emu);
+void bit_h5(EmulationState *emu);
+void bit_l5(EmulationState *emu);
+void bit_hl5(EmulationState *emu);
+void bit_a5(EmulationState *emu);
+
+void bit_b6(EmulationState *emu);
+void bit_c6(EmulationState *emu);
+void bit_d6(EmulationState *emu);
+void bit_e6(EmulationState *emu);
+void bit_h6(EmulationState *emu);
+void bit_l6(EmulationState *emu);
+void bit_hl6(EmulationState *emu);
+void bit_a6(EmulationState *emu);
+
+void bit_b7(EmulationState *emu);
+void bit_c7(EmulationState *emu);
+void bit_d7(EmulationState *emu);
+void bit_e7(EmulationState *emu);
+void bit_h7(EmulationState *emu);
+void bit_l7(EmulationState *emu);
+void bit_hl7(EmulationState *emu);
+void bit_a7(EmulationState *emu);
 
 void res_b0(EmulationState *emu);
 void res_c0(EmulationState *emu);

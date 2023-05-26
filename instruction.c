@@ -844,6 +844,15 @@ void sra_rega16(EmulationState *emu, u16 addr) {
   sra_regd8(emu, &emu->mem[addr]);
 }
 
+void swap_regd8(EmulationState *emu, u8 *reg) {
+  *reg = (*reg << 4) | (*reg >> 4);
+  set_flags(emu, *reg == 0, 0, 0, 0);
+}
+
+void swap_rega16(EmulationState *emu, u16 addr) {
+  swap_regd8(emu, &emu->mem[addr]);
+}
+
 void srl_regd8(EmulationState *emu, u8 *reg) {
   u8 c = *reg & 0b00000001;
   *reg >>= 1;
@@ -854,13 +863,12 @@ void srl_rega16(EmulationState *emu, u16 addr) {
   srl_regd8(emu, &emu->mem[addr]);
 }
 
-void swap_regd8(EmulationState *emu, u8 *reg) {
-  *reg = (*reg << 4) | (*reg >> 4);
-  set_flags(emu, *reg == 0, 0, 0, 0);
+void bit_regd8(EmulationState *emu, u8 *reg, u8 bit) {
+  set_flags(emu, (*reg & (1 << bit)) == 0, 0, 1, -1);
 }
 
-void swap_rega16(EmulationState *emu, u16 addr) {
-  swap_regd8(emu, &emu->mem[addr]);
+void bit_rega16(EmulationState *emu, u16 addr, u8 bit) {
+  bit_regd8(emu, &emu->mem[addr], bit);
 }
 
 void res_regd8(EmulationState *emu, u8 *reg, u8 bit) {
@@ -914,6 +922,78 @@ void srl_h(EmulationState *emu) { srl_regd8(emu, emu->h); }
 void srl_l(EmulationState *emu) { srl_regd8(emu, emu->h); }
 void srl_hl(EmulationState *emu) { srl_rega16(emu, *emu->hl); }
 void srl_a(EmulationState *emu) { srl_regd8(emu, emu->a); }
+
+void bit_b0(EmulationState *emu) { bit_regd8(emu, emu->b, 0); }
+void bit_c0(EmulationState *emu) { bit_regd8(emu, emu->c, 0); }
+void bit_d0(EmulationState *emu) { bit_regd8(emu, emu->d, 0); }
+void bit_e0(EmulationState *emu) { bit_regd8(emu, emu->e, 0); }
+void bit_h0(EmulationState *emu) { bit_regd8(emu, emu->h, 0); }
+void bit_l0(EmulationState *emu) { bit_regd8(emu, emu->l, 0); }
+void bit_hl0(EmulationState *emu) { bit_rega16(emu, *emu->hl, 0); }
+void bit_a0(EmulationState *emu) { bit_regd8(emu, emu->a, 0); }
+
+void bit_b1(EmulationState *emu) { bit_regd8(emu, emu->b, 1); }
+void bit_c1(EmulationState *emu) { bit_regd8(emu, emu->c, 1); }
+void bit_d1(EmulationState *emu) { bit_regd8(emu, emu->d, 1); }
+void bit_e1(EmulationState *emu) { bit_regd8(emu, emu->e, 1); }
+void bit_h1(EmulationState *emu) { bit_regd8(emu, emu->h, 1); }
+void bit_l1(EmulationState *emu) { bit_regd8(emu, emu->l, 1); }
+void bit_hl1(EmulationState *emu) { bit_rega16(emu, *emu->hl, 1); }
+void bit_a1(EmulationState *emu) { bit_regd8(emu, emu->a, 1); }
+
+void bit_b2(EmulationState *emu) { bit_regd8(emu, emu->b, 2); }
+void bit_c2(EmulationState *emu) { bit_regd8(emu, emu->c, 2); }
+void bit_d2(EmulationState *emu) { bit_regd8(emu, emu->d, 2); }
+void bit_e2(EmulationState *emu) { bit_regd8(emu, emu->e, 2); }
+void bit_h2(EmulationState *emu) { bit_regd8(emu, emu->h, 2); }
+void bit_l2(EmulationState *emu) { bit_regd8(emu, emu->l, 2); }
+void bit_hl2(EmulationState *emu) { bit_rega16(emu, *emu->hl, 2); }
+void bit_a2(EmulationState *emu) { bit_regd8(emu, emu->a, 2); }
+
+void bit_b3(EmulationState *emu) { bit_regd8(emu, emu->b, 3); }
+void bit_c3(EmulationState *emu) { bit_regd8(emu, emu->c, 3); }
+void bit_d3(EmulationState *emu) { bit_regd8(emu, emu->d, 3); }
+void bit_e3(EmulationState *emu) { bit_regd8(emu, emu->e, 3); }
+void bit_h3(EmulationState *emu) { bit_regd8(emu, emu->h, 3); }
+void bit_l3(EmulationState *emu) { bit_regd8(emu, emu->l, 3); }
+void bit_hl3(EmulationState *emu) { bit_rega16(emu, *emu->hl, 3); }
+void bit_a3(EmulationState *emu) { bit_regd8(emu, emu->a, 3); }
+
+void bit_b4(EmulationState *emu) { bit_regd8(emu, emu->b, 4); }
+void bit_c4(EmulationState *emu) { bit_regd8(emu, emu->c, 4); }
+void bit_d4(EmulationState *emu) { bit_regd8(emu, emu->d, 4); }
+void bit_e4(EmulationState *emu) { bit_regd8(emu, emu->e, 4); }
+void bit_h4(EmulationState *emu) { bit_regd8(emu, emu->h, 4); }
+void bit_l4(EmulationState *emu) { bit_regd8(emu, emu->l, 4); }
+void bit_hl4(EmulationState *emu) { bit_rega16(emu, *emu->hl, 4); }
+void bit_a4(EmulationState *emu) { bit_regd8(emu, emu->a, 4); }
+
+void bit_b5(EmulationState *emu) { bit_regd8(emu, emu->b, 5); }
+void bit_c5(EmulationState *emu) { bit_regd8(emu, emu->c, 5); }
+void bit_d5(EmulationState *emu) { bit_regd8(emu, emu->d, 5); }
+void bit_e5(EmulationState *emu) { bit_regd8(emu, emu->e, 5); }
+void bit_h5(EmulationState *emu) { bit_regd8(emu, emu->h, 5); }
+void bit_l5(EmulationState *emu) { bit_regd8(emu, emu->l, 5); }
+void bit_hl5(EmulationState *emu) { bit_rega16(emu, *emu->hl, 5); }
+void bit_a5(EmulationState *emu) { bit_regd8(emu, emu->a, 5); }
+
+void bit_b6(EmulationState *emu) { bit_regd8(emu, emu->b, 6); }
+void bit_c6(EmulationState *emu) { bit_regd8(emu, emu->c, 6); }
+void bit_d6(EmulationState *emu) { bit_regd8(emu, emu->d, 6); }
+void bit_e6(EmulationState *emu) { bit_regd8(emu, emu->e, 6); }
+void bit_h6(EmulationState *emu) { bit_regd8(emu, emu->h, 6); }
+void bit_l6(EmulationState *emu) { bit_regd8(emu, emu->l, 6); }
+void bit_hl6(EmulationState *emu) { bit_rega16(emu, *emu->hl, 6); }
+void bit_a6(EmulationState *emu) { bit_regd8(emu, emu->a, 6); }
+
+void bit_b7(EmulationState *emu) { bit_regd8(emu, emu->b, 7); }
+void bit_c7(EmulationState *emu) { bit_regd8(emu, emu->c, 7); }
+void bit_d7(EmulationState *emu) { bit_regd8(emu, emu->d, 7); }
+void bit_e7(EmulationState *emu) { bit_regd8(emu, emu->e, 7); }
+void bit_h7(EmulationState *emu) { bit_regd8(emu, emu->h, 7); }
+void bit_l7(EmulationState *emu) { bit_regd8(emu, emu->l, 7); }
+void bit_hl7(EmulationState *emu) { bit_rega16(emu, *emu->hl, 7); }
+void bit_a7(EmulationState *emu) { bit_regd8(emu, emu->a, 7); }
 
 void res_b0(EmulationState *emu) { res_regd8(emu, emu->b, 0); }
 void res_c0(EmulationState *emu) { res_regd8(emu, emu->c, 0); }
@@ -1095,6 +1175,78 @@ Instruction GB_INSTRUCTIONS_PREFIXED[256] = {
     [0x3D] = {.execute = &srl_l},
     [0x3E] = {.execute = &srl_hl},
     [0x3F] = {.execute = &srl_a},
+
+    [0x40] = {.execute = &bit_b0},
+    [0x41] = {.execute = &bit_c0},
+    [0x42] = {.execute = &bit_d0},
+    [0x43] = {.execute = &bit_e0},
+    [0x44] = {.execute = &bit_h0},
+    [0x45] = {.execute = &bit_l0},
+    [0x46] = {.execute = &bit_hl0},
+    [0x47] = {.execute = &bit_a0},
+
+    [0x48] = {.execute = &bit_b1},
+    [0x49] = {.execute = &bit_c1},
+    [0x4A] = {.execute = &bit_d1},
+    [0x4B] = {.execute = &bit_e1},
+    [0x4C] = {.execute = &bit_h1},
+    [0x4D] = {.execute = &bit_l1},
+    [0x4E] = {.execute = &bit_hl1},
+    [0x4F] = {.execute = &bit_a1},
+
+    [0x50] = {.execute = &bit_b2},
+    [0x51] = {.execute = &bit_c2},
+    [0x52] = {.execute = &bit_d2},
+    [0x53] = {.execute = &bit_e2},
+    [0x54] = {.execute = &bit_h2},
+    [0x55] = {.execute = &bit_l2},
+    [0x56] = {.execute = &bit_hl2},
+    [0x57] = {.execute = &bit_a2},
+
+    [0x58] = {.execute = &bit_b3},
+    [0x59] = {.execute = &bit_c3},
+    [0x5A] = {.execute = &bit_d3},
+    [0x5B] = {.execute = &bit_e3},
+    [0x5C] = {.execute = &bit_h3},
+    [0x5D] = {.execute = &bit_l3},
+    [0x5E] = {.execute = &bit_hl3},
+    [0x5F] = {.execute = &bit_a3},
+
+    [0x60] = {.execute = &bit_b4},
+    [0x61] = {.execute = &bit_c4},
+    [0x62] = {.execute = &bit_d4},
+    [0x63] = {.execute = &bit_e4},
+    [0x64] = {.execute = &bit_h4},
+    [0x65] = {.execute = &bit_l4},
+    [0x66] = {.execute = &bit_hl4},
+    [0x67] = {.execute = &bit_a4},
+
+    [0x68] = {.execute = &bit_b5},
+    [0x69] = {.execute = &bit_c5},
+    [0x6A] = {.execute = &bit_d5},
+    [0x6B] = {.execute = &bit_e5},
+    [0x6C] = {.execute = &bit_h5},
+    [0x6D] = {.execute = &bit_l5},
+    [0x6E] = {.execute = &bit_hl5},
+    [0x6F] = {.execute = &bit_a5},
+
+    [0x70] = {.execute = &bit_b6},
+    [0x71] = {.execute = &bit_c6},
+    [0x72] = {.execute = &bit_d6},
+    [0x73] = {.execute = &bit_e6},
+    [0x74] = {.execute = &bit_h6},
+    [0x75] = {.execute = &bit_l6},
+    [0x76] = {.execute = &bit_hl6},
+    [0x77] = {.execute = &bit_a6},
+
+    [0x78] = {.execute = &bit_b7},
+    [0x79] = {.execute = &bit_c7},
+    [0x7A] = {.execute = &bit_d7},
+    [0x7B] = {.execute = &bit_e7},
+    [0x7C] = {.execute = &bit_h7},
+    [0x7D] = {.execute = &bit_l7},
+    [0x7E] = {.execute = &bit_hl7},
+    [0x7F] = {.execute = &bit_a7},
 
     [0x80] = {.execute = &res_b0},
     [0x81] = {.execute = &res_c0},
