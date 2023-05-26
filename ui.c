@@ -80,7 +80,7 @@ void win_draw_objs(Window *win, SpriteAttribute *sprites, u8 *vram) {
 
   for (u8 i = 0; i < 40; i++) {
     SpriteAttribute sprite = sprites[i];
-    win_draw_tile(winpixel, vram + sprite.tileIdx * 16, pitch / 4, sprite.xPos, sprite.yPos);
+    win_draw_tile(winpixel, vram + sprite.tileIdx * 16, pitch / 4, sprite.xPos - 8, sprite.yPos - 16);
   }
 
   SDL_UnlockTexture(win->screen);
