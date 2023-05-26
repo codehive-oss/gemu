@@ -215,6 +215,14 @@ void ld_de_a(EmulationState *emu);
 void ld_hli_a(EmulationState *emu);
 void ld_hld_a(EmulationState *emu);
 
+void ld_hl_b(EmulationState *emu);
+void ld_hl_c(EmulationState *emu);
+void ld_hl_d(EmulationState *emu);
+void ld_hl_e(EmulationState *emu);
+void ld_hl_h(EmulationState *emu);
+void ld_hl_l(EmulationState *emu);
+void ld_hl_a(EmulationState *emu);
+
 void add_b(EmulationState *emu);
 void add_c(EmulationState *emu);
 void add_d(EmulationState *emu);
@@ -264,10 +272,20 @@ void cp_d8(EmulationState *emu);
 void prefix(EmulationState *emu);
 
 void swap_regd8(EmulationState *emu, u8 *reg);
+void swap_rega16(EmulationState *emu, u16 addr);
 void res_regd8(EmulationState *emu, u8 *reg, u8 bit);
 void res_rega16(EmulationState *emu, u16 addr, u8 bit);
 void set_regd8(EmulationState *emu, u8 *reg, u8 bit);
 void set_rega16(EmulationState *emu, u16 addr, u8 bit);
+
+void swap_b(EmulationState *emu);
+void swap_c(EmulationState *emu);
+void swap_d(EmulationState *emu);
+void swap_e(EmulationState *emu);
+void swap_h(EmulationState *emu);
+void swap_l(EmulationState *emu);
+void swap_hl(EmulationState *emu);
+void swap_a(EmulationState *emu);
 
 void res_b0(EmulationState *emu);
 void res_c0(EmulationState *emu);
@@ -412,13 +430,5 @@ void set_h7(EmulationState *emu);
 void set_l7(EmulationState *emu);
 void set_hl7(EmulationState *emu);
 void set_a7(EmulationState *emu);
-
-void swap_b(EmulationState *emu);
-void swap_c(EmulationState *emu);
-void swap_d(EmulationState *emu);
-void swap_e(EmulationState *emu);
-void swap_h(EmulationState *emu);
-void swap_l(EmulationState *emu);
-void swap_a(EmulationState *emu);
 
 #endif // INSTRUCTION_H

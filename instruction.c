@@ -144,13 +144,9 @@ void cpl(EmulationState *emu) {
 void nop(EmulationState *emu) {}
 
 // https://gbdev.io/pandocs/Interrupts.html
-void di(EmulationState *emu) { emu->ime = false; }
-
 // TODO: Delay instruction by one
-// https://gbdev.io/pandocs/Interrupts.html
-void ei(EmulationState *emu) {
-  emu->ime = true;
-}
+void ei(EmulationState *emu) { emu->ime = true; }
+void di(EmulationState *emu) { emu->ime = false; }
 
 void jp_a16(EmulationState *emu) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
@@ -489,6 +485,14 @@ void ld_hld_a(EmulationState *emu) {
   dec_hl(emu);
 }
 
+void ld_hl_b(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->b); }
+void ld_hl_c(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->c); }
+void ld_hl_d(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->d); }
+void ld_hl_e(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->e); }
+void ld_hl_h(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->h); }
+void ld_hl_l(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->l); }
+void ld_hl_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->a); }
+
 void add_b(EmulationState *emu) { add_regd8(emu, emu->b); }
 void add_c(EmulationState *emu) { add_regd8(emu, emu->c); }
 void add_d(EmulationState *emu) { add_regd8(emu, emu->d); }
@@ -551,6 +555,8 @@ void prefix(EmulationState *emu) {
   *emu->pc += 1;
 
   Instruction instruction = GB_INSTRUCTIONS_PREFIXED[inst];
+  printf("Prefixed Inst: %02X\n", inst);
+
   instruction.execute(emu);
 }
 
@@ -644,6 +650,14 @@ Instruction GB_INSTRUCTIONS[256] = {
 
     [0xE2] = {.execute = &ld_ca_a},
     [0xF2] = {.execute = &ld_a_ca},
+
+    [0x70] = {.execute = &ld_hl_b},
+    [0x71] = {.execute = &ld_hl_c},
+    [0x72] = {.execute = &ld_hl_d},
+    [0x73] = {.execute = &ld_hl_e},
+    [0x74] = {.execute = &ld_hl_h},
+    [0x75] = {.execute = &ld_hl_l},
+    [0x77] = {.execute = &ld_hl_a},
 
     [0x03] = {.execute = &inc_bc},
     [0x13] = {.execute = &inc_de},
@@ -802,6 +816,11 @@ void swap_regd8(EmulationState *emu, u8 *reg) {
   set_flags(emu, *reg == 0, 0, 0, 0);
 }
 
+void swap_rega16(EmulationState *emu, u16 addr) {
+  emu->mem[addr] = (emu->mem[addr] << 4) | (emu->mem[addr] >> 4);
+  set_flags(emu, emu->mem[addr] == 0, 0, 0, 0);
+}
+
 void res_regd8(EmulationState *emu, u8 *reg, u8 bit) {
   *reg &= ~(1 << bit);
 }
@@ -817,6 +836,15 @@ void set_regd8(EmulationState *emu, u8 *reg, u8 bit) {
 void set_rega16(EmulationState *emu, u16 addr, u8 bit) {
   emu->mem[addr] |= (1 << bit);
 }
+
+void swap_b(EmulationState *emu) { swap_regd8(emu, emu->b); }
+void swap_c(EmulationState *emu) { swap_regd8(emu, emu->c); }
+void swap_d(EmulationState *emu) { swap_regd8(emu, emu->d); }
+void swap_e(EmulationState *emu) { swap_regd8(emu, emu->e); }
+void swap_h(EmulationState *emu) { swap_regd8(emu, emu->h); }
+void swap_l(EmulationState *emu) { swap_regd8(emu, emu->l); }
+void swap_hl(EmulationState *emu) { swap_rega16(emu, *emu->hl); }
+void swap_a(EmulationState *emu) { swap_regd8(emu, emu->a); }
 
 void res_b0(EmulationState *emu) { res_regd8(emu, emu->b, 0); }
 void res_c0(EmulationState *emu) { res_regd8(emu, emu->c, 0); }
@@ -962,14 +990,6 @@ void set_l7(EmulationState *emu) { set_regd8(emu, emu->l, 7); }
 void set_hl7(EmulationState *emu) { set_rega16(emu, *emu->hl, 7); }
 void set_a7(EmulationState *emu) { set_regd8(emu, emu->a, 7); }
 
-void swap_b(EmulationState *emu) { swap_regd8(emu, emu->b); }
-void swap_c(EmulationState *emu) { swap_regd8(emu, emu->c); }
-void swap_d(EmulationState *emu) { swap_regd8(emu, emu->d); }
-void swap_e(EmulationState *emu) { swap_regd8(emu, emu->e); }
-void swap_h(EmulationState *emu) { swap_regd8(emu, emu->h); }
-void swap_l(EmulationState *emu) { swap_regd8(emu, emu->l); }
-void swap_a(EmulationState *emu) { swap_regd8(emu, emu->a); }
-
 Instruction GB_INSTRUCTIONS_PREFIXED[256] = {
     [0x30] = {.execute = &swap_b},
     [0x31] = {.execute = &swap_c},
@@ -977,6 +997,7 @@ Instruction GB_INSTRUCTIONS_PREFIXED[256] = {
     [0x33] = {.execute = &swap_e},
     [0x34] = {.execute = &swap_h},
     [0x35] = {.execute = &swap_l},
+    [0x36] = {.execute = &swap_hl},
     [0x37] = {.execute = &swap_a},
 
     [0x80] = {.execute = &res_b0},

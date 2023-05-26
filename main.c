@@ -154,8 +154,8 @@ int main(int argc, char **argv) {
       }
     }
 
-    // Render every 128th frame
-    if (frame % 128 == 0) {
+    // Render every 256th frame
+    if (frame % 257 == 0) {
       win_clear(win);
       win_draw_tiles(win, emu->vram);
 
