@@ -31,8 +31,8 @@
 
 // https://gbdev.io/pandocs/OAM.html#byte-3--attributesflags
 #define BG_OVER_OBJ         0b10000000
-#define Y_flip              0b01000000
-#define X_flip              0b00100000
+#define Y_FLIP              0b01000000
+#define X_FLIP              0b00100000
 #define Palette_NON_CGB_NUM 0b00010000
 #define TILE_VRAM_BANK      0b00001000
 #define Palette_CGB_NUM     0b00000111

@@ -57,7 +57,7 @@ void test_add_sub() {
   {
     *emu->a = 0x0F;
     u8 from = 0x01;
-    add_regd8(emu, &from);
+    add_regd8(emu, from);
     CHECK(*emu->a == 0x10);
     CHECK_MASK_FALSE(*emu->f, Z_MASK);
     CHECK_MASK_FALSE(*emu->f, N_MASK);
@@ -66,7 +66,7 @@ void test_add_sub() {
 
     *emu->a = 0xFF;
     from    = 0x01;
-    add_regd8(emu, &from);
+    add_regd8(emu, from);
     CHECK(*emu->a == 0x00);
     CHECK(*emu->f & Z_MASK);
     CHECK(!(*emu->f & N_MASK));
@@ -79,7 +79,7 @@ void test_add_sub() {
   {
     *emu->a = 0x0F;
     u8 from = 0x01;
-    sub_regd8(emu, &from);
+    sub_regd8(emu, from);
     CHECK(*emu->a == 0x0E);
     CHECK(!(*emu->f & Z_MASK));
     CHECK(*emu->f & N_MASK);
@@ -88,7 +88,7 @@ void test_add_sub() {
 
     *emu->a = 0x01;
     from    = 0x02;
-    sub_regd8(emu, &from);
+    sub_regd8(emu, from);
     CHECK(*emu->a == 0xFF);
     CHECK(!(*emu->f & Z_MASK));
     CHECK(*emu->f & N_MASK);
