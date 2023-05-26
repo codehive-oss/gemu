@@ -9,7 +9,7 @@
 #define START_WITH_STEP true
 
 // https://gbdev.io/pandocs/Interrupts.html
-void handle_interrupt(EmulationState *emu) {
+bool handle_interrupt(EmulationState *emu) {
   // https://gbdev.io/pandocs/Interrupt_Sources.html#int-40--vblank-interrupt
   if (emu->mem[LY] == 144) {
     emu->mem[IF] |= IF_VBLANK;
@@ -22,42 +22,40 @@ void handle_interrupt(EmulationState *emu) {
       call(emu, 0x0040);
       emu->mem[IE] &= ~IF_VBLANK;
       emu->ime = false;
+      return true;
     } else if (interrupt & IF_LCD_STAT) {
       nop(emu);
       call(emu, 0x0048);
       emu->mem[IE] &= ~IF_LCD_STAT;
       emu->ime = false;
+      return true;
     } else if (interrupt & IF_TIMER) {
       nop(emu);
       call(emu, 0x0050);
       emu->ime = false;
+      return true;
     } else if (interrupt & IF_SERIAL) {
       nop(emu);
       call(emu, 0x0058);
       emu->mem[IE] &= ~IF_SERIAL;
       emu->ime = false;
+      return true;
     } else if (interrupt & IF_JOYPAD) {
       nop(emu);
       call(emu, 0x0060);
       emu->mem[IE] &= ~IF_JOYPAD;
       emu->ime = false;
+      return true;
     }
   }
+  return false;
 }
 
 bool handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
   Instruction instruction = GB_INSTRUCTIONS[inst];
-
-  // TODO: Check if instruction exists
-  // if (*(u8 *)&instruction == 0) { // Uninitialized memory
-  //   printf("Instruction not found: %02X\n", inst);
-  //   printf("Terminating...\n");
-
-  //   return false;
-  // }
-
   instruction.execute(emu);
+
   // TODO: Fix this with real mcycle
   emu->mcycle += 1;
   emu->mem[LY] = ((emu->mem[LY] + rand() % 5) % 154);
@@ -69,6 +67,13 @@ int main(int argc, char **argv) {
   if (argc > 1) {
     path = argv[1];
   }
+
+  u16 breakpoint = 0x0100;
+  if (argc > 2) {
+    breakpoint = (u16)strtod(argv[2], NULL);
+    printf("%02X\n", breakpoint);
+  }
+
   printf("Loading ROM from %s\n", path);
 
   EmulationState *emu = emu_init();
@@ -114,13 +119,8 @@ int main(int argc, char **argv) {
   *emu->pc = 0x0100;
 
   for (int frame = 0; running; frame++) {
-    if (!step) {
-      handle_interrupt(emu);
-      u8 inst = emu->rom[*emu->pc];
-      printf("Inst: %02X\tAt: ", inst);
-      PRINT_BYTES(*emu->pc);
-      printf("\n");
-      running = handle_instruction(emu, inst);
+    if (*emu->pc == breakpoint) {
+      step = true;
     }
 
     // TODO: Use a custom input struct to set values
@@ -130,18 +130,29 @@ int main(int argc, char **argv) {
 
     // TODO: Load input
     emu->io[0] |= 0x0F;
-
     if (enterdown) {
       step = !step;
     }
 
-    if (step && spacedown) {
-      handle_interrupt(emu);
+    if (!step || spacedown) {
+      bool interrupted = handle_interrupt(emu);
+      if (interrupted)
+        continue;
       u8 inst = emu->rom[*emu->pc];
-      printf("Inst: %02X\n", inst);
-      emu_print(emu);
-      printf("\n");
-      running = handle_instruction(emu, inst);
+      if (!step) {
+        printf("Inst: %02X\tAt: ", inst);
+        PRINT_BYTES(*emu->pc);
+        printf("\n");
+      } else {
+        printf("Inst: %02X\n", inst);
+        emu_print(emu);
+        printf("\n");
+      }
+      bool success = handle_instruction(emu, inst);
+
+      if (!success) {
+        running = false;
+      }
     }
 
     // Render every 128th frame

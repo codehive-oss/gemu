@@ -551,13 +551,6 @@ void prefix(EmulationState *emu) {
   *emu->pc += 1;
 
   Instruction instruction = GB_INSTRUCTIONS_PREFIXED[inst];
-  // if (*(u8 *)&instruction == 0) { // Uninitialized memory
-  //   printf("Prefixed Instruction not found: %02X\n", inst);
-  //   printf("Terminating...\n");
-
-  //   exit(1);
-  // }
-
   instruction.execute(emu);
 }
 
