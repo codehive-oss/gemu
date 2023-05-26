@@ -10,18 +10,22 @@
 
 // https://gbdev.io/pandocs/Interrupts.html
 void handle_interrupt(EmulationState *emu) {
-  // printf("%02X\n", emu->mem[IF]);
-  u8 interrupt = *emu->ie & emu->mem[IF];
+  // https://gbdev.io/pandocs/Interrupt_Sources.html#int-40--vblank-interrupt
+  if (emu->mem[LY] == 144) {
+    emu->mem[IF] |= IF_VBLANK;
+  }
+
+  u8 interrupt = emu->mem[IE] & emu->mem[IF];
   if (emu->ime && interrupt) {
     if (interrupt & IF_VBLANK) {
       nop(emu);
       call(emu, 0x0040);
-      *emu->ie &= ~IF_VBLANK;
+      emu->mem[IE] &= ~IF_VBLANK;
       emu->ime = false;
     } else if (interrupt & IF_LCD_STAT) {
       nop(emu);
       call(emu, 0x0048);
-      *emu->ie &= ~IF_LCD_STAT;
+      emu->mem[IE] &= ~IF_LCD_STAT;
       emu->ime = false;
     } else if (interrupt & IF_TIMER) {
       nop(emu);
@@ -30,12 +34,12 @@ void handle_interrupt(EmulationState *emu) {
     } else if (interrupt & IF_SERIAL) {
       nop(emu);
       call(emu, 0x0058);
-      *emu->ie &= ~IF_SERIAL;
+      emu->mem[IE] &= ~IF_SERIAL;
       emu->ime = false;
     } else if (interrupt & IF_JOYPAD) {
       nop(emu);
       call(emu, 0x0060);
-      *emu->ie &= ~IF_JOYPAD;
+      emu->mem[IE] &= ~IF_JOYPAD;
       emu->ime = false;
     }
   }
@@ -44,10 +48,6 @@ void handle_interrupt(EmulationState *emu) {
 bool handle_instruction(EmulationState *emu, u8 inst) {
   *emu->pc += 1;
   Instruction instruction = GB_INSTRUCTIONS[inst];
-
-  // if (emu->mem[LY] == 144) {
-  //   emu->mem[IF] |= IF_VBLANK;
-  // }
 
   // TODO: Check if instruction exists
   // if (*(u8 *)&instruction == 0) { // Uninitialized memory
@@ -119,6 +119,7 @@ int main(int argc, char **argv) {
       u8 inst = emu->rom[*emu->pc];
       printf("Inst: %02X\tAt: ", inst);
       PRINT_BYTES(*emu->pc);
+      printf("\n");
       running = handle_instruction(emu, inst);
     }
 

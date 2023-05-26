@@ -5,9 +5,12 @@
 #include <stddef.h>
 
 // https://gbdev.io/pandocs/STAT.html
-#define LY       0xFF44
-#define LYC      0xFF45
-#define LCD_STAT 0xFF41
+#define LY   0xFF44
+#define LYC  0xFF45
+#define STAT 0xFF41
+
+// https://gbdev.io/pandocs/Timer_and_Divider_Registers.html#ff04--div-divider-register
+#define DIV 0xFF04
 
 #define Z_MASK 0b10000000
 #define N_MASK 0b01000000
@@ -34,6 +37,7 @@
 #define TILE_VRAM_BANK      0b00001000
 #define Palette_CGB_NUM     0b00000111
 
+#define IE 0xFFFF
 #define IF 0xFF0F
 
 #define IF_VBLANK   0b00000001
@@ -91,7 +95,6 @@ typedef struct EmulationState {
   u8 *oam;
   u8 *io;
   u8 *hram;
-  u8 *ie;
 
   bool ime;
 

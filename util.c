@@ -264,7 +264,6 @@ void print_bytes(void *p, size_t len) {
   for (size_t i = len; i > 0; i--) {
     printf("%02X", ((u8 *)p)[i - 1]);
   }
-  printf("\n");
 }
 
 size_t read_rom(const char *path, u8 *dst) {
@@ -338,7 +337,6 @@ EmulationState *emu_init() {
   emu->oam  = emu->mem + 0xFE00;
   emu->io   = emu->mem + 0xFF00;
   emu->hram = emu->mem + 0xFF80;
-  emu->ie   = emu->mem + 0xFFFF;
   emu->ime  = false;
 
   emu->a  = emu->reg + 1;
@@ -368,23 +366,58 @@ EmulationState *emu_init() {
 }
 
 void emu_print(EmulationState *emu) {
-  printf("AF: ");
+  printf("AF:\t");
   PRINT_BYTES(*emu->af);
+  printf("\t");
 
-  printf("BC: ");
+  printf("LCDC:\t");
+  PRINT_BYTES(emu->mem[LCDC]);
+  printf("\n");
+
+
+  printf("BC:\t");
   PRINT_BYTES(*emu->bc);
+  printf("\t");
 
-  printf("DE: ");
+  printf("STAT:\t");
+  PRINT_BYTES(emu->mem[STAT]);
+  printf("\n");
+
+
+  printf("DE:\t");
   PRINT_BYTES(*emu->de);
+  printf("\t");
 
-  printf("HL: ");
+  printf("LY:\t");
+  PRINT_BYTES(emu->mem[LY]);
+  printf("\n");
+
+
+  printf("HL:\t");
   PRINT_BYTES(*emu->hl);
+  printf("\t");
 
-  printf("SP: ");
+  printf("DIV:\t");
+  PRINT_BYTES(emu->mem[DIV]);
+  printf("\n");
+
+
+  printf("SP:\t");
   PRINT_BYTES(*emu->sp);
+  printf("\t");
 
-  printf("PC: ");
+  printf("IE:\t");
+  PRINT_BYTES(emu->mem[IE]);
+  printf("\n");
+
+
+  printf("PC:\t");
   PRINT_BYTES(*emu->pc);
+  printf("\t");
+
+  printf("IF:\t");
+  PRINT_BYTES(emu->mem[IF]);
+  printf("\n");
 }
 
 void emu_free(EmulationState *emu) {
