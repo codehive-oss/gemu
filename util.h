@@ -39,6 +39,7 @@
 #define TILE_VRAM_BANK      0b00001000
 #define Palette_CGB_NUM     0b00000111
 
+#define IO 0xFF00
 #define IE 0xFFFF
 #define IF 0xFF0F
 
@@ -78,6 +79,18 @@ typedef struct SpriteAttribute {
   u8 tileIdx;
   u8 flags;
 } SpriteAttribute;
+
+typedef struct GameInput {
+  bool right;
+  bool left;
+  bool up;
+  bool down;
+
+  bool a;
+  bool b;
+  bool select;
+  bool start;
+} GameInput;
 
 typedef struct EmulationState {
   // Data
@@ -127,6 +140,9 @@ void   dump_file(const char *path, u8 *data, size_t length);
 int    getch(void);
 
 u8 get_palette_idx(u8 *tile_data, u8 i);
+
+GameInput *gameinput_init();
+void       gameinput_free(GameInput *input);
 
 EmulationState *emu_init();
 void            emu_print(EmulationState *emu);

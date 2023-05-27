@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -323,6 +324,16 @@ u8 get_palette_idx(u8 *tile_data, u8 i) {
   return idx;
 }
 
+GameInput *gameinput_init() {
+  GameInput *input = (GameInput *)malloc(sizeof(GameInput));
+  memset(input, 0, sizeof(GameInput));
+  return input;
+}
+
+void gameinput_free(GameInput *input) {
+  free(input);
+}
+
 EmulationState *emu_init() {
   EmulationState *emu = (EmulationState *)malloc(sizeof(EmulationState));
 
@@ -374,7 +385,6 @@ void emu_print(EmulationState *emu) {
   PRINT_BYTES(emu->mem[LCDC]);
   printf("\n");
 
-
   printf("BC:\t");
   PRINT_BYTES(*emu->bc);
   printf("\t");
@@ -382,7 +392,6 @@ void emu_print(EmulationState *emu) {
   printf("STAT:\t");
   PRINT_BYTES(emu->mem[STAT]);
   printf("\n");
-
 
   printf("DE:\t");
   PRINT_BYTES(*emu->de);
@@ -392,7 +401,6 @@ void emu_print(EmulationState *emu) {
   PRINT_BYTES(emu->mem[LY]);
   printf("\n");
 
-
   printf("HL:\t");
   PRINT_BYTES(*emu->hl);
   printf("\t");
@@ -401,7 +409,6 @@ void emu_print(EmulationState *emu) {
   PRINT_BYTES(emu->mem[DIV]);
   printf("\n");
 
-
   printf("SP:\t");
   PRINT_BYTES(*emu->sp);
   printf("\t");
@@ -409,7 +416,6 @@ void emu_print(EmulationState *emu) {
   printf("IE:\t");
   PRINT_BYTES(emu->mem[IE]);
   printf("\n");
-
 
   printf("PC:\t");
   PRINT_BYTES(*emu->pc);

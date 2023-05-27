@@ -2,6 +2,7 @@
 #include "types.h"
 #include "util.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
@@ -28,7 +29,7 @@ Window *win_init() {
   return win;
 }
 
-void win_update_input(Window *win, bool *running, bool *spacedown,
+void win_update_input(Window *win, GameInput *input, bool *running, bool *spacedown,
                       bool *enterdown) {
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
@@ -48,8 +49,63 @@ void win_update_input(Window *win, bool *running, bool *spacedown,
       case SDLK_ESCAPE:
         *running = false;
         break;
+
+      case SDLK_d:
+        input->right = true;
+        break;
+      case SDLK_a:
+        input->left = true;
+        break;
+      case SDLK_w:
+        input->up = true;
+        break;
+      case SDLK_s:
+        input->down = true;
+        break;
+
+      case SDLK_m:
+        input->a = true;
+        break;
+      case SDLK_n:
+        input->b = true;
+        break;
+      case SDLK_b:
+        input->start = true;
+        break;
+      case SDLK_v:
+        input->select = true;
+        break;
       }
       break;
+    case SDL_KEYUP: {
+      switch (e.key.keysym.sym) {
+      case SDLK_d:
+        input->right = false;
+        break;
+      case SDLK_a:
+        input->left = false;
+        break;
+      case SDLK_w:
+        input->up = false;
+        break;
+      case SDLK_s:
+        input->down = false;
+        break;
+
+      case SDLK_m:
+        input->a = false;
+        break;
+      case SDLK_n:
+        input->b = false;
+        break;
+      case SDLK_b:
+        input->start = false;
+        break;
+      case SDLK_v:
+        input->select = false;
+        break;
+      }
+    } break;
     }
   }
 }

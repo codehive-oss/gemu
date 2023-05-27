@@ -62,6 +62,25 @@ bool handle_instruction(EmulationState *emu, u8 inst) {
   return true;
 }
 
+// https://gbdev.io/pandocs/Joypad_Input.html
+void handle_gameinput(EmulationState *emu, GameInput *input) {
+  if (!(emu->mem[IO] & (1 << 4))) {
+    // Direction button select
+    BIT_SET(emu->mem[IO], 0, !input->right);
+    BIT_SET(emu->mem[IO], 1, !input->left);
+    BIT_SET(emu->mem[IO], 2, !input->up);
+    BIT_SET(emu->mem[IO], 3, !input->down);
+  } else if (!(emu->mem[IO] & (1 << 5))) {
+    // Action button select
+    BIT_SET(emu->mem[IO], 0, !input->a);
+    BIT_SET(emu->mem[IO], 1, !input->b);
+    BIT_SET(emu->mem[IO], 2, !input->select);
+    BIT_SET(emu->mem[IO], 3, !input->start);
+  } else {
+    emu->mem[IO] |= 0x0F;
+  }
+}
+
 int main(int argc, char **argv) {
   const char *path = "main.gb";
   if (argc > 1) {
@@ -75,7 +94,8 @@ int main(int argc, char **argv) {
 
   printf("Loading ROM from %s\n", path);
 
-  EmulationState *emu = emu_init();
+  EmulationState *emu   = emu_init();
+  GameInput      *input = gameinput_init();
 
   size_t bytes_read = read_rom(path, emu->rom);
   printf("Read %zu bytes\n", bytes_read);
@@ -125,10 +145,9 @@ int main(int argc, char **argv) {
     // TODO: Use a custom input struct to set values
     bool spacedown = false;
     bool enterdown = false;
-    win_update_input(win, &running, &spacedown, &enterdown);
+    win_update_input(win, input, &running, &spacedown, &enterdown);
+    handle_gameinput(emu, input);
 
-    // TODO: Load input
-    emu->io[0] |= 0x0F;
     if (enterdown) {
       step = !step;
     }
@@ -175,6 +194,7 @@ int main(int argc, char **argv) {
   printf("-------------EmulationState-------------\n");
   emu_print(emu);
 
+  gameinput_free(input);
   emu_free(emu);
 
   return 0;
