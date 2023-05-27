@@ -143,6 +143,18 @@ void sub_d8(EmulationState *emu) {
   sub_regd8(emu, target);
 }
 
+void rotate_left_regd8(EmulationState *emu, u8 *target) {
+  u8 c    = *target >> 7;
+  *target = (*target << 1) | c;
+  set_flags(emu, 0, 0, 0, c);
+}
+
+void rotate_right_regd8(EmulationState *emu, u8 *target) {
+  u8 c    = *target << 7;
+  *target = (*target >> 1) | c;
+  set_flags(emu, 0, 0, 0, c);
+}
+
 void pop(EmulationState *emu, u16 *reg) {
   *reg = *(u16 *)&emu->mem[*emu->sp];
   *emu->sp += 2;
@@ -555,6 +567,9 @@ void xor_h(EmulationState *emu) { xor_regd8(emu, *emu->h); }
 void xor_l(EmulationState *emu) { xor_regd8(emu, *emu->l); }
 void xor_a(EmulationState *emu) { xor_regd8(emu, *emu->a); }
 
+void rlca(EmulationState *emu) { rotate_left_regd8(emu, emu->a); }
+void rrca(EmulationState *emu) { rotate_right_regd8(emu, emu->a); }
+
 void cp_d8(EmulationState *emu) {
   u8 value = emu->rom[*emu->pc];
   if (*emu->a == value) {
@@ -776,6 +791,9 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0xD6] = {.execute = &sub_d8},
     [0xE6] = {.execute = &and_d8},
     [0xF6] = {.execute = &or_d8},
+
+    [0x07] = {.execute = &rlca},
+    [0x0F] = {.execute = &rrca},
 
     [0xEE] = {.execute = &xor_d8},
 

@@ -31,6 +31,8 @@ void add_d8(EmulationState *emu);
 void add_regd16(EmulationState *emu, u16 *from);
 void sub_regd8(EmulationState *emu, u8 from);
 void sub_d8(EmulationState *emu);
+void rotate_left_regd8(EmulationState *emu, u8 *target);
+void rotate_right_regd8(EmulationState *emu, u8 *target);
 void pop(EmulationState *emu, u16 *reg);
 void push(EmulationState *emu, u16 *reg);
 
@@ -269,6 +271,9 @@ void xor_e(EmulationState *emu);
 void xor_h(EmulationState *emu);
 void xor_l(EmulationState *emu);
 void xor_a(EmulationState *emu);
+
+void rlca(EmulationState *emu);
+void rrca(EmulationState *emu);
 
 void cp_d8(EmulationState *emu);
 void prefix(EmulationState *emu);
