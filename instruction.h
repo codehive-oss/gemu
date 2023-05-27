@@ -14,7 +14,7 @@ extern Instruction GB_INSTRUCTIONS_PREFIXED[256];
 void ld_regd8_d8(EmulationState *emu, u8 *reg);
 void ld_regd16_d16(EmulationState *emu, u16 *reg);
 void ld_regd8_rega16(EmulationState *emu, u8 *target, u16 *from);
-void ld_rega16_regd8(EmulationState *emu, u16 *target, u8 *from);
+void ld_a16_d8(EmulationState *emu, u16 target, u8 from);
 void ld_rega16_d8(EmulationState *emu, u16 *target);
 void and_regd8(EmulationState *emu, u8 reg);
 void and_d8(EmulationState *emu);

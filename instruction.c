@@ -3,6 +3,7 @@
 #include "util.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Loads 8-bit data to any 8-bit register
 void ld_regd8_d8(EmulationState *emu, u8 *reg) {
@@ -25,8 +26,15 @@ void ld_regd8_rega16(EmulationState *emu, u8 *target, u16 *from) {
 
 // Loads 8-bit register data to any the memory address pointed by any 16-bit
 // register
-void ld_rega16_regd8(EmulationState *emu, u16 *target, u8 *from) {
-  emu->mem[*target] = *from;
+void ld_a16_d8(EmulationState *emu, u16 target, u8 from) {
+  emu->mem[target] = from;
+
+  // https://gbdev.io/pandocs/OAM_DMA_Transfer.html
+  // TODO: Update timing
+  if (target == DMA) {
+    u16 addr = from << 8;
+    memcpy(emu->oam, emu->mem + addr, 0xA0);
+  }
 }
 
 // Loads 8-bit data to any the memory address pointed by any 16-bit register
@@ -330,8 +338,8 @@ void ret_nc(EmulationState *emu) {
 }
 
 void ldh_a8_a(EmulationState *emu) {
-  u8 target       = emu->rom[*emu->pc];
-  emu->io[target] = *emu->a;
+  u8 target = emu->rom[*emu->pc];
+  ld_a16_d8(emu, target + 0xFF00, *emu->a);
   *emu->pc += 1;
 }
 
@@ -438,8 +446,8 @@ void ld_l_a(EmulationState *emu) { *emu->l = *emu->a; }
 void ld_a_a(EmulationState *emu) { *emu->a = *emu->a; }
 
 void ld_a16_a(EmulationState *emu) {
-  u16 target_addr       = *(u16 *)&emu->rom[*emu->pc];
-  emu->mem[target_addr] = *emu->a;
+  u16 target_addr = *(u16 *)&emu->rom[*emu->pc];
+  ld_a16_d8(emu, target_addr, *emu->a);
   *emu->pc += 2;
 }
 
@@ -483,24 +491,24 @@ void ld_e_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->e, emu->hl); }
 void ld_l_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->l, emu->hl); }
 void ld_a_hl(EmulationState *emu) { ld_regd8_rega16(emu, emu->a, emu->hl); }
 
-void ld_bc_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->bc, emu->a); }
-void ld_de_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->de, emu->a); }
+void ld_bc_a(EmulationState *emu) { ld_a16_d8(emu, *emu->bc, *emu->a); }
+void ld_de_a(EmulationState *emu) { ld_a16_d8(emu, *emu->de, *emu->a); }
 void ld_hli_a(EmulationState *emu) {
-  ld_rega16_regd8(emu, emu->hl, emu->a);
+  ld_a16_d8(emu, *emu->hl, *emu->a);
   inc_hl(emu);
 }
 void ld_hld_a(EmulationState *emu) {
-  ld_rega16_regd8(emu, emu->hl, emu->a);
+  ld_a16_d8(emu, *emu->hl, *emu->a);
   dec_hl(emu);
 }
 
-void ld_hl_b(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->b); }
-void ld_hl_c(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->c); }
-void ld_hl_d(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->d); }
-void ld_hl_e(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->e); }
-void ld_hl_h(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->h); }
-void ld_hl_l(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->l); }
-void ld_hl_a(EmulationState *emu) { ld_rega16_regd8(emu, emu->hl, emu->a); }
+void ld_hl_b(EmulationState *emu) { ld_a16_d8(emu, *emu->hl, *emu->b); }
+void ld_hl_c(EmulationState *emu) { ld_a16_d8(emu, *emu->hl, *emu->c); }
+void ld_hl_d(EmulationState *emu) { ld_a16_d8(emu, *emu->hl, *emu->d); }
+void ld_hl_e(EmulationState *emu) { ld_a16_d8(emu, *emu->hl, *emu->e); }
+void ld_hl_h(EmulationState *emu) { ld_a16_d8(emu, *emu->hl, *emu->h); }
+void ld_hl_l(EmulationState *emu) { ld_a16_d8(emu, *emu->hl, *emu->l); }
+void ld_hl_a(EmulationState *emu) { ld_a16_d8(emu, *emu->hl, *emu->a); }
 
 void add_b(EmulationState *emu) { add_regd8(emu, *emu->b); }
 void add_c(EmulationState *emu) { add_regd8(emu, *emu->c); }

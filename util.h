@@ -12,6 +12,8 @@
 // https://gbdev.io/pandocs/Timer_and_Divider_Registers.html#ff04--div-divider-register
 #define DIV 0xFF04
 
+#define DMA 0xFF46
+
 #define Z_MASK 0b10000000
 #define N_MASK 0b01000000
 #define H_MASK 0b00100000
