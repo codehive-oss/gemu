@@ -129,6 +129,15 @@ void add_regd16(EmulationState *emu, u16 *from) {
   set_flags(emu, -1, 0, h, c);
 }
 
+void adc_regd8(EmulationState *emu, u8 from) {
+  u8   carry = ((*emu->f & C_MASK) >> C_BIT) & 0b1;
+  bool h     = (*emu->a & 0x0F) + (from & 0x0F) + carry > 0x0F;
+  bool c     = *emu->hl + from + carry > 0xFF;
+
+  *emu->a += from + carry;
+  set_flags(emu, *emu->a == 0, 0, h, c);
+}
+
 void sub_regd8(EmulationState *emu, u8 from) {
   bool h = (*emu->a & 0x0F) - (from & 0x0F) < 0;
   bool c = *emu->a - from < 0;
@@ -176,6 +185,16 @@ void nop(EmulationState *emu) {}
 // TODO: Delay instruction by one
 void ei(EmulationState *emu) { emu->ime = true; }
 void di(EmulationState *emu) { emu->ime = false; }
+
+void cp(EmulationState *emu, u8 value) {
+  if (*emu->a == value) {
+    set_flags(emu, 1, 1, 0, 0);
+  } else if (*emu->a > value) {
+    set_flags(emu, 0, 1, 0, 0);
+  } else {
+    set_flags(emu, 0, 1, 1, 1);
+  }
+}
 
 void jp_a16(EmulationState *emu) {
   u16 target = *(u16 *)&emu->rom[*emu->pc];
@@ -528,6 +547,7 @@ void add_d(EmulationState *emu) { add_regd8(emu, *emu->d); }
 void add_e(EmulationState *emu) { add_regd8(emu, *emu->e); }
 void add_h(EmulationState *emu) { add_regd8(emu, *emu->h); }
 void add_l(EmulationState *emu) { add_regd8(emu, *emu->l); }
+void add_ahl(EmulationState *emu) { add_regd8(emu, emu->mem[*emu->hl]); }
 void add_a(EmulationState *emu) { add_regd8(emu, *emu->a); }
 
 void add_bc(EmulationState *emu) { add_regd16(emu, emu->bc); }
@@ -535,12 +555,22 @@ void add_de(EmulationState *emu) { add_regd16(emu, emu->de); }
 void add_hl(EmulationState *emu) { add_regd16(emu, emu->hl); }
 void add_sp(EmulationState *emu) { add_regd16(emu, emu->sp); }
 
+void adc_b(EmulationState *emu) { adc_regd8(emu, *emu->b); }
+void adc_c(EmulationState *emu) { adc_regd8(emu, *emu->c); }
+void adc_d(EmulationState *emu) { adc_regd8(emu, *emu->d); }
+void adc_e(EmulationState *emu) { adc_regd8(emu, *emu->e); }
+void adc_h(EmulationState *emu) { adc_regd8(emu, *emu->h); }
+void adc_l(EmulationState *emu) { adc_regd8(emu, *emu->l); }
+void adc_ahl(EmulationState *emu) { adc_regd8(emu, emu->mem[*emu->hl]); }
+void adc_a(EmulationState *emu) { adc_regd8(emu, *emu->a); }
+
 void sub_b(EmulationState *emu) { sub_regd8(emu, *emu->b); }
 void sub_c(EmulationState *emu) { sub_regd8(emu, *emu->c); }
 void sub_d(EmulationState *emu) { sub_regd8(emu, *emu->d); }
 void sub_e(EmulationState *emu) { sub_regd8(emu, *emu->e); }
 void sub_h(EmulationState *emu) { sub_regd8(emu, *emu->h); }
 void sub_l(EmulationState *emu) { sub_regd8(emu, *emu->l); }
+void sub_ahl(EmulationState *emu) { sub_regd8(emu, emu->mem[*emu->hl]); }
 void sub_a(EmulationState *emu) { sub_regd8(emu, *emu->a); }
 
 void and_b(EmulationState *emu) { and_regd8(emu, *emu->b); }
@@ -549,6 +579,7 @@ void and_d(EmulationState *emu) { and_regd8(emu, *emu->d); }
 void and_e(EmulationState *emu) { and_regd8(emu, *emu->e); }
 void and_h(EmulationState *emu) { and_regd8(emu, *emu->h); }
 void and_l(EmulationState *emu) { and_regd8(emu, *emu->l); }
+void and_ahl(EmulationState *emu) { and_regd8(emu, emu->mem[*emu->hl]); }
 void and_a(EmulationState *emu) { and_regd8(emu, *emu->a); }
 
 void or_b(EmulationState *emu) { or_regd8(emu, *emu->b); }
@@ -557,6 +588,7 @@ void or_d(EmulationState *emu) { or_regd8(emu, *emu->d); }
 void or_e(EmulationState *emu) { or_regd8(emu, *emu->e); }
 void or_h(EmulationState *emu) { or_regd8(emu, *emu->h); }
 void or_l(EmulationState *emu) { or_regd8(emu, *emu->l); }
+void or_ahl(EmulationState *emu) { or_regd8(emu, emu->mem[*emu->hl]); }
 void or_a(EmulationState *emu) { or_regd8(emu, *emu->a); }
 
 void xor_b(EmulationState *emu) { xor_regd8(emu, *emu->b); }
@@ -565,22 +597,26 @@ void xor_d(EmulationState *emu) { xor_regd8(emu, *emu->d); }
 void xor_e(EmulationState *emu) { xor_regd8(emu, *emu->e); }
 void xor_h(EmulationState *emu) { xor_regd8(emu, *emu->h); }
 void xor_l(EmulationState *emu) { xor_regd8(emu, *emu->l); }
+void xor_ahl(EmulationState *emu) { xor_regd8(emu, emu->mem[*emu->hl]); }
 void xor_a(EmulationState *emu) { xor_regd8(emu, *emu->a); }
 
-void rlca(EmulationState *emu) { rotate_left_regd8(emu, emu->a); }
-void rrca(EmulationState *emu) { rotate_right_regd8(emu, emu->a); }
+void cp_b(EmulationState *emu) { cp(emu, *emu->b); }
+void cp_c(EmulationState *emu) { cp(emu, *emu->c); }
+void cp_d(EmulationState *emu) { cp(emu, *emu->d); }
+void cp_e(EmulationState *emu) { cp(emu, *emu->e); }
+void cp_h(EmulationState *emu) { cp(emu, *emu->h); }
+void cp_l(EmulationState *emu) { cp(emu, *emu->l); }
+void cp_ahl(EmulationState *emu) { cp(emu, emu->mem[*emu->hl]); }
+void cp_a(EmulationState *emu) { cp(emu, *emu->a); }
 
 void cp_d8(EmulationState *emu) {
   u8 value = emu->rom[*emu->pc];
-  if (*emu->a == value) {
-    set_flags(emu, 1, 1, 0, 0);
-  } else if (*emu->a > value) {
-    set_flags(emu, 0, 1, 0, 0);
-  } else {
-    set_flags(emu, 0, 1, 1, 1);
-  }
+  cp(emu, value);
   *emu->pc += 1;
 }
+
+void rlca(EmulationState *emu) { rotate_left_regd8(emu, emu->a); }
+void rrca(EmulationState *emu) { rotate_right_regd8(emu, emu->a); }
 
 void prefix(EmulationState *emu) {
   u8 inst = emu->rom[*emu->pc];
@@ -748,6 +784,7 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x83] = {.execute = &add_e},
     [0x84] = {.execute = &add_h},
     [0x85] = {.execute = &add_l},
+    [0x86] = {.execute = &add_ahl},
     [0x87] = {.execute = &add_a},
 
     [0x09] = {.execute = &add_bc},
@@ -755,12 +792,22 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x29] = {.execute = &add_hl},
     [0x39] = {.execute = &add_sp},
 
+    [0x88] = {.execute = &adc_b},
+    [0x89] = {.execute = &adc_c},
+    [0x8A] = {.execute = &adc_d},
+    [0x8B] = {.execute = &adc_e},
+    [0x8C] = {.execute = &adc_h},
+    [0x8D] = {.execute = &adc_l},
+    [0x8E] = {.execute = &adc_ahl},
+    [0x8F] = {.execute = &adc_a},
+
     [0x90] = {.execute = &sub_b},
     [0x91] = {.execute = &sub_c},
     [0x92] = {.execute = &sub_d},
     [0x93] = {.execute = &sub_e},
     [0x94] = {.execute = &sub_h},
     [0x95] = {.execute = &sub_l},
+    [0x96] = {.execute = &sub_ahl},
     [0x97] = {.execute = &sub_a},
 
     [0xA0] = {.execute = &and_b},
@@ -769,6 +816,7 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0xA3] = {.execute = &and_e},
     [0xA4] = {.execute = &and_h},
     [0xA5] = {.execute = &and_l},
+    [0xA6] = {.execute = &and_ahl},
     [0xA7] = {.execute = &and_a},
 
     [0xA8] = {.execute = &xor_b},
@@ -777,7 +825,10 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0xAB] = {.execute = &xor_e},
     [0xAC] = {.execute = &xor_h},
     [0xAD] = {.execute = &xor_l},
+    [0xAE] = {.execute = &xor_ahl},
     [0xAF] = {.execute = &xor_a},
+
+    [0xEE] = {.execute = &xor_d8},
 
     [0xB0] = {.execute = &or_b},
     [0xB1] = {.execute = &or_c},
@@ -795,9 +846,16 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x07] = {.execute = &rlca},
     [0x0F] = {.execute = &rrca},
 
-    [0xEE] = {.execute = &xor_d8},
-
     [0x2F] = {.execute = &cpl},
+
+    [0xB8] = {.execute = &cp_b},
+    [0xB9] = {.execute = &cp_c},
+    [0xBA] = {.execute = &cp_d},
+    [0xBB] = {.execute = &cp_e},
+    [0xBC] = {.execute = &cp_h},
+    [0xBD] = {.execute = &cp_l},
+    [0xBE] = {.execute = &cp_ahl},
+    [0xBF] = {.execute = &cp_a},
 
     [0xFE] = {.execute = &cp_d8},
 

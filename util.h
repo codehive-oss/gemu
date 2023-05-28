@@ -14,10 +14,15 @@
 
 #define DMA 0xFF46
 
-#define Z_MASK 0b10000000
-#define N_MASK 0b01000000
-#define H_MASK 0b00100000
-#define C_MASK 0b00010000
+#define Z_BIT 7
+#define N_BIT 6
+#define H_BIT 5
+#define C_BIT 4
+
+#define Z_MASK (1 << Z_BIT)
+#define N_MASK (1 << N_BIT)
+#define H_MASK (1 << H_BIT)
+#define C_MASK (1 << C_BIT)
 
 // https://gbdev.io/pandocs/LCDC.html
 #define LCDC 0xFF40
