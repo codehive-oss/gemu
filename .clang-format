@@ -5,3 +5,4 @@ AlignTrailingComments: true
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
 AlignConsecutiveMacros: true
+AlignArrayOfStructures: Left
