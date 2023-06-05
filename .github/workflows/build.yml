@@ -19,7 +19,7 @@ jobs:
           sudo apt install gcc libsdl2-dev -y
 
       - name: Test with Make
-        run: make test && ./a.out
+        run: make test && ./test-gemu
 
       - name: Build with Make
         run: make release
