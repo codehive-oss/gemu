@@ -1,7 +1,7 @@
-CFLAGS=-Wall -Wextra -pedantic -Werror -g
+CFLAGS=-Wall -Wextra -pedantic -Wmissing-declarations -Werror -g
 LDLIBS=-lSDL2
 
-SRCFILES=util.c instruction.c ui.c
+SRCFILES=emulation.c util.c instruction.c ui.c
 
 main:
 	$(CC) $(CFLAGS) main.c $(SRCFILES) $(LDLIBS) -O0

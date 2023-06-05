@@ -29,6 +29,7 @@ void    win_update_input(Window *win, GameInput *input, bool *running, bool *spa
 
 void win_clear(Window *win);
 void win_render(Window *win);
+void win_draw_tile(u32 *target, u8 *tile, int pitch, u8 x, u8 y);
 void win_draw_objs(Window *win, SpriteAttribute *sprites, u8 *vram);
 void win_draw_bg(Window *win, u8 *vram, u8 *tileMap, bool data_area);
 void win_draw_tiles(Window *win, u8 *data);
