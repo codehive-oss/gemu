@@ -27,32 +27,32 @@
 // https://gbdev.io/pandocs/LCDC.html
 #define LCDC 0xFF40
 
-#define LCD_ENABLE          0b10000000
-#define WINDOW_TILEMAP_AREA 0b01000000
-#define WINDOW_ENABLE       0b00100000
-#define BG_WINDOW_DATA_AREA 0b00010000
-#define BG_TILEMAP_AREA     0b00001000
-#define OBJ_SIZE            0b00000100
-#define OBJ_ENABLE          0b00000010
-#define BG_WINDOW_ENABLE    0b00000001
+#define LCD_ENABLE          (1 << 7)
+#define WINDOW_TILEMAP_AREA (1 << 6)
+#define WINDOW_ENABLE       (1 << 5)
+#define BG_WINDOW_DATA_AREA (1 << 4)
+#define BG_TILEMAP_AREA     (1 << 3)
+#define OBJ_SIZE            (1 << 2)
+#define OBJ_ENABLE          (1 << 1)
+#define BG_WINDOW_ENABLE    (1 << 0)
 
 // https://gbdev.io/pandocs/OAM.html#byte-3--attributesflags
-#define BG_OVER_OBJ         0b10000000
-#define Y_FLIP              0b01000000
-#define X_FLIP              0b00100000
-#define Palette_NON_CGB_NUM 0b00010000
-#define TILE_VRAM_BANK      0b00001000
-#define Palette_CGB_NUM     0b00000111
+#define BG_OVER_OBJ         (1 << 7)
+#define Y_FLIP              (1 << 6)
+#define X_FLIP              (1 << 5)
+#define PALETTE_NON_CGB_NUM (1 << 4)
+#define TILE_VRAM_BANK      (1 << 3)
+#define PALETTE_CGB_NUM     (0x0F & ~(1 << 3))
 
 #define IO 0xFF00
 #define IE 0xFFFF
 #define IF 0xFF0F
 
-#define IF_VBLANK   0b00000001
-#define IF_LCD_STAT 0b00000010
-#define IF_TIMER    0b00000100
-#define IF_SERIAL   0b00001000
-#define IF_JOYPAD   0b00010000
+#define IF_VBLANK   (1 << 0)
+#define IF_LCD_STAT (1 << 1)
+#define IF_TIMER    (1 << 2)
+#define IF_SERIAL   (1 << 3)
+#define IF_JOYPAD   (1 << 4)
 
 extern const char *ROM_TYPES[256];
 extern const char *NEW_LICENSEE_CODE[256];

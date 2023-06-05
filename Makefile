@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -Werror -g
+CFLAGS=-Wall -Wextra -pedantic -Werror -g
 LDLIBS=-lSDL2
 
 SRCFILES=util.c instruction.c ui.c

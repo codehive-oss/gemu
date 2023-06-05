@@ -130,7 +130,7 @@ void add_regd16(EmulationState *emu, u16 *from) {
 }
 
 void adc_regd8(EmulationState *emu, u8 from) {
-  u8   carry = ((*emu->f & C_MASK) >> C_BIT) & 0b1;
+  u8   carry = ((*emu->f & C_MASK) >> C_BIT) & (1 << 0);
   bool h     = (*emu->a & 0x0F) + (from & 0x0F) + carry > 0x0F;
   bool c     = *emu->hl + from + carry > 0xFF;
 
@@ -180,7 +180,7 @@ void cpl(EmulationState *emu) {
 }
 
 void nop(EmulationState *emu) {
-	(void)emu;
+  (void)emu;
 }
 
 // https://gbdev.io/pandocs/Interrupts.html
@@ -909,7 +909,7 @@ Instruction GB_INSTRUCTIONS[256] = {
 };
 
 void sla_regd8(EmulationState *emu, u8 *reg) {
-  u8 c = *reg & 0b10000000;
+  u8 c = *reg & (1 << 7);
   *reg <<= 1;
   set_flags(emu, *reg == 0, 0, 0, c);
 }
@@ -919,8 +919,8 @@ void sla_rega16(EmulationState *emu, u16 addr) {
 }
 
 void sra_regd8(EmulationState *emu, u8 *reg) {
-  u8 c    = *reg & 0b00000001;
-  u8 left = *reg & 0b10000000;
+  u8 c    = *reg & (1 << 0);
+  u8 left = *reg & (1 << 7);
   *reg >>= 1;
   *reg |= left;
   set_flags(emu, *reg == 0, 0, 0, c);
@@ -940,7 +940,7 @@ void swap_rega16(EmulationState *emu, u16 addr) {
 }
 
 void srl_regd8(EmulationState *emu, u8 *reg) {
-  u8 c = *reg & 0b00000001;
+  u8 c = *reg & (1 << 0);
   *reg >>= 1;
   set_flags(emu, *reg == 0, 0, 0, c);
 }
@@ -958,7 +958,7 @@ void bit_rega16(EmulationState *emu, u16 addr, u8 bit) {
 }
 
 void res_regd8(EmulationState *emu, u8 *reg, u8 bit) {
-	(void)emu;
+  (void)emu;
   *reg &= ~(1 << bit);
 }
 
@@ -967,7 +967,7 @@ void res_rega16(EmulationState *emu, u16 addr, u8 bit) {
 }
 
 void set_regd8(EmulationState *emu, u8 *reg, u8 bit) {
-	(void)emu;
+  (void)emu;
   *reg |= (1 << bit);
 }
 
