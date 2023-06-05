@@ -14,6 +14,7 @@ SUITE(sub);
 SUITE(inc);
 SUITE(dec);
 SUITE(and);
+SUITE(adc);
 
 TEST palette_idx_test(void) {
   u8 b[] = {
@@ -226,6 +227,51 @@ TEST and_test2() {
   PASS();
 }
 
+TEST adc_without_carry() {
+  EmulationState *emu = emu_init();
+
+  *emu->a = 0x0F;
+  adc_regd8(emu, 0x10);
+  ASSERT_EQ(*emu->a, 0x1F);
+  ASSERT_FALSE(*emu->f & Z_MASK);
+  ASSERT_FALSE(*emu->f & N_MASK);
+  ASSERT_FALSE(*emu->f & H_MASK);
+  ASSERT_FALSE(*emu->f & C_MASK);
+
+  emu_free(emu);
+  PASS();
+}
+
+TEST adc_with_half_carry() {
+  EmulationState *emu = emu_init();
+
+  *emu->a = 0x0F;
+  adc_regd8(emu, 0x1F);
+  ASSERT_EQ(*emu->a, 0x2E);
+  ASSERT_FALSE(*emu->f & Z_MASK);
+  ASSERT_FALSE(*emu->f & N_MASK);
+  ASSERT(*emu->f & H_MASK);
+  ASSERT_FALSE(*emu->f & C_MASK);
+
+  emu_free(emu);
+  PASS();
+}
+
+TEST adc_with_carry() {
+  EmulationState *emu = emu_init();
+
+  *emu->a = 0xFF;
+  adc_regd8(emu, 0x01);
+  ASSERT_EQ(*emu->a, 0x00);
+  ASSERT(*emu->f & Z_MASK);
+  ASSERT_FALSE(*emu->f & N_MASK);
+  ASSERT(*emu->f & H_MASK);
+  ASSERT(*emu->f & C_MASK);
+
+  emu_free(emu);
+  PASS();
+}
+
 SUITE(palette_idx) {
   RUN_TEST(palette_idx_test);
 }
@@ -257,6 +303,12 @@ SUITE(and) {
   RUN_TEST(and_test2);
 }
 
+SUITE(adc) {
+  RUN_TEST(adc_without_carry);
+  RUN_TEST(adc_with_half_carry);
+  RUN_TEST(adc_with_carry);
+}
+
 GREATEST_MAIN_DEFS();
 
 int main(int argc, char **argv) {
@@ -268,6 +320,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(inc);
   RUN_SUITE(dec);
   RUN_SUITE(and);
+  RUN_SUITE(adc);
 
   GREATEST_MAIN_END();
 }
