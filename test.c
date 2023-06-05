@@ -189,7 +189,7 @@ TEST dec_test3() {
   PASS();
 }
 
-TEST and_test1() {
+TEST and_with_nonzero() {
   EmulationState *emu = emu_init();
 
   // Test case 1: Perform AND operation with non-zero value
@@ -208,7 +208,7 @@ TEST and_test1() {
   PASS();
 }
 
-TEST and_test2() {
+TEST and_with_zero() {
   EmulationState *emu = emu_init();
 
   // Test case 2: Perform AND operation with zero value
@@ -299,8 +299,8 @@ SUITE(dec) {
 }
 
 SUITE(and) {
-  RUN_TEST(and_test1);
-  RUN_TEST(and_test2);
+  RUN_TEST(and_with_nonzero);
+  RUN_TEST(and_with_zero);
 }
 
 SUITE(adc) {
