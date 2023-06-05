@@ -132,7 +132,7 @@ void add_regd16(EmulationState *emu, u16 *from) {
 void adc_regd8(EmulationState *emu, u8 from) {
   u8   carry = ((*emu->f & C_MASK) >> C_BIT) & (1 << 0);
   bool h     = (*emu->a & 0x0F) + (from & 0x0F) + carry > 0x0F;
-  bool c     = *emu->hl + from + carry > 0xFF;
+  bool c     = *emu->a + from + carry > 0xFF;
 
   *emu->a += from + carry;
   set_flags(emu, *emu->a == 0, 0, h, c);
