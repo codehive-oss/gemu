@@ -179,7 +179,9 @@ void cpl(EmulationState *emu) {
   set_flags(emu, -1, 1, 1, -1);
 }
 
-void nop(EmulationState *emu) {}
+void nop(EmulationState *emu) {
+	(void)emu;
+}
 
 // https://gbdev.io/pandocs/Interrupts.html
 // TODO: Delay instruction by one
@@ -956,6 +958,7 @@ void bit_rega16(EmulationState *emu, u16 addr, u8 bit) {
 }
 
 void res_regd8(EmulationState *emu, u8 *reg, u8 bit) {
+	(void)emu;
   *reg &= ~(1 << bit);
 }
 
@@ -964,6 +967,7 @@ void res_rega16(EmulationState *emu, u16 addr, u8 bit) {
 }
 
 void set_regd8(EmulationState *emu, u8 *reg, u8 bit) {
+	(void)emu;
   *reg |= (1 << bit);
 }
 

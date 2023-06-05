@@ -31,6 +31,7 @@ Window *win_init() {
 
 void win_update_input(Window *win, GameInput *input, bool *running, bool *spacedown,
                       bool *enterdown) {
+	(void)win;
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
     switch (e.type) {
