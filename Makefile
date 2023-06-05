@@ -1,10 +1,13 @@
-CFLAGS=-Wall -Werror
+CFLAGS=-Wall -Werror -g
+LDLIBS=-lSDL2
+
+SRCFILES=util.c instruction.c ui.c
 
 main:
-	$(CC) $(CFLAGS) main.c util.c instruction.c ui.c -g -O0 -lSDL2
+	$(CC) $(CFLAGS) main.c $(SRCFILES) $(LDLIBS) -O0
 
 release:
-	$(CC) $(CFLAGS) main.c util.c instruction.c ui.c -lSDL2 -g -O2 -o gemu
+	$(CC) $(CFLAGS) main.c $(SRCFILES) $(LDLIBS) -O2 -o gemu
 
 test:
-	$(CC) $(CFLAGS) test.c util.c instruction.c
+	$(CC) $(CFLAGS) test.c $(SRCFILES) $(LDLIBS) -O0
