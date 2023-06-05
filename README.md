@@ -19,3 +19,7 @@ make
 - Space: Step to next instruction (step mode only)
 - Escape: Exit Program
 - q: Exit Program
+
+
+## Dependencies 
+- [Greatest](https://github.com/silentbicycle/greatest)
