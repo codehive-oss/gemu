@@ -336,9 +336,14 @@ void gameinput_free(GameInput *input) {
 
 EmulationState *emu_init() {
   EmulationState *emu = (EmulationState *)malloc(sizeof(EmulationState));
+	memset(emu, 0, sizeof(EmulationState));
 
   emu->mem    = (u8 *)malloc(65536);
+	memset(emu->mem, 0, 65536);
+
   emu->reg    = (u8 *)malloc(12);
+	memset(emu->reg, 0, 12);
+
   emu->mcycle = 0;
 
   emu->rom  = emu->mem;

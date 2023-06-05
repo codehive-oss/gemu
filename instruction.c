@@ -179,6 +179,15 @@ void cpl(EmulationState *emu) {
   set_flags(emu, -1, 1, 1, -1);
 }
 
+void ccf(EmulationState *emu) {
+	u8 set = ((*emu->f & C_MASK) >> C_BIT) ^ 1;
+	set_flags(emu, -1, 0, 0, set);
+}
+
+void scf(EmulationState *emu) {
+	set_flags(emu, -1, 0, 0, 1);
+}
+
 void nop(EmulationState *emu) {
   (void)emu;
 }
@@ -849,6 +858,8 @@ Instruction GB_INSTRUCTIONS[256] = {
     [0x0F] = {.execute = &rrca},
 
     [0x2F] = {.execute = &cpl},
+    [0x37] = {.execute = &scf},
+    [0x3F] = {.execute = &ccf},
 
     [0xB8] = {.execute = &cp_b},
     [0xB9] = {.execute = &cp_c},

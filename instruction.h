@@ -37,6 +37,8 @@ void rotate_right_regd8(EmulationState *emu, u8 *target);
 void pop(EmulationState *emu, u16 *reg);
 void push(EmulationState *emu, u16 *reg);
 void cpl(EmulationState *emu);
+void ccf(EmulationState *emu);
+void scf(EmulationState *emu);
 
 void nop(EmulationState *emu);
 void ei(EmulationState *emu);

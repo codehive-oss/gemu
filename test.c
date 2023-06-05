@@ -8,13 +8,13 @@
 
 #include "greatest.h"
 
-SUITE(palette_idx);
-SUITE(add);
-SUITE(sub);
-SUITE(inc);
-SUITE(dec);
-SUITE(and);
-SUITE(adc);
+SUITE(palette_idx_suite);
+SUITE(add_suite);
+SUITE(sub_suite);
+SUITE(inc_suite);
+SUITE(dec_suite);
+SUITE(and_suite);
+SUITE(adc_suite);
 
 TEST palette_idx_test(void) {
   u8 b[] = {
@@ -272,41 +272,90 @@ TEST adc_with_carry() {
   PASS();
 }
 
-SUITE(palette_idx) {
+TEST ccf_carry_flag_set() {
+  EmulationState *emu = emu_init();
+  *emu->f |= C_MASK; // Set carry flag
+  ccf(emu);
+  ASSERT_FALSE(*emu->f & C_MASK); // Carry flag should be cleared
+  ASSERT_FALSE(*emu->f & N_MASK); // Subtraction flag should be cleared
+  ASSERT_FALSE(*emu->f & H_MASK); // Half-carry flag should be cleared
+  PASS();
+}
+
+TEST ccf_carry_flag_cleared() {
+  EmulationState *emu = emu_init();
+  *emu->f &= ~C_MASK; // Clear carry flag
+  ccf(emu);
+  ASSERT(*emu->f & C_MASK);       // Carry flag should be set
+  ASSERT_FALSE(*emu->f & N_MASK); // Subtraction flag should be cleared
+  ASSERT_FALSE(*emu->f & H_MASK); // Half-carry flag should be cleared
+  PASS();
+}
+
+TEST scf_carry_flag_set() {
+  EmulationState *emu = emu_init();
+  scf(emu);
+  ASSERT(*emu->f & C_MASK);       // Carry flag should be set
+  ASSERT_FALSE(*emu->f & N_MASK); // Subtraction flag should be cleared
+  ASSERT_FALSE(*emu->f & H_MASK); // Half-carry flag should be cleared
+  PASS();
+}
+
+TEST scf_carry_flag_cleared() {
+  EmulationState *emu = emu_init();
+  *emu->f |= C_MASK; // Set carry flag
+  scf(emu);
+  ASSERT(*emu->f & C_MASK);       // Carry flag should still be set
+  ASSERT_FALSE(*emu->f & N_MASK); // Subtraction flag should be cleared
+  ASSERT_FALSE(*emu->f & H_MASK); // Half-carry flag should be cleared
+  PASS();
+}
+
+SUITE(palette_idx_suite) {
   RUN_TEST(palette_idx_test);
 }
 
-SUITE(add) {
+SUITE(add_suite) {
   RUN_TEST(add_test1);
   RUN_TEST(add_test2);
 }
 
-SUITE(sub) {
+SUITE(sub_suite) {
   RUN_TEST(sub_test1);
   RUN_TEST(sub_test2);
 }
 
-SUITE(inc) {
+SUITE(inc_suite) {
   RUN_TEST(inc_test1);
   RUN_TEST(inc_test2);
   RUN_TEST(inc_test3);
 }
 
-SUITE(dec) {
+SUITE(dec_suite) {
   RUN_TEST(dec_test1);
   RUN_TEST(dec_test2);
   RUN_TEST(dec_test3);
 }
 
-SUITE(and) {
+SUITE(and_suite) {
   RUN_TEST(and_with_nonzero);
   RUN_TEST(and_with_zero);
 }
 
-SUITE(adc) {
+SUITE(adc_suite) {
   RUN_TEST(adc_without_carry);
   RUN_TEST(adc_with_half_carry);
   RUN_TEST(adc_with_carry);
+}
+
+SUITE(ccf_suite) {
+  RUN_TEST(ccf_carry_flag_set);
+  RUN_TEST(ccf_carry_flag_cleared);
+}
+
+SUITE(scf_suite) {
+  RUN_TEST(scf_carry_flag_set);
+  RUN_TEST(scf_carry_flag_cleared);
 }
 
 GREATEST_MAIN_DEFS();
@@ -314,13 +363,15 @@ GREATEST_MAIN_DEFS();
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
 
-  RUN_SUITE(palette_idx);
-  RUN_SUITE(add);
-  RUN_SUITE(sub);
-  RUN_SUITE(inc);
-  RUN_SUITE(dec);
-  RUN_SUITE(and);
-  RUN_SUITE(adc);
+  RUN_SUITE(palette_idx_suite);
+  RUN_SUITE(add_suite);
+  RUN_SUITE(sub_suite);
+  RUN_SUITE(inc_suite);
+  RUN_SUITE(dec_suite);
+  RUN_SUITE(and_suite);
+  RUN_SUITE(adc_suite);
+  RUN_SUITE(ccf_suite);
+  RUN_SUITE(scf_suite);
 
   GREATEST_MAIN_END();
 }
